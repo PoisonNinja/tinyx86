@@ -13,7 +13,7 @@ set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_CFLAGS_RELEASE} -O3")
 
 include_directories(include)
 
-add_executable(x86emu log.c main.c)
+add_executable(x86emu board.c log.c main.c)
 add_subdirectory(hw)
 
 install(TARGETS x86emu DESTINATION /usr/local/bin)

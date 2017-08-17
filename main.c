@@ -1,10 +1,11 @@
+#include <board.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <x86emu.h>
 
-static size_t memory = X86EMU_MINIMUM_MEMORY;
+static struct board* board = NULL;
 
 static void validate_memory(size_t* memory)
 {
@@ -18,6 +19,7 @@ int main(int argc, char** argv)
 {
     int c;
     char* end = NULL;
+    size_t memory = X86EMU_MINIMUM_MEMORY;
     while ((c = getopt(argc, argv, "m:")) != -1) {
         switch (c) {
             case 'm':
@@ -44,5 +46,10 @@ int main(int argc, char** argv)
         }
     }
     log_info("Memory: %zu", memory);
+    board = board_create(memory);
+    if (!board) {
+        exit(1);
+    }
+    log_trace("Created board");
     return 0;
 }
