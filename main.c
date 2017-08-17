@@ -1,10 +1,8 @@
-#include <cpu/cpu.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
-static struct cpu* bsp = NULL;
+#include <x86emu.h>
 
 static size_t memory = X86EMU_MINIMUM_MEMORY;
 
@@ -45,8 +43,6 @@ int main(int argc, char** argv)
                 exit(1);
         }
     }
-    log_info("Memory: %zu\n", memory);
-    bsp = cpu_create();
-    cpu_destroy(bsp);
+    log_info("Memory: %zu", memory);
     return 0;
 }
