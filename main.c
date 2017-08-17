@@ -45,7 +45,7 @@ int main(int argc, char** argv)
                 exit(1);
         }
     }
-    printf("Memory: %zu\n", memory);
+    log_info("Memory: %zu\n", memory);
     bsp = cpu_create();
     cpu_destroy(bsp);
     return 0;
