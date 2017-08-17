@@ -1,13 +1,31 @@
 #pragma once
 
-#include <stdint.h>
+#include <x86emu.h>
 
-// A struct representing a CPU running in real mode (16-bit addressing)
-struct cpu_real {
-    uint16_t AX, BX, CX, DX;
-    uint16_t SI, DI;
-    uint16_t BP, SP;
-    uint16_t IP;
-    uint16_t CS, DS, SS;
-    uint16_t ES, FS, GS;
+struct cpu_16bit {
+    uint16_t ax, bx, cx, dx;
+    uint16_t si, di;
+    uint16_t bp, sp;
+    uint16_t ip;
 };
+
+struct cpu_32bit {
+    uint32_t eax, ebx, ecx, edx;
+    uint32_t esi, edi;
+    uint32_t ebp, esp;
+    uint32_t eip;
+};
+
+struct cpu_segments {
+    uint16_t cs, ds, ss;
+    uint16_t es, fs, gs;
+};
+
+struct cpu {
+    struct cpu_16bit registers16;
+    struct cpu_32bit registers32;
+    struct cpu_segments segments;
+};
+
+struct cpu* cpu_create(void);
+void cpu_destroy(struct cpu* cpu);
