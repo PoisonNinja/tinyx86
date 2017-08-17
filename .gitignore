@@ -1,0 +1,5 @@
+# Directories
+build/
+
+# File types
+*.o
