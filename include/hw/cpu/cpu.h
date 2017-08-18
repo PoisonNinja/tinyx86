@@ -8,6 +8,11 @@ union cpu_register {
     uint8_t regs_8;
 };
 
+struct cpu_selector {
+    uint32_t base, limit;
+    uint16_t selector;
+};
+
 struct eflags {
     uint8_t carry : 1;
     uint8_t reserved_1 : 1;
@@ -36,7 +41,7 @@ struct eflags {
 struct cpu {
     union cpu_register ax, bx, cx, dx;
     union cpu_register sp, bp, si, di, ip;
-    uint16_t cs, ds, ss, es, fs, gs;
+    struct cpu_register cs, ds, ss, es, fs, gs;
     struct eflags eflags;
 };
 
