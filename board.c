@@ -21,3 +21,8 @@ fail:
     free(board);
     return NULL;
 }
+
+void board_poweron(struct board* board)
+{
+    cpu_reset(board->cpu);
+}

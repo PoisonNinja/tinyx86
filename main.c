@@ -9,10 +9,15 @@ static struct board* board = NULL;
 
 static void validate_memory(size_t* memory)
 {
-    if (*memory < X86EMU_MINIMUM_MEMORY)
+    if (*memory < X86EMU_MINIMUM_MEMORY) {
+        log_warn("Requested memory size is too small, minimum is %zu",
+                 X86EMU_MINIMUM_MEMORY);
         *memory = X86EMU_MINIMUM_MEMORY;
-    else if (*memory > X86EMU_MAXIMUM_MEMORY)
+    } else if (*memory > X86EMU_MAXIMUM_MEMORY) {
+        log_warn("Requested memory size is too large, maximum is %zu",
+                 X86EMU_MAXIMUM_MEMORY);
         *memory = X86EMU_MAXIMUM_MEMORY;
+    }
 }
 
 int main(int argc, char** argv)
@@ -51,5 +56,7 @@ int main(int argc, char** argv)
         exit(1);
     }
     log_trace("Created board");
+    board_poweron(board);
+    log_trace("Powered on board");
     return 0;
 }
