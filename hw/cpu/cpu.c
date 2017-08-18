@@ -1,10 +1,12 @@
 #include <hw/cpu/cpu.h>
+#include <hw/cpu/opcode.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 void cpu_cycle(struct cpu* cpu)
 {
+    opcode_execute(cpu);
 }
 
 void cpu_reset(struct cpu* cpu)

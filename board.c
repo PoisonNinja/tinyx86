@@ -12,6 +12,7 @@ struct board* board_create(size_t memory)
         return NULL;
     }
     board->cpu = cpu_create();
+    board->cpu->board = board;
     board->memory_base = (uintptr_t)malloc(MB_TO_BYTE(memory));
     if (!board->memory_base) {
         log_fatal("Failed to allocate memory for board.");

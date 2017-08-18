@@ -2,6 +2,8 @@
 
 #include <x86emu.h>
 
+struct board;
+
 union cpu_register {
     uint32_t regs_32;
     uint16_t regs_16;
@@ -39,6 +41,7 @@ struct eflags {
 } __attribute((packed));
 
 struct cpu {
+    struct board* board;
     union cpu_register ax, bx, cx, dx;
     union cpu_register sp, bp, si, di, ip;
     struct cpu_selector cs, ds, ss, es, fs, gs;

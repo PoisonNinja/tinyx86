@@ -6,6 +6,8 @@
 #include <stdint.h>
 #include <stdio.h>
 
+typedef size_t addr_t;
+
 #define X86EMU_MINIMUM_MEMORY 128
 #define X86EMU_MAXIMUM_MEMORY 1024
 
