@@ -26,3 +26,9 @@ void board_poweron(struct board* board)
 {
     cpu_reset(board->cpu);
 }
+
+void board_run(struct board* board)
+{
+    while (1) {
+    }
+}

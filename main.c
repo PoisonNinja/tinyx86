@@ -58,5 +58,6 @@ int main(int argc, char** argv)
     log_trace("Created board");
     board_poweron(board);
     log_trace("Powered on board");
+    board_run(board);
     return 0;
 }

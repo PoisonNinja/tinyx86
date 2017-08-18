@@ -12,3 +12,4 @@ struct board {
 
 extern struct board* board_create(size_t memory);
 extern void board_poweron(struct board* board);
+extern void board_run(struct board* board);

@@ -3,6 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+void cpu_cycle(struct cpu* cpu)
+{
+}
+
 void cpu_reset(struct cpu* cpu)
 {
     memset(cpu, 0, sizeof(struct cpu));

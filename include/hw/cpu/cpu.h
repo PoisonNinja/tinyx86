@@ -45,6 +45,8 @@ struct cpu {
     struct eflags eflags;
 };
 
+extern void cpu_cycle(struct cpu* cpu);
+
 extern void cpu_reset(struct cpu* cpu);
 
 extern struct cpu* cpu_create(void);
