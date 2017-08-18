@@ -6,6 +6,10 @@
 void cpu_reset(struct cpu* cpu)
 {
     memset(cpu, 0, sizeof(struct cpu));
+    cpu->cs.selector = 0xF000;
+    cpu->cs.base = 0xFFFF0000;
+    cpu->cs.limit = 0xFFFF;
+    cpu->ip.regs_16 = 0xFFF0;
 }
 
 struct cpu* cpu_create(void)
