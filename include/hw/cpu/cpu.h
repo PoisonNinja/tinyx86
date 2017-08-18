@@ -41,7 +41,7 @@ struct eflags {
 struct cpu {
     union cpu_register ax, bx, cx, dx;
     union cpu_register sp, bp, si, di, ip;
-    struct cpu_register cs, ds, ss, es, fs, gs;
+    struct cpu_selector cs, ds, ss, es, fs, gs;
     struct eflags eflags;
 };
 
