@@ -4,6 +4,8 @@
 
 #define MB_TO_BYTE(x) ((x)*1024 * 1024)
 
+extern rom_load(void);
+
 struct board* board_create(size_t memory)
 {
     struct board* board = malloc(sizeof(struct board));
@@ -19,6 +21,7 @@ struct board* board_create(size_t memory)
         goto fail;
     }
     board->memory_extent = MB_TO_BYTE(memory);
+    rom_load();
     return board;
 fail:
     free(board);
