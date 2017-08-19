@@ -1,8 +1,11 @@
 #include <board.h>
 #include <ctype.h>
+#include <errno.h>
+#include <fcntl.h>
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <x86emu.h>
 
@@ -41,13 +44,14 @@ int main(int argc, char** argv)
 {
     int c, long_index;
     char* end = NULL;
-    char* binary;
+    char* binary = NULL;
     size_t memory = X86EMU_MINIMUM_MEMORY;
     while ((c = getopt_long(argc, argv, "hm:", long_options, &long_index)) !=
            -1) {
         switch (c) {
             case 'b':
                 binary = optarg;
+                break;
             case 'h':
                 print_usage(argv);
                 exit(0);
@@ -71,6 +75,25 @@ int main(int argc, char** argv)
         exit(1);
     }
     log_trace("Created board");
+    if (binary) {
+        log_trace("Loading binary %s", binary);
+        int fd = open(binary, O_RDONLY);
+        if (fd < 0) {
+            log_fatal("Could not open binary %s: %s", binary, strerror(errno));
+            exit(1);
+        }
+        size_t binary_size = lseek(fd, 0, SEEK_END);
+        lseek(fd, 0, SEEK_SET);
+        void* buffer = malloc(binary_size);
+        size_t bread = 0;
+        if ((bread = read(fd, buffer, binary_size)) != binary_size) {
+            log_fatal("Failed to read entire binary. Expected %zu, but got %zu",
+                      binary_size, bread);
+            close(fd);
+            exit(1);
+        }
+        board_load(board, 0, buffer, binary_size);
+    }
     board_poweron(board);
     log_trace("Powered on board");
     board_run(board);
