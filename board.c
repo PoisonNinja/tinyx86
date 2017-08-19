@@ -1,5 +1,4 @@
 #include <board.h>
-#include <hw/cpu/cpu.h>
 #include <stdlib.h>
 #include <string.h>
 

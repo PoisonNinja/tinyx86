@@ -11,11 +11,14 @@ void cpu_cycle(struct cpu* cpu)
 
 void cpu_reset(struct cpu* cpu)
 {
-    memset(cpu, 0, sizeof(struct cpu));
-    cpu->cs.selector = 0xF000;
-    cpu->cs.base = 0xFFFF0000;
+    // cpu->cs.selector = 0xF000;
+    // cpu->cs.base = 0xFFFF0000;
+    // cpu->cs.limit = 0xFFFF;
+    // cpu->ip.regs_16 = 0xFFF0;
+    // cpu->cs.selector = 0xF000;
+    cpu->cs.base = 0x0;
     cpu->cs.limit = 0xFFFF;
-    cpu->ip.regs_16 = 0xFFF0;
+    cpu->ip.regs_16 = 0x1000;
 }
 
 struct cpu* cpu_create(void)

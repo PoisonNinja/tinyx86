@@ -1,8 +1,7 @@
 #pragma once
 
+#include <hw/cpu/cpu.h>
 #include <x86emu.h>
-
-struct cpu;
 
 struct board {
     struct cpu* cpu;
