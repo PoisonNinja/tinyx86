@@ -1,11 +1,27 @@
 #include <board.h>
 #include <ctype.h>
+#include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <x86emu.h>
 
 static struct board* board = NULL;
+
+static struct option long_options[] = {
+    {"memory", required_argument, 0, 'm'},
+    {"help", no_argument, 0, 'h'},
+    {NULL, 0, NULL, 0},
+};
+
+static void print_usage(char* argv[])
+{
+    printf("usage: %s [options] [binary_file]\n", argv[0]);
+    printf("\n'binary_file' is a flat binary image you would like to run\n");
+    printf("\nOptions:\n"
+           "-h | --help     Print this help out\n"
+           "-m | --memory   Set the memory available to the machine in MiB\n");
+}
 
 static void validate_memory(size_t* memory)
 {
@@ -22,30 +38,25 @@ static void validate_memory(size_t* memory)
 
 int main(int argc, char** argv)
 {
-    int c;
+    int c, long_index;
     char* end = NULL;
     size_t memory = X86EMU_MINIMUM_MEMORY;
-    while ((c = getopt(argc, argv, "m:")) != -1) {
+    while ((c = getopt_long(argc, argv, "hm:", long_options, &long_index)) !=
+           -1) {
         switch (c) {
+            case 'h':
+                print_usage(argv);
+                exit(0);
             case 'm':
                 memory = strtoll(optarg, &end, 0);
                 if (*end) {
                     fprintf(stderr,
-                            "Option -m requires a numerical argument.\n");
+                            "%s: Option -m requires a numerical argument.\n",
+                            argv[0]);
                     exit(1);
                 }
                 validate_memory(&memory);
                 break;
-            case '?':
-                if (optopt == 'm')
-                    fprintf(stderr, "Option -%c requires an argument.\n",
-                            optopt);
-                else if (isprint(optopt))
-                    fprintf(stderr, "Unknown option `-%c'.\n", optopt);
-                else
-                    fprintf(stderr, "Unknown option character `\\x%x'.\n",
-                            optopt);
-                return 1;
             default:
                 exit(1);
         }
