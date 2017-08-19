@@ -1,10 +1,11 @@
 #include <board.h>
 #include <hw/cpu/cpu.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define MB_TO_BYTE(x) ((x)*1024 * 1024)
 
-extern rom_load(void);
+extern void rom_load(void);
 
 struct board* board_create(size_t memory)
 {
@@ -38,4 +39,10 @@ void board_run(struct board* board)
     while (1) {
         cpu_cycle(board->cpu);
     }
+}
+
+void board_load(struct board* board, addr_t load, void* blob, size_t size)
+{
+    uint8_t* memory = (uint8_t*)board->memory_base;
+    memcpy(&memory[load], blob, size);
 }
