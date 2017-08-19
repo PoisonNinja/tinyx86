@@ -5,6 +5,6 @@
 
 uint8_t cpu_fetch_data_byte(struct cpu* cpu, addr_t offset)
 {
-    addr_t final = (cpu->ds << 4) + offset;
+    addr_t final = cpu->ds.base + offset;
     return memory_read_byte(cpu->board, final);
 }
