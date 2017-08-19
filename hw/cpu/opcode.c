@@ -4,6 +4,5 @@
 
 void opcode_execute(struct cpu* cpu)
 {
-    uint16_t ip = cpu->ip.regs_16;
-    uint8_t opcode = memory_read_byte(cpu->board, ip);
+    uint8_t opcode = cpu_fetch_instruction_byte(cpu);
 }
