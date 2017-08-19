@@ -9,16 +9,17 @@
 static struct board* board = NULL;
 
 static struct option long_options[] = {
-    {"memory", required_argument, 0, 'm'},
+    {"binary", required_argument, 0, 'b'},
     {"help", no_argument, 0, 'h'},
+    {"memory", required_argument, 0, 'm'},
     {NULL, 0, NULL, 0},
 };
 
 static void print_usage(char* argv[])
 {
-    printf("usage: %s [options] [binary_file]\n", argv[0]);
-    printf("\n'binary_file' is a flat binary image you would like to run\n");
+    printf("usage: %s [options]\n", argv[0]);
     printf("\nOptions:\n"
+           "-b | --binary   Binary to load\n"
            "-h | --help     Print this help out\n"
            "-m | --memory   Set the memory available to the machine in MiB\n");
 }
@@ -40,10 +41,13 @@ int main(int argc, char** argv)
 {
     int c, long_index;
     char* end = NULL;
+    char* binary;
     size_t memory = X86EMU_MINIMUM_MEMORY;
     while ((c = getopt_long(argc, argv, "hm:", long_options, &long_index)) !=
            -1) {
         switch (c) {
+            case 'b':
+                binary = optarg;
             case 'h':
                 print_usage(argv);
                 exit(0);
