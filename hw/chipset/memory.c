@@ -62,11 +62,7 @@ uint8_t memory_read_byte(struct board* board, addr_t addr)
     if ((mmio = mmio_get(addr))) {
         return (uint8_t)mmio->read(addr - mmio->base, 1);
     }
-    uint8_t* memory = (uint8_t*)board->memory_base;
-    if (addr > board->memory_extent - 1) {
-        return 0xFF;
-    }
-    return memory[addr];
+    return ram_read_byte(board, addr);
 }
 
 void memory_write_byte(struct board* board, addr_t addr, uint8_t value)
@@ -75,11 +71,7 @@ void memory_write_byte(struct board* board, addr_t addr, uint8_t value)
     if ((mmio = mmio_get(addr))) {
         return mmio->write(addr - mmio->base, value, 1);
     }
-    uint8_t* memory = (uint8_t*)board->memory_base;
-    if (addr >= board->memory_extent - 1) {
-        return;
-    }
-    memory[addr] = value;
+    return ram_write_byte(board, addr, value);
 }
 
 uint16_t memory_read_word(struct board* board, addr_t addr)
@@ -88,11 +80,7 @@ uint16_t memory_read_word(struct board* board, addr_t addr)
     if ((mmio = mmio_get(addr))) {
         return (uint16_t)mmio->read(addr - mmio->base, 2);
     }
-    uint8_t* memory = (uint8_t*)board->memory_base;
-    if (addr >= board->memory_extent - 2) {
-        return 0xFFFF;
-    }
-    return *(uint16_t*)&memory[addr];
+    return ram_read_word(board, addr);
 }
 
 void memory_write_word(struct board* board, addr_t addr, uint16_t value)
@@ -101,9 +89,5 @@ void memory_write_word(struct board* board, addr_t addr, uint16_t value)
     if ((mmio = mmio_get(addr))) {
         return mmio->write(addr - mmio->base, value, 2);
     }
-    uint8_t* memory = (uint8_t*)board->memory_base;
-    if (addr >= board->memory_extent - 2) {
-        return;
-    }
-    *(uint16_t*)&memory[addr] = value;
+    return ram_write_word(board, addr, value);
 }
