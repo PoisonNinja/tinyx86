@@ -13,7 +13,7 @@ struct mmio* mmio_get(addr_t address)
     struct mmio* mmio = NULL;
     list_for_each(&mmio_list, list, mmio)
     {
-        if (mmio->base >= address && address < mmio->extent) {
+        if (mmio->base >= address && address < mmio->base + mmio->extent) {
             return mmio;
         }
     }
