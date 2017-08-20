@@ -20,14 +20,30 @@ uint16_t cpu_fetch_instruction_word(struct cpu* cpu)
     return ret;
 }
 
-uint8_t cpu_fetch_data_byte(struct cpu* cpu, addr_t offset)
+uint8_t cpu_fetch_byte(struct cpu* cpu, struct cpu_segment* segment,
+                       addr_t offset)
 {
-    addr_t final = cpu->ds.base + offset;
+    addr_t final = segment->base + offset;
     return memory_read_byte(cpu->board, final);
 }
 
-uint16_t cpu_fetch_data_word(struct cpu* cpu, addr_t offset)
+void cpu_store_byte(struct cpu* cpu, struct cpu_segment* segment, addr_t offset,
+                    uint8_t value)
 {
-    addr_t final = cpu->ds.base + offset;
+    addr_t final = segment->base + offset;
+    return memory_write_byte(cpu->board, final, value);
+}
+
+uint16_t cpu_fetch_word(struct cpu* cpu, struct cpu_segment* segment,
+                        addr_t offset)
+{
+    addr_t final = segment->base + offset;
     return memory_read_word(cpu->board, final);
+}
+
+void cpu_store_word(struct cpu* cpu, struct cpu_segment* segment, addr_t offset,
+                    uint16_t value)
+{
+    addr_t final = segment->base + offset;
+    return memory_write_word(cpu->board, final, value);
 }

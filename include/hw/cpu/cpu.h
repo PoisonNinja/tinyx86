@@ -10,7 +10,7 @@ union cpu_register {
     uint8_t regs_8;
 };
 
-struct cpu_selector {
+struct cpu_segment {
     uint32_t base, limit;
     uint16_t selector;
 };
@@ -44,7 +44,7 @@ struct cpu {
     struct board* board;
     union cpu_register ax, bx, cx, dx;
     union cpu_register sp, bp, si, di, ip;
-    struct cpu_selector cs, ds, ss, es, fs, gs;
+    struct cpu_segment cs, ds, ss, es, fs, gs;
     struct eflags eflags;
 };
 
