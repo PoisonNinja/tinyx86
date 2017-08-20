@@ -13,6 +13,16 @@ static inline void raw_to_modrm(uint8_t raw, struct modrm* modrm)
     *tmp = raw;
 }
 
+/*
+ * 0xB8: MOV r16/32, imm16/32
+ */
+OPCODE_DEFINE(B8)
+{
+    log_trace("mov ax, imm16");
+    uint16_t val = cpu_fetch_instruction_word(cpu);
+    cpu->ax.regs_16 = val;
+}
+
 opcode_fn_t opcode_table[256] = {
     NULL, NULL, NULL, NULL, NULL,     NULL, NULL, NULL, NULL, NULL, NULL, NULL,
     NULL, NULL, NULL, NULL, NULL,     NULL, NULL, NULL, NULL, NULL, NULL, NULL,
@@ -29,7 +39,7 @@ opcode_fn_t opcode_table[256] = {
     NULL, NULL, NULL, NULL, NULL,     NULL, NULL, NULL, NULL, NULL, NULL, NULL,
     NULL, NULL, NULL, NULL, NULL,     NULL, NULL, NULL, NULL, NULL, NULL, NULL,
     NULL, NULL, NULL, NULL, NULL,     NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-    NULL, NULL, NULL, NULL, NULL,     NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+    NULL, NULL, NULL, NULL, opcodeB8, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
     NULL, NULL, NULL, NULL, NULL,     NULL, NULL, NULL, NULL, NULL, NULL, NULL,
     NULL, NULL, NULL, NULL, NULL,     NULL, NULL, NULL, NULL, NULL, NULL, NULL,
     NULL, NULL, NULL, NULL, NULL,     NULL, NULL, NULL, NULL, NULL, NULL, NULL,
