@@ -13,6 +13,12 @@ static inline void raw_to_modrm(uint8_t raw, struct modrm* modrm)
     *tmp = raw;
 }
 
+void push_word(struct cpu* cpu, uint16_t value)
+{
+    cpu->sp.regs_16 -= 2;
+    cpu_store_word(cpu, &cpu->ss, cpu->sp.regs_16, value);
+}
+
 /*
  * 0xB8: MOV r16/32, imm16/32
  */
@@ -31,6 +37,7 @@ OPCODE_DEFINE(E8)
     log_trace("call rel16/32");
     int16_t offset = cpu_fetch_instruction_word(cpu);
     uint16_t eip = cpu->ip.regs_16 + offset;
+    push_word(cpu, cpu->ip.regs_16);
     cpu->ip.regs_16 = eip;
 }
 
