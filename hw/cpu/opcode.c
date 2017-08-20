@@ -23,6 +23,17 @@ OPCODE_DEFINE(B8)
     cpu->ax.regs_16 = val;
 }
 
+/*
+ * 0xE8: CALL rel16/32
+ */
+OPCODE_DEFINE(E8)
+{
+    log_trace("call rel16/32");
+    int16_t offset = cpu_fetch_instruction_word(cpu);
+    uint16_t eip = cpu->ip.regs_16 + offset;
+    cpu->ip.regs_16 = eip;
+}
+
 opcode_fn_t opcode_table[256] = {
     NULL, NULL, NULL, NULL, NULL,     NULL, NULL, NULL, NULL, NULL, NULL, NULL,
     NULL, NULL, NULL, NULL, NULL,     NULL, NULL, NULL, NULL, NULL, NULL, NULL,
@@ -43,7 +54,7 @@ opcode_fn_t opcode_table[256] = {
     NULL, NULL, NULL, NULL, NULL,     NULL, NULL, NULL, NULL, NULL, NULL, NULL,
     NULL, NULL, NULL, NULL, NULL,     NULL, NULL, NULL, NULL, NULL, NULL, NULL,
     NULL, NULL, NULL, NULL, NULL,     NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-    NULL, NULL, NULL, NULL, NULL,     NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+    NULL, NULL, NULL, NULL, opcodeE8, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
     NULL, NULL, NULL, NULL, NULL,     NULL, NULL, NULL, NULL, NULL, NULL, NULL,
     NULL, NULL, NULL, NULL,
 };
