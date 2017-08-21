@@ -54,3 +54,5 @@ extern void cpu_reset(struct cpu* cpu);
 
 extern struct cpu* cpu_create(void);
 extern void cpu_destroy(struct cpu* cpu);
+
+extern void cpu_dump(struct cpu* cpu);
