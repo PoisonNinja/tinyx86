@@ -5,12 +5,33 @@
 #include <stdlib.h>
 #include <string.h>
 
+/*
+ * Print out the VGA buffer, but only memory that contains actual data.
+ */
+static void dump_vga(struct board* board)
+{
+    uint8_t* vga = &((uint8_t*)board->memory_base)[0x8000];
+    int x, y;
+    for (y = 0; y < 25; y++) {
+        uint8_t had_data = 0;
+        for (x = 0; x < 80; x++) {
+            if (vga[(y * 80) + x]) {
+                had_data = 1;
+                fprintf(stdout, "%c", vga[(y * 80) + x]);
+            }
+        }
+        if (had_data)
+            fprintf(stdout, "\n");
+    }
+}
+
 void cpu_cycle(struct cpu* cpu)
 {
     if (cpu->state == CPU_RUNNING) {
         opcode_execute(cpu);
         cpu_dump(cpu);
     } else if (cpu->state == CPU_HALTED) {
+        dump_vga(cpu->board);
         board_destroy(cpu->board);
         exit(0);
     }
