@@ -74,9 +74,9 @@ int main(int argc, char** argv)
     if (!board) {
         exit(1);
     }
-    log_trace("Created board");
+    log_debug("Created board");
     if (binary) {
-        log_trace("Loading binary %s", binary);
+        log_debug("Loading binary %s", binary);
         int fd = open(binary, O_RDONLY);
         if (fd < 0) {
             log_fatal("Could not open binary %s: %s", binary, strerror(errno));
@@ -95,7 +95,7 @@ int main(int argc, char** argv)
         board_load(board, 0x0, buffer, binary_size);
     }
     board_poweron(board);
-    log_trace("Powered on board");
+    log_debug("Powered on board");
     board_run(board);
     return 0;
 }
