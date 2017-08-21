@@ -1,7 +1,7 @@
 #pragma once
 
 #include <list.h>
-#include <x86emu.h>
+#include <tinyx86.h>
 
 struct board;
 

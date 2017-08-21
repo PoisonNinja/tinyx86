@@ -26,7 +26,7 @@
 #include <string.h>
 #include <time.h>
 
-#include <x86emu.h>
+#include <tinyx86.h>
 
 static struct {
     void *udata;

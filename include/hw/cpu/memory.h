@@ -1,6 +1,6 @@
 #pragma once
 
-#include <x86emu.h>
+#include <tinyx86.h>
 
 extern uint8_t cpu_fetch_instruction_byte(struct cpu* cpu);
 

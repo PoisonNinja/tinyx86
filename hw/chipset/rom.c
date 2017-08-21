@@ -1,5 +1,5 @@
 #include <hw/chipset/memory.h>
-#include <x86emu.h>
+#include <tinyx86.h>
 
 static uint64_t rom_read(addr_t address, size_t size)
 {

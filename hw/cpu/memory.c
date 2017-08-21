@@ -2,7 +2,7 @@
 #include <hw/chipset/memory.h>
 #include <hw/cpu/cpu.h>
 #include <hw/cpu/memory.h>
-#include <x86emu.h>
+#include <tinyx86.h>
 
 uint8_t cpu_fetch_instruction_byte(struct cpu* cpu)
 {

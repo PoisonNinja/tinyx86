@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <x86emu.h>
+#include <tinyx86.h>
 
 static struct board* board = NULL;
 
@@ -29,14 +29,14 @@ static void print_usage(char* argv[])
 
 static void validate_memory(size_t* memory)
 {
-    if (*memory < X86EMU_MINIMUM_MEMORY) {
+    if (*memory < TINYX86_MINIMUM_MEMORY) {
         log_warn("Requested memory size is too small, minimum is %zuMB",
-                 X86EMU_MINIMUM_MEMORY);
-        *memory = X86EMU_MINIMUM_MEMORY;
-    } else if (*memory > X86EMU_MAXIMUM_MEMORY) {
+                 TINYX86_MINIMUM_MEMORY);
+        *memory = TINYX86_MINIMUM_MEMORY;
+    } else if (*memory > TINYX86_MAXIMUM_MEMORY) {
         log_warn("Requested memory size is too large, maximum is %zuMB",
-                 X86EMU_MAXIMUM_MEMORY);
-        *memory = X86EMU_MAXIMUM_MEMORY;
+                 TINYX86_MAXIMUM_MEMORY);
+        *memory = TINYX86_MAXIMUM_MEMORY;
     }
 }
 
@@ -45,7 +45,7 @@ int main(int argc, char** argv)
     int c, long_index;
     char* end = NULL;
     char* binary = NULL;
-    size_t memory = X86EMU_MINIMUM_MEMORY;
+    size_t memory = TINYX86_MINIMUM_MEMORY;
     while ((c = getopt_long(argc, argv, "hm:", long_options, &long_index)) !=
            -1) {
         switch (c) {

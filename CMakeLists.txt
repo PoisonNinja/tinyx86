@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
-project(x86emu)
+project(tinyx86)
 
 # Check for in tree builds
 if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
@@ -13,7 +13,7 @@ set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_CFLAGS_RELEASE} -O3")
 
 include_directories(include)
 
-add_executable(x86emu board.c log.c main.c)
+add_executable(tinyx86 board.c log.c main.c)
 add_subdirectory(hw)
 
-install(TARGETS x86emu DESTINATION /usr/local/bin)
+install(TARGETS tinyx86 DESTINATION /usr/local/bin)
