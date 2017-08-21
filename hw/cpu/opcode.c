@@ -220,8 +220,16 @@ OPCODE_DEFINE(8A)
 OPCODE_DEFINE(B8)
 {
     log_trace("mov ax, imm16");
-    uint16_t val = cpu_fetch_instruction_word(cpu);
-    cpu->ax.regs_16 = val;
+    cpu->ax.regs_16 = cpu_fetch_instruction_word(cpu);
+}
+
+/*
+ * 0xBC: MOV r16/32, imm16/32
+ */
+OPCODE_DEFINE(BC)
+{
+    log_trace("mov r16/32, imm16/32");
+    cpu->sp.regs_16 = cpu_fetch_instruction_word(cpu);
 }
 
 /*
@@ -237,35 +245,38 @@ OPCODE_DEFINE(E8)
 }
 
 opcode_fn_t opcode_table[256] = {
-    NULL, NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,     NULL,
-    NULL, NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,     NULL,
-    NULL, NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,     NULL,
-    NULL, NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,     NULL,
-    NULL, NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,     NULL,
-    NULL, NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,     NULL,
-    NULL, NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,     NULL,
-    NULL, NULL,     NULL,     NULL,     opcode43, NULL, NULL, NULL,     NULL,
-    NULL, NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,     NULL,
-    NULL, opcode52, opcode53, NULL,     NULL,     NULL, NULL, NULL,     NULL,
-    NULL, NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,     NULL,
-    NULL, NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,     NULL,
-    NULL, NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,     NULL,
-    NULL, NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,     NULL,
-    NULL, NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,     NULL,
-    NULL, NULL,     opcode89, opcode8A, NULL,     NULL, NULL, NULL,     NULL,
-    NULL, NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,     NULL,
-    NULL, NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,     NULL,
-    NULL, NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,     NULL,
-    NULL, NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,     NULL,
-    NULL, NULL,     NULL,     NULL,     opcodeB8, NULL, NULL, NULL,     NULL,
-    NULL, NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,     NULL,
-    NULL, NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,     NULL,
-    NULL, NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,     NULL,
-    NULL, NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,     NULL,
-    NULL, NULL,     NULL,     NULL,     NULL,     NULL, NULL, opcodeE8, NULL,
-    NULL, NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,     NULL,
-    NULL, NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,     NULL,
-    NULL, NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     opcode43, NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     opcode52, opcode53, NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     opcode89, opcode8A, NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    opcodeB8, NULL,     NULL,     NULL,     opcodeBC, NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    opcodeE8, NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
 };
 
 void opcode_execute(struct cpu* cpu)
