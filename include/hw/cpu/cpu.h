@@ -46,6 +46,10 @@ struct cpu {
     union cpu_register sp, bp, si, di, ip;
     struct cpu_segment cs, ds, ss, es, fs, gs;
     struct eflags eflags;
+#define CPU_STOPPED 0x0
+#define CPU_RUNNING 0x1
+#define CPU_HALTED 0x2
+    uint8_t state;
 };
 
 extern void cpu_cycle(struct cpu* cpu);

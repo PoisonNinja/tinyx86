@@ -407,6 +407,15 @@ OPCODE_DEFINE(E8)
     cpu->ip.regs_16 = eip;
 }
 
+/*
+ * 0xF4: HLT
+ */
+OPCODE_DEFINE(F4)
+{
+    log_trace("hlt");
+    cpu->state = CPU_HALTED;
+}
+
 opcode_fn_t opcode_table[256] = {
     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
@@ -442,7 +451,7 @@ opcode_fn_t opcode_table[256] = {
     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
     NULL,     opcodeE8, NULL,     NULL,     NULL,     NULL,     NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     opcodeF4,
     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
     NULL,     NULL,     NULL,     NULL,
 };

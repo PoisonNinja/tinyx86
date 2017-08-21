@@ -6,8 +6,12 @@
 
 void cpu_cycle(struct cpu* cpu)
 {
-    opcode_execute(cpu);
-    cpu_dump(cpu);
+    if (cpu->state == CPU_RUNNING) {
+        opcode_execute(cpu);
+        cpu_dump(cpu);
+    } else if (cpu->state == CPU_HALTED) {
+        exit(0);
+    }
 }
 
 void cpu_reset(struct cpu* cpu)
@@ -23,6 +27,7 @@ void cpu_reset(struct cpu* cpu)
     cpu->cs.base = 0x0;
     cpu->cs.limit = 0xFFFF;
     cpu->ip.regs_16 = 0x0;
+    cpu->state = CPU_STOPPED;
 }
 
 struct cpu* cpu_create(void)

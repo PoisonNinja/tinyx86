@@ -35,6 +35,7 @@ void board_poweron(struct board* board)
 
 void board_run(struct board* board)
 {
+    board->cpu->state = CPU_RUNNING;
     while (1) {
         cpu_cycle(board->cpu);
     }
