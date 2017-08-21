@@ -28,7 +28,22 @@ fail:
     return NULL;
 }
 
+void board_destroy(struct board* board)
+{
+    if (!board) {
+        log_warn("Attempting to destroy a non-existent board?");
+        return;
+    }
+    cpu_destroy(board->cpu);
+    free(board);
+}
+
 void board_poweron(struct board* board)
+{
+    cpu_reset(board->cpu);
+}
+
+void board_poweroff(struct board* board)
 {
     cpu_reset(board->cpu);
 }

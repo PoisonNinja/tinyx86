@@ -1,3 +1,4 @@
+#include <board.h>
 #include <hw/cpu/cpu.h>
 #include <hw/cpu/opcode.h>
 #include <stdio.h>
@@ -10,6 +11,7 @@ void cpu_cycle(struct cpu* cpu)
         opcode_execute(cpu);
         cpu_dump(cpu);
     } else if (cpu->state == CPU_HALTED) {
+        board_destroy(cpu->board);
         exit(0);
     }
 }
