@@ -15,7 +15,7 @@ uint8_t cpu_fetch_instruction_byte(struct cpu* cpu)
 uint16_t cpu_fetch_instruction_word(struct cpu* cpu)
 {
     addr_t final = cpu->cs.base + cpu->ip.regs_16;
-    uint8_t ret = memory_read_word(cpu->board, final);
+    uint16_t ret = memory_read_word(cpu->board, final);
     cpu->ip.regs_16 += 2;
     return ret;
 }

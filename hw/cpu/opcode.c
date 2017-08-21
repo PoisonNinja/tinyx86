@@ -46,7 +46,7 @@ union cpu_register* modrm_to_register(struct cpu* cpu, uint8_t modrm)
             return &cpu->dx;
             break;
         case 3:
-            return &cpu->dx;
+            return &cpu->bx;
             break;
         case 4:
             return &cpu->sp;
