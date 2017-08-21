@@ -1,4 +1,5 @@
 start:
+	mov sp, 0x2000
 	mov ax, msg
 	call print
 	hlt
