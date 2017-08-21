@@ -133,6 +133,13 @@ void push_word(struct cpu* cpu, uint16_t value)
     cpu_store_word(cpu, &cpu->ss, cpu->sp.regs_16, value);
 }
 
+uint16_t pop_word(struct cpu* cpu)
+{
+    uint16_t ret = cpu_fetch_word(cpu, &cpu->ss, cpu->sp.regs_16);
+    cpu->sp.regs_16 += 2;
+    return ret;
+}
+
 /*
  * Primitive operations (add, sub, etc.)
  */
@@ -149,12 +156,47 @@ void inc_word(struct cpu* cpu, union cpu_register* reg)
 }
 
 /*
+ * 0x20: AND r/m8, r8
+ */
+OPCODE_DEFINE(20)
+{
+    log_trace("AND r/m8, r8");
+    struct modrm modrm;
+    raw_to_modrm(cpu_fetch_instruction_byte(cpu), &modrm);
+    if (modrm.mod == 3) {
+        // Direct addressing mode, reg is source, rm is dest because d == 0
+        union cpu_register* source = modrm_to_register(cpu, modrm.reg);
+        union cpu_register* dest = modrm_to_register(cpu, modrm.rm);
+        uint8_t result = source->regs_8 & dest->regs_8;
+        cpu->eflags.overflow = 0;
+        cpu->eflags.carry = 0;
+        cpu->eflags.parity = (calculate_parity(result) == 0);
+        cpu->eflags.zero = ((result & 0xFFFF) == 0);
+        cpu->eflags.sign = (result & 0x8000);
+        dest->regs_8 = result;
+
+    } else {
+        // TODO: Implement if mod != 3
+        log_fatal("Only MOD 3 for opcode 0x20 is supported");
+    }
+}
+
+/*
  * 0x43: INC dx
  */
 OPCODE_DEFINE(43)
 {
     log_trace("inc bx");
     inc_word(cpu, &cpu->bx);
+}
+
+/*
+ * 0x47: INC di
+ */
+OPCODE_DEFINE(47)
+{
+    log_trace("inc di");
+    inc_word(cpu, &cpu->di);
 }
 
 /*
@@ -176,6 +218,93 @@ OPCODE_DEFINE(53)
 }
 
 /*
+ * 0x57: PUSH di
+ */
+OPCODE_DEFINE(57)
+{
+    log_trace("push di");
+    push_word(cpu, cpu->di.regs_16);
+}
+
+/*
+ * 0x5A: POP dx
+ */
+OPCODE_DEFINE(5A)
+{
+    log_trace("pop dx");
+    cpu->dx.regs_16 = pop_word(cpu);
+}
+
+/*
+ * 0x5B: POP bx
+ */
+OPCODE_DEFINE(5B)
+{
+    log_trace("pop bx");
+    cpu->bx.regs_16 = pop_word(cpu);
+}
+
+/*
+ * 0x5F: POP di
+ */
+OPCODE_DEFINE(5F)
+{
+    log_trace("pop di");
+    cpu->di.regs_16 = pop_word(cpu);
+}
+
+/*
+ * 0x75: JNZ/JNE rel8
+ */
+OPCODE_DEFINE(75)
+{
+    log_trace("jnz rel8");
+    int8_t offset = cpu_fetch_instruction_byte(cpu);
+    uint32_t ip = cpu->ip.regs_16 + offset;
+    if (!cpu->eflags.zero)
+        cpu->ip.regs_16 = ip;
+}
+
+/*
+ * 0x86: XCHG r8, r/m8
+ */
+OPCODE_DEFINE(86)
+{
+    log_trace("xchg r8, r/m8");
+    struct modrm modrm;
+    raw_to_modrm(cpu_fetch_instruction_byte(cpu), &modrm);
+    if (modrm.mod == 3) {
+        // Direct addressing mode, rm is source, reg is dest because d == 1
+        union cpu_register* a = modrm_to_register(cpu, modrm.reg);
+        union cpu_register* b = modrm_to_register(cpu, modrm.rm);
+        uint8_t temp = a->regs_8;
+        a->regs_8 = b->regs_8;
+        b->regs_8 = temp;
+    } else {
+        // TODO: Implement if mod != 3
+        log_fatal("Only MOD 3 for opcode 0x86 is supported");
+    }
+}
+
+/*
+ * 0x88: r/m8, r8
+ */
+OPCODE_DEFINE(88)
+{
+    log_trace("mov r/m8, r8");
+    struct modrm modrm;
+    raw_to_modrm(cpu_fetch_instruction_byte(cpu), &modrm);
+    if (modrm.mod == 3) {
+        // TODO; Implement if mod == 3
+        log_fatal("MOD 3 for opcode 0x88 is unsupported");
+    } else {
+        union cpu_register* source = modrm_to_register(cpu, modrm.reg);
+        addr_t dest = modrm_to_address(cpu, modrm.mod, modrm.rm);
+        cpu_store_byte(cpu, &cpu->ds, dest, source->regs_8);
+    }
+}
+
+/*
  * 0x89: MOV r/m16/32, r16/32
  */
 
@@ -185,13 +314,14 @@ OPCODE_DEFINE(89)
     struct modrm modrm;
     raw_to_modrm(cpu_fetch_instruction_byte(cpu), &modrm);
     if (modrm.mod == 3) {
-        // Direct addressing mode, reg is source, rm is dest because d == 1
+        // Direct addressing mode, reg is source, rm is dest because d == 0
         union cpu_register* source = modrm_to_register(cpu, modrm.reg);
         union cpu_register* dest = modrm_to_register(cpu, modrm.rm);
         dest->regs_16 = source->regs_16;
     } else {
-        // TODO: Implement if mod != 3
-        log_fatal("Only MOD 3 for opcode 0x89 is unsupported");
+        union cpu_register* source = modrm_to_register(cpu, modrm.reg);
+        addr_t dest = modrm_to_address(cpu, modrm.mod, modrm.rm);
+        cpu_store_word(cpu, &cpu->ds, dest, source->regs_16);
     }
 }
 
@@ -214,6 +344,22 @@ OPCODE_DEFINE(8A)
     }
 }
 
+OPCODE_DEFINE(8B)
+{
+    log_trace("mov r8, r/m8");
+    struct modrm modrm;
+    raw_to_modrm(cpu_fetch_instruction_byte(cpu), &modrm);
+    if (modrm.mod == 3) {
+        // TODO; Implement if mod == 3
+        log_fatal("MOD 3 for opcode 0x8A is unsupported");
+    } else {
+        // Direct addressing mode, rm is source, reg is dest because d == 1
+        union cpu_register* dest = modrm_to_register(cpu, modrm.reg);
+        dest->regs_16 = cpu_fetch_word(
+            cpu, &cpu->ds, modrm_to_address(cpu, modrm.mod, modrm.rm));
+    }
+}
+
 /*
  * 0xB8: MOV r16/32, imm16/32
  */
@@ -224,12 +370,29 @@ OPCODE_DEFINE(B8)
 }
 
 /*
+ * 0xBB: MOV r16/32, imm16/32
+ */
+OPCODE_DEFINE(BB)
+{
+    log_trace("mov r16/32, imm16/32");
+    cpu->bx.regs_16 = cpu_fetch_instruction_word(cpu);
+}
+
+/*
  * 0xBC: MOV r16/32, imm16/32
  */
 OPCODE_DEFINE(BC)
 {
     log_trace("mov r16/32, imm16/32");
     cpu->sp.regs_16 = cpu_fetch_instruction_word(cpu);
+}
+/*
+ * 0xC3: RETN
+ */
+OPCODE_DEFINE(C3)
+{
+    log_trace("retn");
+    cpu->ip.regs_16 = pop_word(cpu);
 }
 
 /*
@@ -245,38 +408,43 @@ OPCODE_DEFINE(E8)
 }
 
 opcode_fn_t opcode_table[256] = {
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     opcode43, NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     opcode52, opcode53, NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     opcode89, opcode8A, NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    opcodeB8, NULL,     NULL,     NULL,     opcodeBC, NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    opcodeE8, NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL, NULL, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     opcode20, NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     opcode43, NULL,     NULL,
+    NULL,     opcode47, NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     opcode52, opcode53,
+    NULL,     NULL,     NULL,     opcode57, NULL,     NULL,     opcode5A,
+    opcode5B, NULL,     NULL,     NULL,     opcode5F, NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     opcode75, NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     opcode86, NULL,     opcode88, opcode89, opcode8A, opcode8B,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     opcodeB8, NULL,     NULL,     opcodeBB, opcodeBC,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     opcodeC3,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     opcodeE8, NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,
 };
 
 void opcode_execute(struct cpu* cpu)
@@ -288,8 +456,8 @@ void opcode_execute(struct cpu* cpu)
     log_trace("Opcode: %X", opcode);
     if (!opcode_table[opcode]) {
         log_fatal("Unknown opcode, should probably throw an Invalid Opcode "
-                  "exception, got %X",
-                  opcode);
+                  "exception, got opcode 0x%X at IP 0x%X",
+                  opcode, cpu->ip.regs_16 - 1);
     }
     opcode_table[opcode](cpu);
 }
