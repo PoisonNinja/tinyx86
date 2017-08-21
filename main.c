@@ -92,7 +92,7 @@ int main(int argc, char** argv)
             close(fd);
             exit(1);
         }
-        board_load(board, 0x1000, buffer, binary_size);
+        board_load(board, 0x0, buffer, binary_size);
     }
     board_poweron(board);
     log_trace("Powered on board");

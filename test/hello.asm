@@ -1,4 +1,4 @@
-org 0x1000
+org 0x0
 start:
 	mov sp, 0x2000
 	mov ax, msg

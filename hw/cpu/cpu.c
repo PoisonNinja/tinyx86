@@ -22,7 +22,7 @@ void cpu_reset(struct cpu* cpu)
     // cpu->cs.selector = 0xF000;
     cpu->cs.base = 0x0;
     cpu->cs.limit = 0xFFFF;
-    cpu->ip.regs_16 = 0x1000;
+    cpu->ip.regs_16 = 0x0;
 }
 
 struct cpu* cpu_create(void)
