@@ -139,7 +139,7 @@ void push_word(struct cpu* cpu, uint16_t value)
 void inc_word(struct cpu* cpu, union cpu_register* reg)
 {
     uint32_t result = reg->regs_16 + 1;
-    cpu->eflags.parity = calculate_parity(result);
+    cpu->eflags.parity = (calculate_parity(result) == 0);
     cpu->eflags.adjust = (((reg->regs_16 ^ 1 ^ result) & 0x10) != 0);
     cpu->eflags.zero = ((result & 0xFFFF) == 0);
     cpu->eflags.sign = (result & 0x8000);
