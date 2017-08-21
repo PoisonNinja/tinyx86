@@ -87,7 +87,7 @@ uint32_t modrm_to_address_no_dis(struct cpu* cpu, uint8_t rm)
             return (cpu->di.regs_16);
             break;
         case 6:
-            return (cpu->si.regs_16);
+            return cpu_fetch_instruction_word(cpu);
             break;
         case 7:
             return (cpu->bx.regs_16);
