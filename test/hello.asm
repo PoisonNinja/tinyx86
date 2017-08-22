@@ -35,7 +35,7 @@ print_char:
     ret
 
 msg:
-    db      "Hello, CSO!", 0
+    db "Hello, CSO!", 0
 
 current:
     dw	0
