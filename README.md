@@ -53,6 +53,6 @@ Some other useful flags include:
 * `--logging-level`: Set the minimum logging level. Higher is more serious
 * `-m | --memory`: Set the amount of memory in MiB
 
-By default, tinyx86 prints out log messages greater than LOG_INFO, but this can be configured using the `--log-level` option as described above.
+By default, tinyx86 prints out only LOG_FATAL messages, but this can be configured using the `--log-level` option as described above.
 
 For more detailed help, run tinyx86 with the `--help` or `-h` argument
