@@ -97,16 +97,6 @@ uint32_t modrm_to_address_no_dis(struct cpu* cpu, uint8_t rm)
     }
 }
 
-uint32_t modrm_to_address_one_dis(struct cpu* cpu, uint8_t rm)
-{
-    log_warn("modrm_to_address_one_dis is not implemented yet!");
-}
-
-uint32_t modrm_to_address_four_dis(struct cpu* cpu, uint8_t rm)
-{
-    log_warn("modrm_to_address_four_dis is not implemented yet!");
-}
-
 uint32_t modrm_to_address(struct cpu* cpu, uint8_t mod, uint8_t rm)
 {
     switch (mod) {
@@ -114,14 +104,13 @@ uint32_t modrm_to_address(struct cpu* cpu, uint8_t mod, uint8_t rm)
             return modrm_to_address_no_dis(cpu, rm);
             break;
         case 1:
-            return modrm_to_address_one_dis(cpu, rm);
+            log_warn("modrm_to_address_one_dis is not implemented yet!");
             break;
         case 2:
-            return modrm_to_address_four_dis(cpu, rm);
+            log_warn("modrm_to_address_four_dis is not implemented yet!");
             break;
-        default:
-            return 0;
     }
+    return 0;
 }
 
 /*

@@ -1,7 +1,8 @@
 #include <hw/chipset/memory.h>
 #include <tinyx86.h>
 
-static uint64_t rom_read(addr_t address, size_t size)
+static uint64_t rom_read(addr_t __attribute__((unused)) address,
+                         size_t __attribute__((unused)) size)
 {
     return 0xFFFFFFFF;
 }
