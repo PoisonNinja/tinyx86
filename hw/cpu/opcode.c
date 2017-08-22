@@ -161,7 +161,7 @@ OPCODE_DEFINE(20)
         cpu->eflags.carry = 0;
         cpu->eflags.parity = (calculate_parity(result) == 0);
         cpu->eflags.zero = ((result & 0xFFFF) == 0);
-        cpu->eflags.sign = (result & 0x8000);
+        cpu->eflags.sign = ((result & 0x8000) == 1);
         dest->regs_8 = result;
 
     } else {
