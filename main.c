@@ -32,7 +32,7 @@ static void print_usage(char* argv[])
         "-h | --help         Print this help out\n"
         "--log-level         Logging level. Higher is more serious\n"
         "-m | --memory       Set the memory available to the machine in MiB\n"
-        "-v | --version      Display the version number");
+        "-v | --version      Display the version number\n");
 }
 
 static void print_version()
