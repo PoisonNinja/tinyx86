@@ -6,15 +6,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <tinyx86.h>
+#include <unistd.h>
 
 static struct board* board = NULL;
 
+#define GETOPT_BINARY 0x1000
+
 static struct option long_options[] = {
-    {"binary", required_argument, 0, 'b'},
+    {"binary", required_argument, 0, GETOPT_BINARY},
     {"help", no_argument, 0, 'h'},
     {"memory", required_argument, 0, 'm'},
+    {"version", no_argument, 0, 'v'},
     {NULL, 0, NULL, 0},
 };
 
@@ -22,9 +25,15 @@ static void print_usage(char* argv[])
 {
     printf("usage: %s [options]\n", argv[0]);
     printf("\nOptions:\n"
-           "-b | --binary   Binary to load\n"
+           "--binary   Binary to load\n"
            "-h | --help     Print this help out\n"
            "-m | --memory   Set the memory available to the machine in MiB\n");
+}
+
+static void print_version()
+{
+    printf("%s %d.%d.%d\n", TINYX86_VERSION_NAME, TINYX86_VERSION_MAJOR,
+           TINYX86_VERSION_MINOR, TINYX86_VERSION_PATCH);
 }
 
 static void validate_memory(size_t* memory)
@@ -46,10 +55,10 @@ int main(int argc, char** argv)
     char* end = NULL;
     char* binary = NULL;
     size_t memory = TINYX86_MINIMUM_MEMORY;
-    while ((c = getopt_long(argc, argv, "hm:", long_options, &long_index)) !=
+    while ((c = getopt_long(argc, argv, "hm:v", long_options, &long_index)) !=
            -1) {
         switch (c) {
-            case 'b':
+            case GETOPT_BINARY:
                 binary = optarg;
                 break;
             case 'h':
@@ -65,6 +74,9 @@ int main(int argc, char** argv)
                 }
                 validate_memory(&memory);
                 break;
+            case 'v':
+                print_version();
+                exit(0);
             default:
                 exit(1);
         }
