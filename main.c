@@ -12,9 +12,11 @@
 static struct board* board = NULL;
 
 #define GETOPT_BINARY 0x1000
+#define GETOPT_LOG_LEVEL 0x1001
 
 static struct option long_options[] = {
     {"binary", required_argument, 0, GETOPT_BINARY},
+    {"log-level", required_argument, 0, GETOPT_LOG_LEVEL},
     {"help", no_argument, 0, 'h'},
     {"memory", required_argument, 0, 'm'},
     {"version", no_argument, 0, 'v'},
@@ -24,10 +26,13 @@ static struct option long_options[] = {
 static void print_usage(char* argv[])
 {
     printf("usage: %s [options]\n", argv[0]);
-    printf("\nOptions:\n"
-           "--binary   Binary to load\n"
-           "-h | --help     Print this help out\n"
-           "-m | --memory   Set the memory available to the machine in MiB\n");
+    printf(
+        "\nOptions:\n"
+        "--binary            Binary to load\n"
+        "-h | --help         Print this help out\n"
+        "--log-level         Logging level. Higher is more serious\n"
+        "-m | --memory       Set the memory available to the machine in MiB\n"
+        "-v | --version      Display the version number");
 }
 
 static void print_version()
@@ -49,17 +54,35 @@ static void validate_memory(size_t* memory)
     }
 }
 
+static void validate_log_level(int* level)
+{
+    if (*level < LOG_TRACE) {
+        log_warn("Requested logging level is too low, minimum is %d",
+                 LOG_TRACE);
+        *level = LOG_TRACE;
+    } else if (*level > LOG_FATAL) {
+        log_warn("Requested logging level is too high, maximum is %d",
+                 LOG_FATAL);
+        *level = LOG_FATAL;
+    }
+}
+
 int main(int argc, char** argv)
 {
     int c, long_index;
     char* end = NULL;
     char* binary = NULL;
+    int log_level = LOG_FATAL;
     size_t memory = TINYX86_MINIMUM_MEMORY;
     while ((c = getopt_long(argc, argv, "hm:v", long_options, &long_index)) !=
            -1) {
         switch (c) {
             case GETOPT_BINARY:
                 binary = optarg;
+                break;
+            case GETOPT_LOG_LEVEL:
+                log_level = atoi(optarg);
+                validate_log_level(&log_level);
                 break;
             case 'h':
                 print_usage(argv);
@@ -81,6 +104,7 @@ int main(int argc, char** argv)
                 exit(1);
         }
     }
+    log_set_level(log_level);
     log_info("Memory: %zuMB", memory);
     board = board_create(memory);
     if (!board) {
