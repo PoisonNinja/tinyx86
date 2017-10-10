@@ -13,15 +13,10 @@ static void dump_vga(struct board* board)
     uint8_t* vga = &((uint8_t*)board->memory_base)[0x8000];
     int x, y;
     for (y = 0; y < 25; y++) {
-        uint8_t had_data = 0;
         for (x = 0; x < 80; x++) {
-            if (vga[(y * 80) + x]) {
-                had_data = 1;
-                fprintf(stdout, "%c", vga[(y * 80) + x]);
-            }
+            fprintf(stdout, "%c", vga[(y * 80) + x]);
         }
-        if (had_data)
-            fprintf(stdout, "\n");
+        fprintf(stdout, "\n");
     }
 }
 
