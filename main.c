@@ -113,20 +113,20 @@ int main(int argc, char** argv)
     log_debug("Created board");
     if (binary) {
         log_debug("Loading binary %s", binary);
-        int fd = open(binary, O_RDONLY);
-        if (fd < 0) {
+        tinyx86_file_t file = tinyx86_file_open(binary, "r");
+        if (!file) {
             log_fatal("Could not open binary %s: %s", binary, strerror(errno));
-            exit(1);
+            tinyx86_exit(1);
         }
-        size_t binary_size = lseek(fd, 0, SEEK_END);
-        lseek(fd, 0, SEEK_SET);
+        size_t binary_size = tinyx86_file_size(file);
         void* buffer = malloc(binary_size);
         size_t bread = 0;
-        if ((bread = read(fd, buffer, binary_size)) != binary_size) {
+        if ((bread = tinyx86_file_read(file, buffer, binary_size)) !=
+            binary_size) {
             log_fatal("Failed to read entire binary. Expected %zu, but got %zu",
                       binary_size, bread);
-            close(fd);
-            exit(1);
+            tinyx86_file_close(file);
+            tinyx86_exit(1);
         }
         board_load(board, 0x0, buffer, binary_size);
     }

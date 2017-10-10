@@ -35,3 +35,14 @@ void log_set_level(int level);
 void log_set_quiet(int enable);
 
 void log_log(int level, const char *fmt, ...);
+
+// TODO: Move this to platform dependant
+typedef FILE *tinyx86_file_t;
+
+extern tinyx86_file_t tinyx86_file_open(const char *path, char *flags);
+extern int tinyx86_file_close(tinyx86_file_t file);
+extern ssize_t tinyx86_file_read(tinyx86_file_t file, uint8_t *buffer,
+                                 size_t size);
+extern size_t tinyx86_file_size(tinyx86_file_t file);
+
+extern void tinyx86_exit(int code);
