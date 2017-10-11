@@ -1,4 +1,4 @@
-#include <board.h>
+#include <hw/board.h>
 #include <hw/chipset/mmio.h>
 
 static struct list_element mmio_list = LIST_COMPILE_INIT(mmio_list);

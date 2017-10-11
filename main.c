@@ -1,4 +1,4 @@
-#include <board.h>
+#include <hw/board.h>
 #include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>

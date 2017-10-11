@@ -1,4 +1,4 @@
-#include <board.h>
+#include <hw/board.h>
 #include <hw/chipset/ram.h>
 
 uint8_t ram_read_byte(struct board* board, addr_t addr)

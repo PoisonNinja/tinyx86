@@ -1,4 +1,4 @@
-#include <board.h>
+#include <hw/board.h>
 #include <hw/chipset/memory.h>
 #include <hw/cpu/cpu.h>
 #include <hw/cpu/memory.h>
