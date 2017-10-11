@@ -1,12 +1,12 @@
 #pragma once
 
+#include <hw/chipset/memory.h>
 #include <hw/cpu/cpu.h>
 #include <tinyx86.h>
 
 struct board {
     struct cpu* cpu;
-    uintptr_t memory_base;
-    size_t memory_extent;
+    struct memory* memory;
 };
 
 extern struct board* board_create(size_t memory);

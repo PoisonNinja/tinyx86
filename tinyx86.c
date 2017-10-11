@@ -39,6 +39,16 @@ size_t tinyx86_file_size(tinyx86_file_t file)
     return size;
 }
 
+void* tinyx86_malloc(size_t size)
+{
+    return malloc(size);
+}
+
+void tinyx86_free(void* addr)
+{
+    return free(addr);
+}
+
 void tinyx86_exit(int code)
 {
     exit(code);

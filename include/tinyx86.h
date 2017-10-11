@@ -45,4 +45,7 @@ extern ssize_t tinyx86_file_read(tinyx86_file_t file, uint8_t *buffer,
                                  size_t size);
 extern size_t tinyx86_file_size(tinyx86_file_t file);
 
+extern void *tinyx86_malloc(size_t size);
+extern void tinyx86_free(void *addr);
+
 extern void tinyx86_exit(int code);

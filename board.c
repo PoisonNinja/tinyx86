@@ -13,16 +13,9 @@ struct board* board_create(size_t memory)
     }
     board->cpu = cpu_create();
     board->cpu->board = board;
-    board->memory_base = (uintptr_t)malloc(MB_TO_BYTE(memory));
-    if (!board->memory_base) {
-        log_fatal("Failed to allocate memory for board.");
-        goto fail;
-    }
-    board->memory_extent = MB_TO_BYTE(memory);
+    board->memory = memory_create();
+    memory_init_ram(board, 0, MB_TO_BYTE(memory));
     return board;
-fail:
-    free(board);
-    return NULL;
 }
 
 void board_destroy(struct board* board)
@@ -55,6 +48,4 @@ void board_run(struct board* board)
 
 void board_load(struct board* board, addr_t load, void* blob, size_t size)
 {
-    uint8_t* memory = (uint8_t*)board->memory_base;
-    memcpy(&memory[load], blob, size);
 }
