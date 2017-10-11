@@ -128,6 +128,7 @@ int main(int argc, char** argv)
             tinyx86_file_close(file);
             tinyx86_exit(1);
         }
+        tinyx86_file_close(file);
         board_load(board, 0x0, buffer, binary_size);
     }
     board_poweron(board);
