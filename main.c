@@ -1,8 +1,8 @@
-#include <hw/board.h>
 #include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <getopt.h>
+#include <hw/board.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -129,7 +129,7 @@ int main(int argc, char** argv)
             tinyx86_exit(1);
         }
         tinyx86_file_close(file);
-        board_load(board, 0x0, buffer, binary_size);
+        board_load(board, buffer, binary_size);
     }
     board_poweron(board);
     log_debug("Powered on board");

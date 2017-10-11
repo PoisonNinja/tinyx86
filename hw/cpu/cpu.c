@@ -14,7 +14,7 @@ static void dump_vga(struct board* board)
     for (y = 0; y < 25; y++) {
         for (x = 0; x < 80; x++) {
             fprintf(stdout, "%c",
-                    memory_read_byte(board, 0xB800 + (y * 80) + x));
+                    memory_read_byte(board, 0x8000 + (y * 80) + x));
         }
         fprintf(stdout, "\n");
     }

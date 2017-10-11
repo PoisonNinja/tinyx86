@@ -21,8 +21,6 @@ struct board;
 
 extern struct memory* memory_create(void);
 
-extern void memory_init_ram(struct board* board, addr_t base, size_t size);
-
 extern uint8_t memory_read_byte(struct board* board, addr_t addr);
 extern void memory_write_byte(struct board* board, addr_t addr, uint8_t value);
 

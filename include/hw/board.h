@@ -14,5 +14,4 @@ extern void board_destroy(struct board* board);
 extern void board_poweron(struct board* board);
 extern void board_poweroff(struct board* board);
 extern void board_run(struct board* board);
-extern void board_load(struct board* board, addr_t load, void* blob,
-                       size_t size);
+extern void board_load(struct board* board, void* blob, size_t size);
