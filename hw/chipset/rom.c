@@ -1,4 +1,4 @@
-#include <hw/chipset/memory.h>
+#include <hw/chipset/mmio.h>
 #include <tinyx86.h>
 
 static uint64_t rom_read(addr_t __attribute__((unused)) address,
