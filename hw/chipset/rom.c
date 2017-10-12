@@ -5,13 +5,13 @@ struct rom_data {
     void* host_base;
 };
 
-void memory_init_rom(struct board* board, addr_t base, size_t size, void* blob)
+void memory_init_rom(struct board* board, addr_t base, size_t size)
 {
     struct memory_region* region = tinyx86_malloc(sizeof(struct memory_region));
     region->base = base;
     region->size = size;
     struct rom_data* rom_data = tinyx86_malloc(sizeof(struct rom_data));
-    rom_data->host_base = blob;
+    rom_data->host_base = tinyx86_malloc(size);
     region->data = rom_data;
     list_add(&board->memory->rom_regions, &region->list);
 }

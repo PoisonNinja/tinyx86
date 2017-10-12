@@ -2,8 +2,7 @@
 
 #include <tinyx86.h>
 
-extern void memory_init_rom(struct board* board, addr_t base, size_t size,
-                            void* blob);
+extern void memory_init_rom(struct board* board, addr_t base, size_t size);
 
 extern uint8_t rom_read_byte(struct memory_region* region, addr_t addr);
 extern void rom_write_byte(struct memory_region* region, addr_t addr,

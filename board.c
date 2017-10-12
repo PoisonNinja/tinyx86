@@ -50,5 +50,5 @@ void board_run(struct board* board)
 
 void board_load(struct board* board, void* blob, size_t size)
 {
-    memory_init_rom(board, 0, size, blob);
+    memory_init_rom(board, 0, size);
 }
