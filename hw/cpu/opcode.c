@@ -15,7 +15,10 @@ static const uint8_t ParityTable256[256] = {
 #define P2(n) n, n ^ 1, n ^ 1, n
 #define P4(n) P2(n), P2(n ^ 1), P2(n ^ 1), P2(n)
 #define P6(n) P4(n), P4(n ^ 1), P4(n ^ 1), P4(n)
-    P6(0), P6(1), P6(1), P6(0),
+    P6(0),
+    P6(1),
+    P6(1),
+    P6(0),
 };
 
 static uint8_t calculate_parity(uint32_t value)
@@ -456,6 +459,7 @@ void opcode_execute(struct cpu* cpu)
         log_fatal("Unknown opcode, should probably throw an Invalid Opcode "
                   "exception, got opcode 0x%X at IP 0x%X",
                   opcode, cpu->ip.regs_16 - 1);
+        tinyx86_exit(1);
     }
     opcode_table[opcode](cpu);
 }
