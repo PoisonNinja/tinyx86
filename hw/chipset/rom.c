@@ -1,13 +1,15 @@
 #include <hw/board.h>
 #include <hw/chipset/rom.h>
 
-void memory_init_rom(struct board* board, addr_t base, size_t size)
+struct memory_region* memory_init_rom(struct board* board, addr_t base,
+                                      size_t size)
 {
     struct memory_region* region = tinyx86_malloc(sizeof(struct memory_region));
     region->base = base;
     region->size = size;
     region->host_base = tinyx86_malloc(size);
     list_add(&board->memory->rom_regions, &region->list);
+    return region;
 }
 
 uint8_t rom_read_byte(struct memory_region* region, addr_t addr)

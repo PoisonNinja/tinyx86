@@ -2,6 +2,7 @@
 #include <hw/chipset/memory.h>
 #include <hw/chipset/ram.h>
 #include <hw/chipset/rom.h>
+#include <string.h>
 
 struct memory* memory_create()
 {
