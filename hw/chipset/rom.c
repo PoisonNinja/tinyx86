@@ -22,10 +22,11 @@ uint8_t rom_read_byte(struct memory_region* region, addr_t addr)
     return memory[addr];
 }
 
-void rom_write_byte(struct memory_region* region, addr_t addr, uint8_t value)
+void rom_write_byte(__attribute__((unused)) struct memory_region* region,
+                    __attribute__((unused)) addr_t addr,
+                    __attribute__((unused)) uint8_t value)
 {
-    uint8_t* memory = (uint8_t*)((struct rom_data*)region->data)->host_base;
-    memory[addr] = value;
+    return;
 }
 
 uint16_t rom_read_word(struct memory_region* region, addr_t addr)
@@ -34,8 +35,9 @@ uint16_t rom_read_word(struct memory_region* region, addr_t addr)
     return *(uint16_t*)&memory[addr];
 }
 
-void rom_write_word(struct memory_region* region, addr_t addr, uint16_t value)
+void rom_write_word(__attribute__((unused)) struct memory_region* region,
+                    __attribute__((unused)) addr_t addr,
+                    __attribute__((unused)) uint16_t value)
 {
-    uint8_t* memory = (uint8_t*)((struct rom_data*)region->data)->host_base;
-    *(uint16_t*)&memory[addr] = value;
+    return;
 }
