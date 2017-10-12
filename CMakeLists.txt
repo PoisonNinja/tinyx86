@@ -17,4 +17,11 @@ include_directories(include)
 add_executable(tinyx86 board.c log.c main.c tinyx86.c)
 add_subdirectory(hw)
 
+INCLUDE(FindPkgConfig)
+
+PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
+
+include_directories(${SDL2_INCLUDE_DIRS})
+target_link_libraries(tinyx86 ${SDL2_LIBRARIES})
+
 install(TARGETS tinyx86 DESTINATION /usr/local/bin)
