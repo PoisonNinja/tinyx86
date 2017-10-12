@@ -5,10 +5,11 @@ struct memory_region* memory_init_rom(struct board* board, addr_t base,
                                       size_t size)
 {
     struct memory_region* region = tinyx86_malloc(sizeof(struct memory_region));
+    list_runtime_init(&region->subregions);
     region->base = base;
     region->size = size;
     region->host_base = tinyx86_malloc(size);
-    list_add(&board->memory->rom_regions, &region->list);
+    memory_insert_region(board, region);
     return region;
 }
 
