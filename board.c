@@ -50,5 +50,6 @@ void board_run(struct board* board)
 
 void board_load(struct board* board, void* blob, size_t size)
 {
-    memory_init_rom(board, 0, size);
+    struct memory_region* region = memory_init_ram(board, 0, size);
+    memory_load_image(region, blob, 0, size);
 }

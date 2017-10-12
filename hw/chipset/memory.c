@@ -84,3 +84,14 @@ void memory_write_word(struct board* board, addr_t addr, uint16_t value)
     log_fatal("Attempting to write outside memory: %p", addr);
     tinyx86_exit(1);
 }
+
+int memory_load_image(struct memory_region* region, void* blob, addr_t offset,
+                      size_t size)
+{
+    if (offset + size > region->size) {
+        return 1;
+    }
+    uint8_t* target = ((uint8_t*)region->host_base) + offset;
+    memcpy(target, blob, size);
+    return 0;
+}
