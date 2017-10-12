@@ -13,7 +13,6 @@ struct memory_region {
 struct memory {
     struct list_element mmio_regions;
     struct list_element rom_regions;
-    struct list_element alias_regions;
     struct list_element ram_regions;
 };
 
