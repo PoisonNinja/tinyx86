@@ -5,8 +5,8 @@
 
 struct memory_region {
     addr_t base;
+    void* host_base;
     addr_t size;
-    void* data;  // Specific data types
     struct list_element list;
 };
 
