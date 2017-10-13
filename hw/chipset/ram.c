@@ -4,25 +4,25 @@
 uint8_t ram_read_byte(struct memory_region* region, addr_t addr)
 {
     uint8_t* memory = (uint8_t*)region->host_base;
-    return memory[addr];
+    return memory[addr - region->base];
 }
 
 void ram_write_byte(struct memory_region* region, addr_t addr, uint8_t value)
 {
     uint8_t* memory = (uint8_t*)region->host_base;
-    memory[addr] = value;
+    memory[addr - region->base] = value;
 }
 
 uint16_t ram_read_word(struct memory_region* region, addr_t addr)
 {
     uint8_t* memory = (uint8_t*)region->host_base;
-    return *(uint16_t*)&memory[addr];
+    return *(uint16_t*)&memory[addr - region->base];
 }
 
 void ram_write_word(struct memory_region* region, addr_t addr, uint16_t value)
 {
     uint8_t* memory = (uint8_t*)region->host_base;
-    *(uint16_t*)&memory[addr] = value;
+    *(uint16_t*)&memory[addr - region->base] = value;
 }
 
 struct memory_region_operations ram_memory_region_operations = {

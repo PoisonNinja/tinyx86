@@ -16,7 +16,7 @@ struct memory_region* memory_init_rom(struct board* board, addr_t base,
 uint8_t rom_read_byte(struct memory_region* region, addr_t addr)
 {
     uint8_t* memory = (uint8_t*)region->host_base;
-    return memory[addr];
+    return memory[addr - region->base];
 }
 
 void rom_write_byte(__attribute__((unused)) struct memory_region* region,
@@ -29,7 +29,7 @@ void rom_write_byte(__attribute__((unused)) struct memory_region* region,
 uint16_t rom_read_word(struct memory_region* region, addr_t addr)
 {
     uint8_t* memory = (uint8_t*)region->host_base;
-    return *(uint16_t*)&memory[addr];
+    return *(uint16_t*)&memory[addr - region->base];
 }
 
 void rom_write_word(__attribute__((unused)) struct memory_region* region,
