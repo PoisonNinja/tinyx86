@@ -41,6 +41,6 @@ struct memory_region* memory_init_ram(struct board* board, addr_t base,
     region->host_base = tinyx86_malloc(size);
     region->memory_region_ops = &ram_memory_region_operations;
     list_runtime_init(&region->subregions);
-    memory_insert_region(board, region);
+    memory_register_region(board, region);
     return region;
 }

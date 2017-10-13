@@ -11,8 +11,8 @@ struct memory* memory_create()
     return memory;
 }
 
-struct memory_region* __memory_resolve_region(struct memory_region* parent,
-                                              addr_t addr)
+static struct memory_region* __memory_resolve_region(
+    struct memory_region* parent, addr_t addr)
 {
     struct memory_region* subregion = NULL;
     list_for_each(&parent->subregions, list, subregion)
@@ -43,8 +43,8 @@ struct memory_region* memory_resolve_region(struct board* board, addr_t addr)
     return NULL;
 }
 
-void __memory_insert_region(struct memory_region* parent,
-                            struct memory_region* region)
+static void __memory_register_region(struct memory_region* parent,
+                                     struct memory_region* region)
 {
     if (list_empty(&parent->subregions)) {
         list_add(&parent->subregions, &region->list);
@@ -54,14 +54,14 @@ void __memory_insert_region(struct memory_region* parent,
         {
             if (subregion->base <= region->base &&
                 subregion->size >= region->size) {
-                return __memory_insert_region(subregion, region);
+                return __memory_register_region(subregion, region);
             }
         }
         list_add(&parent->subregions, &region->list);
     }
 }
 
-void memory_insert_region(struct board* board, struct memory_region* region)
+void memory_register_region(struct board* board, struct memory_region* region)
 {
     if (list_empty(&board->memory->regions)) {
         list_add(&board->memory->regions, &region->list);
@@ -70,7 +70,7 @@ void memory_insert_region(struct board* board, struct memory_region* region)
         list_for_each(&board->memory->regions, list, top)
         {
             if (top->base <= region->base && top->size >= region->size) {
-                return __memory_insert_region(top, region);
+                return __memory_register_region(top, region);
             }
         }
         list_add(&board->memory->regions, &region->list);

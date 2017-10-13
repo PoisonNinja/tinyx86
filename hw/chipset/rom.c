@@ -9,7 +9,7 @@ struct memory_region* memory_init_rom(struct board* board, addr_t base,
     region->base = base;
     region->size = size;
     region->host_base = tinyx86_malloc(size);
-    memory_insert_region(board, region);
+    memory_register_region(board, region);
     return region;
 }
 
