@@ -11,11 +11,9 @@
 
 static struct board* board = NULL;
 
-#define GETOPT_BINARY 0x1000
 #define GETOPT_LOG_LEVEL 0x1001
 
 static struct option long_options[] = {
-    {"binary", required_argument, 0, GETOPT_BINARY},
     {"log-level", required_argument, 0, GETOPT_LOG_LEVEL},
     {"help", no_argument, 0, 'h'},
     {"memory", required_argument, 0, 'm'},
@@ -28,7 +26,6 @@ static void print_usage(char* argv[])
     printf("usage: %s [options]\n", argv[0]);
     printf(
         "\nOptions:\n"
-        "--binary            Binary to load\n"
         "-h | --help         Print this help out\n"
         "--log-level         Logging level. Higher is more serious\n"
         "-m | --memory       Set the memory available to the machine in MiB\n"
@@ -71,15 +68,11 @@ int main(int argc, char** argv)
 {
     int c, long_index;
     char* end = NULL;
-    char* binary = NULL;
     int log_level = LOG_FATAL;
     size_t memory = TINYX86_MINIMUM_MEMORY;
     while ((c = getopt_long(argc, argv, "hm:v", long_options, &long_index)) !=
            -1) {
         switch (c) {
-            case GETOPT_BINARY:
-                binary = optarg;
-                break;
             case GETOPT_LOG_LEVEL:
                 log_level = atoi(optarg);
                 validate_log_level(&log_level);
@@ -111,26 +104,6 @@ int main(int argc, char** argv)
         exit(1);
     }
     log_debug("Created board");
-    if (binary) {
-        log_debug("Loading binary %s", binary);
-        tinyx86_file_t file = tinyx86_file_open(binary, "r");
-        if (!file) {
-            log_fatal("Could not open binary %s: %s", binary, strerror(errno));
-            tinyx86_exit(1);
-        }
-        size_t binary_size = tinyx86_file_size(file);
-        void* buffer = malloc(binary_size);
-        size_t bread = 0;
-        if ((bread = tinyx86_file_read(file, buffer, binary_size)) !=
-            binary_size) {
-            log_fatal("Failed to read entire binary. Expected %zu, but got %zu",
-                      binary_size, bread);
-            tinyx86_file_close(file);
-            tinyx86_exit(1);
-        }
-        tinyx86_file_close(file);
-        board_load(board, buffer, binary_size);
-    }
     board_poweron(board);
     log_debug("Powered on board");
     board_run(board);

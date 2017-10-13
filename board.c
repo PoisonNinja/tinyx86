@@ -47,9 +47,3 @@ void board_run(struct board* board)
         cpu_cycle(board->cpu);
     }
 }
-
-void board_load(struct board* board, void* blob, size_t size)
-{
-    struct memory_region* region = memory_init_ram(board, 0, size);
-    memory_load_image(region, blob, 0, size);
-}
