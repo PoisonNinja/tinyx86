@@ -53,7 +53,8 @@ static void __memory_register_region(struct memory_region* parent,
         list_for_each(&parent->subregions, list, subregion)
         {
             if (subregion->base <= region->base &&
-                subregion->size >= region->size) {
+                subregion->base + subregion->size >=
+                    region->base + region->size) {
                 return __memory_register_region(subregion, region);
             }
         }
@@ -69,7 +70,8 @@ void memory_register_region(struct board* board, struct memory_region* region)
         struct memory_region* top = NULL;
         list_for_each(&board->memory->regions, list, top)
         {
-            if (top->base <= region->base && top->size >= region->size) {
+            if (top->base <= region->base &&
+                top->base + top->size >= region->base + region->size) {
                 return __memory_register_region(top, region);
             }
         }
