@@ -1,6 +1,6 @@
 #include <hw/board.h>
+#include <hw/chipset/bios.h>
 #include <hw/chipset/ram.h>
-#include <hw/chipset/rom.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -17,6 +17,7 @@ struct board* board_create(size_t memory)
     board->cpu->board = board;
     board->memory = memory_create();
     memory_init_ram(board, 0, MB_TO_BYTE(memory));
+    bios_load(board);
     return board;
 }
 
