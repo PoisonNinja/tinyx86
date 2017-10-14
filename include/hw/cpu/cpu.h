@@ -41,12 +41,8 @@ struct eflags {
 };
 
 struct cpu_prefix_state {
-    struct cpu_segment cs;
-    struct cpu_segment ds;
-    struct cpu_segment es;
-    struct cpu_segment fs;
-    struct cpu_segment gs;
-    struct cpu_segment ss;
+    struct cpu_segment* segment;
+    uint8_t operand32;
     uint8_t repne;
     uint8_t repe;
 };
