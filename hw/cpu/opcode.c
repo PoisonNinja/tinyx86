@@ -132,6 +132,19 @@ uint16_t pop_word(struct cpu* cpu)
     return ret;
 }
 
+void push_long(struct cpu* cpu, uint32_t value)
+{
+    cpu->sp.regs_16 -= 4;
+    cpu_store_long(cpu, &cpu->ss, cpu->sp.regs_32, value);
+}
+
+uint16_t pop_long(struct cpu* cpu)
+{
+    uint16_t ret = cpu_fetch_long(cpu, &cpu->ss, cpu->sp.regs_32);
+    cpu->sp.regs_16 += 4;
+    return ret;
+}
+
 /*
  * Primitive operations (add, sub, etc.)
  */
@@ -196,8 +209,13 @@ OPCODE_DEFINE(47)
  */
 OPCODE_DEFINE(52)
 {
-    log_trace("push dx");
-    push_word(cpu, cpu->dx.regs_16);
+    if (CPU_PREFIX_STATE_OPERAND32(cpu)) {
+        log_trace("push edx");
+        push_long(cpu, cpu->dx.regs_32);
+    } else {
+        log_trace("push dx");
+        push_word(cpu, cpu->dx.regs_16);
+    }
 }
 
 /*
@@ -205,8 +223,13 @@ OPCODE_DEFINE(52)
  */
 OPCODE_DEFINE(53)
 {
-    log_trace("push bx");
-    push_word(cpu, cpu->bx.regs_16);
+    if (CPU_PREFIX_STATE_OPERAND32(cpu)) {
+        log_trace("push ebx");
+        push_long(cpu, cpu->bx.regs_32);
+    } else {
+        log_trace("push bx");
+        push_word(cpu, cpu->bx.regs_16);
+    }
 }
 
 /*
@@ -214,8 +237,13 @@ OPCODE_DEFINE(53)
  */
 OPCODE_DEFINE(57)
 {
-    log_trace("push di");
-    push_word(cpu, cpu->di.regs_16);
+    if (CPU_PREFIX_STATE_OPERAND32(cpu)) {
+        log_trace("push edi");
+        push_long(cpu, cpu->di.regs_32);
+    } else {
+        log_trace("push di");
+        push_word(cpu, cpu->di.regs_16);
+    }
 }
 
 /*
@@ -223,8 +251,13 @@ OPCODE_DEFINE(57)
  */
 OPCODE_DEFINE(5A)
 {
-    log_trace("pop dx");
-    cpu->dx.regs_16 = pop_word(cpu);
+    if (CPU_PREFIX_STATE_OPERAND32(cpu)) {
+        log_trace("pop edx");
+        cpu->dx.regs_32 = pop_long(cpu);
+    } else {
+        log_trace("pop dx");
+        cpu->dx.regs_16 = pop_word(cpu);
+    }
 }
 
 /*
@@ -232,8 +265,13 @@ OPCODE_DEFINE(5A)
  */
 OPCODE_DEFINE(5B)
 {
-    log_trace("pop bx");
-    cpu->bx.regs_16 = pop_word(cpu);
+    if (CPU_PREFIX_STATE_OPERAND32(cpu)) {
+        log_trace("pop ebx");
+        cpu->bx.regs_32 = pop_long(cpu);
+    } else {
+        log_trace("pop bx");
+        cpu->bx.regs_16 = pop_word(cpu);
+    }
 }
 
 /*
@@ -241,8 +279,13 @@ OPCODE_DEFINE(5B)
  */
 OPCODE_DEFINE(5F)
 {
-    log_trace("pop di");
-    cpu->di.regs_16 = pop_word(cpu);
+    if (CPU_PREFIX_STATE_OPERAND32(cpu)) {
+        log_trace("pop edi");
+        cpu->di.regs_32 = pop_long(cpu);
+    } else {
+        log_trace("pop di");
+        cpu->di.regs_16 = pop_word(cpu);
+    }
 }
 
 /*

@@ -42,6 +42,7 @@ struct eflags {
 
 struct cpu_prefix_state {
     struct cpu_segment* segment;
+#define CPU_PREFIX_STATE_OPERAND32(cpu) ((cpu)->prefix_state.operand32 ? 1 : 0)
     uint8_t operand32;
     uint8_t repne;
     uint8_t repe;

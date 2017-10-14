@@ -25,11 +25,25 @@ void ram_write_word(struct memory_region* region, addr_t addr, uint16_t value)
     *(uint16_t*)&memory[addr - region->base] = value;
 }
 
+uint32_t ram_read_long(struct memory_region* region, addr_t addr)
+{
+    uint8_t* memory = (uint8_t*)region->host_base;
+    return *(uint32_t*)&memory[addr - region->base];
+}
+
+void ram_write_long(struct memory_region* region, addr_t addr, uint32_t value)
+{
+    uint8_t* memory = (uint8_t*)region->host_base;
+    *(uint32_t*)&memory[addr - region->base] = value;
+}
+
 struct memory_region_operations ram_memory_region_operations = {
     .read_byte = ram_read_byte,
     .write_byte = ram_write_byte,
     .read_word = ram_read_word,
     .write_word = ram_write_word,
+    .read_long = ram_read_long,
+    .write_long = ram_write_long,
 };
 
 struct memory_region* memory_init_ram(struct board* board, addr_t base,

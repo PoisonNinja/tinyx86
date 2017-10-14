@@ -38,3 +38,16 @@ void rom_write_word(__attribute__((unused)) struct memory_region* region,
 {
     return;
 }
+
+uint32_t rom_read_long(struct memory_region* region, addr_t addr)
+{
+    uint8_t* memory = (uint8_t*)region->host_base;
+    return *(uint32_t*)&memory[addr - region->base];
+}
+
+void rom_write_long(__attribute__((unused)) struct memory_region* region,
+                    __attribute__((unused)) addr_t addr,
+                    __attribute__((unused)) uint32_t value)
+{
+    return;
+}

@@ -119,6 +119,26 @@ void memory_write_word(struct board* board, addr_t addr, uint16_t value)
     tinyx86_exit(1);
 }
 
+uint32_t memory_read_long(struct board* board, addr_t addr)
+{
+    struct memory_region* region = NULL;
+    if ((region = memory_resolve_region(board, addr))) {
+        return region->memory_region_ops->read_long(region, addr);
+    }
+    log_fatal("Attempting to read outside memory: %p", addr);
+    tinyx86_exit(1);
+}
+
+void memory_write_long(struct board* board, addr_t addr, uint32_t value)
+{
+    struct memory_region* region = NULL;
+    if ((region = memory_resolve_region(board, addr))) {
+        return region->memory_region_ops->write_long(region, addr, value);
+    }
+    log_fatal("Attempting to write outside memory: %p", addr);
+    tinyx86_exit(1);
+}
+
 int memory_load_image(struct memory_region* region, void* blob, addr_t offset,
                       size_t size)
 {

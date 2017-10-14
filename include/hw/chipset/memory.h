@@ -12,6 +12,9 @@ struct memory_region_operations {
     uint16_t (*read_word)(struct memory_region* region, addr_t addr);
     void (*write_word)(struct memory_region* region, addr_t addr,
                        uint16_t value);
+    uint32_t (*read_long)(struct memory_region* region, addr_t addr);
+    void (*write_long)(struct memory_region* region, addr_t addr,
+                       uint32_t value);
 };
 
 struct memory_region {
@@ -36,6 +39,9 @@ extern void memory_write_byte(struct board* board, addr_t addr, uint8_t value);
 
 extern uint16_t memory_read_word(struct board* board, addr_t addr);
 extern void memory_write_word(struct board* board, addr_t addr, uint16_t value);
+
+extern uint32_t memory_read_long(struct board* board, addr_t addr);
+extern void memory_write_long(struct board* board, addr_t addr, uint32_t value);
 
 extern void memory_register_region(struct board* board,
                                    struct memory_region* region);

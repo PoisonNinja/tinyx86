@@ -47,3 +47,17 @@ void cpu_store_word(struct cpu* cpu, struct cpu_segment* segment, addr_t offset,
     addr_t final = segment->base + offset;
     return memory_write_word(cpu->board, final, value);
 }
+
+uint32_t cpu_fetch_long(struct cpu* cpu, struct cpu_segment* segment,
+                        addr_t offset)
+{
+    addr_t final = segment->base + offset;
+    return memory_read_long(cpu->board, final);
+}
+
+void cpu_store_long(struct cpu* cpu, struct cpu_segment* segment, addr_t offset,
+                    uint32_t value)
+{
+    addr_t final = segment->base + offset;
+    return memory_write_long(cpu->board, final, value);
+}
