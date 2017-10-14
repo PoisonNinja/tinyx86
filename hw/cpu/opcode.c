@@ -400,6 +400,19 @@ OPCODE_DEFINE(E8)
 }
 
 /*
+ * 0xEA: JMPF ptr16:16/32
+ */
+OPCODE_DEFINE(EA)
+{
+    log_trace("jmpf ptr16:16/32");
+    uint16_t eip = cpu_fetch_instruction_word(cpu);
+    uint16_t cs = cpu_fetch_instruction_word(cpu);
+    cpu->cs.base = cs << 4;
+    cpu->cs.selector = cs;
+    cpu->ip.regs_16 = eip;
+}
+
+/*
  * 0xF4: HLT
  */
 OPCODE_DEFINE(F4)
@@ -442,7 +455,7 @@ opcode_fn_t opcode_table[256] = {
     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
-    NULL,     opcodeE8, NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     opcodeE8, NULL,     opcodeEA, NULL,     NULL,     NULL,
     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     opcodeF4,
     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
     NULL,     NULL,     NULL,     NULL,
@@ -458,7 +471,7 @@ void opcode_execute(struct cpu* cpu)
     if (!opcode_table[opcode]) {
         log_fatal("Unknown opcode, should probably throw an Invalid Opcode "
                   "exception, got opcode 0x%X at IP 0x%X",
-                  opcode, cpu->ip.regs_16 - 1);
+                  opcode, cpu->cs.base + cpu->ip.regs_16 - 1);
         tinyx86_exit(1);
     }
     opcode_table[opcode](cpu);
