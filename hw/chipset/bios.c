@@ -18,11 +18,12 @@ void bios_load(struct board* board)
         log_fatal("Failed to read entire BIOS binary");
         tinyx86_exit(1);
     }
-    struct memory_region* bios_low = memory_init_ram(board, 0, 0x100000);
-    memory_load_image(bios_low, bios_buffer, 0x100000 - bios_size, bios_size);
-    struct memory_region* bios_high =
-        memory_init_ram(board, 0xFFF00000, 0x100000);
-    memory_load_image(bios_high, bios_buffer, 0x100000 - bios_size, bios_size);
-    tinyx86_free(bios_buffer);
     tinyx86_file_close(bios);
+    struct memory_region* bios_low =
+        memory_init_ram(board, 0x100000 - bios_size, bios_size);
+    memory_load_image(bios_low, bios_buffer, 0, bios_size);
+    struct memory_region* bios_high =
+        memory_init_ram(board, -(uint32_t)bios_size, bios_size);
+    memory_load_image(bios_high, bios_buffer, 0, bios_size);
+    tinyx86_free(bios_buffer);
 }
