@@ -21,8 +21,8 @@ void cpu_reset(struct cpu* cpu)
     cpu->cs.selector = 0xF000;
     cpu->cs.base = 0xFFFF0000;
     cpu->cs.limit = 0xFFFF;
-    cpu->ip.regs_16 = 0xFFF0;
     cpu->cs.selector = 0xF000;
+    cpu->ip.regs_16 = 0xFFF0;
     cpu->state = CPU_STOPPED;
 }
 

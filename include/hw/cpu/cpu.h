@@ -41,13 +41,14 @@ struct eflags {
 };
 
 struct cpu_prefix_state {
-    uint8_t cs;
-    uint8_t ds;
-    uint8_t es;
-    uint8_t fs;
-    uint8_t gs;
-    uint8_t ss;
-    uint32_t override_value;
+    struct cpu_segment cs;
+    struct cpu_segment ds;
+    struct cpu_segment es;
+    struct cpu_segment fs;
+    struct cpu_segment gs;
+    struct cpu_segment ss;
+    uint8_t repne;
+    uint8_t repe;
 };
 
 struct cpu {
