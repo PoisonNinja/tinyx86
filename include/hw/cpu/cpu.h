@@ -40,12 +40,16 @@ struct eflags {
     uint8_t reserved_5[10];
 } __attribute((packed));
 
+struct prefix_state {
+};
+
 struct cpu {
     struct board* board;
     union cpu_register ax, bx, cx, dx;
     union cpu_register sp, bp, si, di, ip;
     struct cpu_segment cs, ds, ss, es, fs, gs;
     struct eflags eflags;
+    struct prefix_state prefix;
 #define CPU_STOPPED 0x0
 #define CPU_RUNNING 0x1
 #define CPU_HALTED 0x2
