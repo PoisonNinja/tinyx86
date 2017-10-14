@@ -16,29 +16,29 @@ struct cpu_segment {
 };
 
 struct eflags {
-    uint8_t carry : 1;
-    uint8_t reserved_1 : 1;
-    uint8_t parity : 1;
-    uint8_t reserved_2 : 1;
-    uint8_t adjust : 1;
-    uint8_t reserved_3 : 1;
-    uint8_t zero : 1;
-    uint8_t sign : 1;
-    uint8_t trap : 1;
-    uint8_t interrupt : 1;
-    uint8_t direction : 1;
-    uint8_t overflow : 1;
+    uint8_t carry;
+    uint8_t reserved_1;
+    uint8_t parity;
+    uint8_t reserved_2;
+    uint8_t adjust;
+    uint8_t reserved_3;
+    uint8_t zero;
+    uint8_t sign;
+    uint8_t trap;
+    uint8_t interrupt;
+    uint8_t direction;
+    uint8_t overflow;
     uint8_t iopl : 2;
-    uint8_t nested_task : 1;
-    uint8_t reserved_4 : 1;
-    uint8_t resume : 1;
-    uint8_t vm : 1;
-    uint8_t alignment_check : 1;
-    uint8_t virtual_interrupt : 1;
-    uint8_t virtual_interrupt_pending : 1;
-    uint8_t cpuid : 1;
+    uint8_t nested_task;
+    uint8_t reserved_4;
+    uint8_t resume;
+    uint8_t vm;
+    uint8_t alignment_check;
+    uint8_t virtual_interrupt;
+    uint8_t virtual_interrupt_pending;
+    uint8_t cpuid;
     uint8_t reserved_5[10];
-} __attribute((packed));
+};
 
 struct prefix_state {
 };
