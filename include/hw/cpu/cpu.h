@@ -40,7 +40,14 @@ struct eflags {
     uint8_t reserved_5[10];
 };
 
-struct prefix_state {
+struct cpu_prefix_state {
+    uint8_t cs;
+    uint8_t ds;
+    uint8_t es;
+    uint8_t fs;
+    uint8_t gs;
+    uint8_t ss;
+    uint32_t override_value;
 };
 
 struct cpu {
@@ -49,7 +56,7 @@ struct cpu {
     union cpu_register sp, bp, si, di, ip;
     struct cpu_segment cs, ds, ss, es, fs, gs;
     struct eflags eflags;
-    struct prefix_state prefix;
+    struct cpu_prefix_state prefix_state;
 #define CPU_STOPPED 0x0
 #define CPU_RUNNING 0x1
 #define CPU_HALTED 0x2

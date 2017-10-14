@@ -468,8 +468,10 @@ void opcode_execute(struct cpu* cpu)
     while (isPrefix) {
         switch ((opcode = cpu_fetch_instruction_byte(cpu))) {
             case 0x2E:
+                log_trace("Prefix: %X", opcode);
                 break;
             case 0x66:
+                log_trace("Prefix: %X", opcode);
                 break;
             default:
                 isPrefix = 0;
