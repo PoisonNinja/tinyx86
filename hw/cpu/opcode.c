@@ -463,18 +463,13 @@ opcode_fn_t opcode_table[256] = {
 
 void opcode_execute(struct cpu* cpu)
 {
-    uint8_t opcode = cpu_fetch_instruction_byte(cpu);
-    if (opcode == 0x0F) {
-        log_fatal("We do not support two byte opcodes yet!");
-    }
+    uint8_t opcode = 0;
     bool isPrefix = 1;
     while (isPrefix) {
-        switch (opcode) {
+        switch ((opcode = cpu_fetch_instruction_byte(cpu))) {
             case 0x2E:
-                opcode = cpu_fetch_instruction_byte(cpu);
                 break;
             case 0x66:
-                opcode = cpu_fetch_instruction_byte(cpu);
                 break;
             default:
                 isPrefix = 0;
