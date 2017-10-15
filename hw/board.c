@@ -6,21 +6,6 @@
 
 #define MB_TO_BYTE(x) ((x)*1024 * 1024)
 
-/*
- * Print out the VGA buffer, but only memory that contains actual data.
- */
-static void dump_vga(struct board* board)
-{
-    int x, y;
-    for (y = 0; y < 25; y++) {
-        for (x = 0; x < 80; x++) {
-            fprintf(stdout, "%c",
-                    memory_read_byte(board, 0x8000 + (y * 80) + x));
-        }
-        fprintf(stdout, "\n");
-    }
-}
-
 struct board* board_create(size_t memory)
 {
     struct board* board = malloc(sizeof(struct board));
@@ -63,9 +48,8 @@ void board_run(struct board* board)
         if (board->cpu->state == CPU_RUNNING) {
             cpu_cycle(board->cpu);
         } else {
-            dump_vga(board);
             board_destroy(board);
-            exit(0);
+            return;
         }
     }
 }
