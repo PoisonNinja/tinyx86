@@ -70,33 +70,64 @@ union cpu_register* modrm_to_register(struct cpu* cpu, uint8_t modrm)
 
 uint32_t modrm_to_address_no_dis(struct cpu* cpu, uint8_t rm)
 {
-    switch (rm) {
-        case 0:
-            return (cpu->bx.regs_16 + cpu->si.regs_16);
-            break;
-        case 1:
-            return (cpu->bx.regs_16 + cpu->di.regs_16);
-            break;
-        case 2:
-            return (cpu->bp.regs_16 + cpu->si.regs_16);
-            break;
-        case 3:
-            return (cpu->bp.regs_16 + cpu->di.regs_16);
-            break;
-        case 4:
-            return (cpu->si.regs_16);
-            break;
-        case 5:
-            return (cpu->di.regs_16);
-            break;
-        case 6:
-            return cpu_fetch_instruction_u16(cpu);
-            break;
-        case 7:
-            return (cpu->bx.regs_16);
-            break;
-        default:
-            return 0;
+    if (CPU_PREFIX_STATE_OPERAND32(cpu)) {
+        switch (rm) {
+            case 0:
+                return cpu->ax.regs_32;
+                break;
+            case 1:
+                return cpu->cx.regs_32;
+                break;
+            case 2:
+                return cpu->dx.regs_32;
+                break;
+            case 3:
+                return cpu->bx.regs_32;
+                break;
+            case 4:
+                // TODO: SIB decoding
+                break;
+            case 5:
+                return cpu_fetch_instruction_u32(cpu);
+                break;
+            case 6:
+                return cpu->si.regs_32;
+                break;
+            case 7:
+                return cpu->di.regs_32;
+                break;
+            default:
+                return 0;
+        }
+    } else {
+        switch (rm) {
+            case 0:
+                return (cpu->bx.regs_16 + cpu->si.regs_16);
+                break;
+            case 1:
+                return (cpu->bx.regs_16 + cpu->di.regs_16);
+                break;
+            case 2:
+                return (cpu->bp.regs_16 + cpu->si.regs_16);
+                break;
+            case 3:
+                return (cpu->bp.regs_16 + cpu->di.regs_16);
+                break;
+            case 4:
+                return (cpu->si.regs_16);
+                break;
+            case 5:
+                return (cpu->di.regs_16);
+                break;
+            case 6:
+                return cpu_fetch_instruction_u16(cpu);
+                break;
+            case 7:
+                return (cpu->bx.regs_16);
+                break;
+            default:
+                return 0;
+        }
     }
 }
 
