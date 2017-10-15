@@ -603,4 +603,10 @@ void opcode_execute(struct cpu* cpu)
         tinyx86_exit(1);
     }
     opcode_table[opcode](cpu);
+
+    // Reset CPU prefix state
+    cpu->prefix_state.segment = NULL;
+    cpu->prefix_state.operand32 = 0;
+    cpu->prefix_state.repne = 0;
+    cpu->prefix_state.repe = 0;
 }
