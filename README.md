@@ -12,16 +12,15 @@ In addition to the processor, tinyx86 aims to implement all the hardware in an a
 * 8259 Programmble Interrupt Controller
 * IDE Controller
 
-In it's current state, tinyx86 can run a simple 'Hello, World!' program. This early in the development stage, tinyx86 does sacrifice some accuracy for the sake of ease of use. For example:
-* The CPU starts executing instructions from 0x0
-* The VGA buffer is located at 0x8000 instead of 0xB8000 to make it easier to access the buffer without changing the DS register
-* Upon CPU reset, the CS limit is set to 0xFFFF
+The current goal of tinyx86 is to be able to boot SeaBIOS, which will eventually allow us to boot actual operating systems.
 
 # Building
 ## Setting up the environment
 Building tinyx86 has only been tested on MacOS (10.12) and Ubuntu (17.04), other operating systems are not officially supported.
 
-tinyx86 at this time does not require any dependencies beyond a C11-compliant compiler and NASM (optional if you are not compiling your own binaries). Both Clang (Linux and Mac) and GCC (5 and 6) are known to build tinyx86 successfully, so try to use those if you are having issues with your compiler.
+You will need a reasonably modern compiler with C11 support. Both Clang (Linux and Mac) and GCC (5 and 6) are known to build tinyx86 successfully, so try to use those if you are having issues with your compiler.
+
+You will also need SDL2 to draw the VGA framebuffer. For Debian derivatives, you can simply run `sudo apt install libsdl2-dev`. For other systems, you will need to manually install SDL2.
 
 ## Obtaining the source
 It's preferable to obtain the source using git, since that reflects the latest development progress and bugfixes:
@@ -42,12 +41,9 @@ CMake should complete without any errors or warnings.
 Simply run your build system. The default target builds a binary called `tinyx86` located in the build directory. At this time, an install target is not provided, so you will have to run it from the build folder.
 
 # Basics
-There isn't really much to see currently, but tinyx86 does have some basic functionality. A prebuilt binary called `hello` is located in the test/ folder. The source for that binary is `hello.asm`, and the disassembly of the binary made using ndisasm is called `hello.disasm`.
+There isn't really much to see currently, but tinyx86 does have some basic functionality implemented.
 
-To boot up tinyx86 with the `hello` binary, simply run: `tinyx86 --binary <path to binary>`. You can try running your own binaries, but keep in mind a few points:
-* tinyx86 is very much a work in progress, and most likely your custom binary will fail with an `Invalid Opcode` message
-* The binary loaded must be a flat binary (for NASM, `-f bin`)
-* The binary can not be larger than a segment
+Upon start, tinyx86 loads SeaBIOS into memory and starts executing it. In its current state, not all opcodes and required hardware support is implemented, so there isn't actualyl anything to see.
 
 Some other useful flags include:
 * `--logging-level`: Set the minimum logging level. Higher is more serious
