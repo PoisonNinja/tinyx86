@@ -79,61 +79,61 @@ void memory_register_region(struct board* board, struct memory_region* region)
     }
 }
 
-uint8_t memory_read_byte(struct board* board, addr_t addr)
+uint8_t memory_read_u8(struct board* board, addr_t addr)
 {
     struct memory_region* region = NULL;
     if ((region = memory_resolve_region(board, addr))) {
-        return region->memory_region_ops->read_byte(region, addr);
+        return region->memory_region_ops->read_u8(region, addr);
     }
     log_fatal("Attempting to read outside memory: %p", addr);
     tinyx86_exit(1);
 }
 
-void memory_write_byte(struct board* board, addr_t addr, uint8_t value)
+void memory_write_u8(struct board* board, addr_t addr, uint8_t value)
 {
     struct memory_region* region = NULL;
     if ((region = memory_resolve_region(board, addr))) {
-        return region->memory_region_ops->write_byte(region, addr, value);
+        return region->memory_region_ops->write_u8(region, addr, value);
     }
     log_fatal("Attempting to write outside memory: %p", addr);
     tinyx86_exit(1);
 }
 
-uint16_t memory_read_word(struct board* board, addr_t addr)
+uint16_t memory_read_u16(struct board* board, addr_t addr)
 {
     struct memory_region* region = NULL;
     if ((region = memory_resolve_region(board, addr))) {
-        return region->memory_region_ops->read_word(region, addr);
+        return region->memory_region_ops->read_u16(region, addr);
     }
     log_fatal("Attempting to read outside memory: %p", addr);
     tinyx86_exit(1);
 }
 
-void memory_write_word(struct board* board, addr_t addr, uint16_t value)
+void memory_write_u16(struct board* board, addr_t addr, uint16_t value)
 {
     struct memory_region* region = NULL;
     if ((region = memory_resolve_region(board, addr))) {
-        return region->memory_region_ops->write_word(region, addr, value);
+        return region->memory_region_ops->write_u16(region, addr, value);
     }
     log_fatal("Attempting to write outside memory: %p", addr);
     tinyx86_exit(1);
 }
 
-uint32_t memory_read_long(struct board* board, addr_t addr)
+uint32_t memory_read_u32(struct board* board, addr_t addr)
 {
     struct memory_region* region = NULL;
     if ((region = memory_resolve_region(board, addr))) {
-        return region->memory_region_ops->read_long(region, addr);
+        return region->memory_region_ops->read_u32(region, addr);
     }
     log_fatal("Attempting to read outside memory: %p", addr);
     tinyx86_exit(1);
 }
 
-void memory_write_long(struct board* board, addr_t addr, uint32_t value)
+void memory_write_u32(struct board* board, addr_t addr, uint32_t value)
 {
     struct memory_region* region = NULL;
     if ((region = memory_resolve_region(board, addr))) {
-        return region->memory_region_ops->write_long(region, addr, value);
+        return region->memory_region_ops->write_u32(region, addr, value);
     }
     log_fatal("Attempting to write outside memory: %p", addr);
     tinyx86_exit(1);

@@ -4,68 +4,68 @@
 #include <hw/cpu/memory.h>
 #include <tinyx86.h>
 
-uint8_t cpu_fetch_instruction_byte(struct cpu* cpu)
+uint8_t cpu_fetch_instruction_u8(struct cpu* cpu)
 {
     addr_t final = cpu->cs.base + cpu->ip.regs_16;
-    uint8_t ret = memory_read_byte(cpu->board, final);
+    uint8_t ret = memory_read_u8(cpu->board, final);
     cpu->ip.regs_16++;
     return ret;
 }
 
-uint16_t cpu_fetch_instruction_word(struct cpu* cpu)
+uint16_t cpu_fetch_instruction_u16(struct cpu* cpu)
 {
     addr_t final = cpu->cs.base + cpu->ip.regs_16;
-    uint16_t ret = memory_read_word(cpu->board, final);
+    uint16_t ret = memory_read_u16(cpu->board, final);
     cpu->ip.regs_16 += 2;
     return ret;
 }
 
-uint32_t cpu_fetch_instruction_long(struct cpu* cpu)
+uint32_t cpu_fetch_instruction_u32(struct cpu* cpu)
 {
     addr_t final = cpu->cs.base + cpu->ip.regs_32;
-    uint16_t ret = memory_read_long(cpu->board, final);
+    uint16_t ret = memory_read_u32(cpu->board, final);
     cpu->ip.regs_32 += 4;
     return ret;
 }
 
-uint8_t cpu_fetch_byte(struct cpu* cpu, struct cpu_segment* segment,
+uint8_t cpu_fetch_u8(struct cpu* cpu, struct cpu_segment* segment,
+                     addr_t offset)
+{
+    addr_t final = segment->base + offset;
+    return memory_read_u8(cpu->board, final);
+}
+
+void cpu_store_u8(struct cpu* cpu, struct cpu_segment* segment, addr_t offset,
+                  uint8_t value)
+{
+    addr_t final = segment->base + offset;
+    return memory_write_u8(cpu->board, final, value);
+}
+
+uint16_t cpu_fetch_u16(struct cpu* cpu, struct cpu_segment* segment,
                        addr_t offset)
 {
     addr_t final = segment->base + offset;
-    return memory_read_byte(cpu->board, final);
+    return memory_read_u16(cpu->board, final);
 }
 
-void cpu_store_byte(struct cpu* cpu, struct cpu_segment* segment, addr_t offset,
-                    uint8_t value)
+void cpu_store_u16(struct cpu* cpu, struct cpu_segment* segment, addr_t offset,
+                   uint16_t value)
 {
     addr_t final = segment->base + offset;
-    return memory_write_byte(cpu->board, final, value);
+    return memory_write_u16(cpu->board, final, value);
 }
 
-uint16_t cpu_fetch_word(struct cpu* cpu, struct cpu_segment* segment,
-                        addr_t offset)
+uint32_t cpu_fetch_u32(struct cpu* cpu, struct cpu_segment* segment,
+                       addr_t offset)
 {
     addr_t final = segment->base + offset;
-    return memory_read_word(cpu->board, final);
+    return memory_read_u32(cpu->board, final);
 }
 
-void cpu_store_word(struct cpu* cpu, struct cpu_segment* segment, addr_t offset,
-                    uint16_t value)
+void cpu_store_u32(struct cpu* cpu, struct cpu_segment* segment, addr_t offset,
+                   uint32_t value)
 {
     addr_t final = segment->base + offset;
-    return memory_write_word(cpu->board, final, value);
-}
-
-uint32_t cpu_fetch_long(struct cpu* cpu, struct cpu_segment* segment,
-                        addr_t offset)
-{
-    addr_t final = segment->base + offset;
-    return memory_read_long(cpu->board, final);
-}
-
-void cpu_store_long(struct cpu* cpu, struct cpu_segment* segment, addr_t offset,
-                    uint32_t value)
-{
-    addr_t final = segment->base + offset;
-    return memory_write_long(cpu->board, final, value);
+    return memory_write_u32(cpu->board, final, value);
 }
