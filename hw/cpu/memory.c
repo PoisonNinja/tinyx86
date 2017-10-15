@@ -20,6 +20,14 @@ uint16_t cpu_fetch_instruction_word(struct cpu* cpu)
     return ret;
 }
 
+uint32_t cpu_fetch_instruction_long(struct cpu* cpu)
+{
+    addr_t final = cpu->cs.base + cpu->ip.regs_32;
+    uint16_t ret = memory_read_long(cpu->board, final);
+    cpu->ip.regs_32 += 4;
+    return ret;
+}
+
 uint8_t cpu_fetch_byte(struct cpu* cpu, struct cpu_segment* segment,
                        addr_t offset)
 {

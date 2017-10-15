@@ -160,6 +160,18 @@ void inc_word(struct cpu* cpu, union cpu_register* reg)
     reg->regs_16 = (uint16_t)result;
 }
 
+void inc_long(struct cpu* cpu, union cpu_register* reg)
+{
+    uint32_t result = reg->regs_32 + 1;
+    cpu->eflags.parity = (calculate_parity(result) == 0);
+    cpu->eflags.adjust = (((reg->regs_32 ^ 1 ^ result) & 0x10) != 0);
+    cpu->eflags.zero = ((result & 0xFFFFFFFF) == 0);
+    cpu->eflags.sign = (result & 0x80000000);
+    cpu->eflags.overflow =
+        (((result ^ reg->regs_32) & (result ^ 1) & 0x80000000) != 0);
+    reg->regs_16 = (uint16_t)result;
+}
+
 /*
  * 0x20: AND r/m8, r8
  */
@@ -191,8 +203,13 @@ OPCODE_DEFINE(20)
  */
 OPCODE_DEFINE(43)
 {
-    log_trace("inc bx");
-    inc_word(cpu, &cpu->bx);
+    if (CPU_PREFIX_STATE_OPERAND32(cpu)) {
+        log_trace("inc ebx");
+        inc_long(cpu, &cpu->bx);
+    } else {
+        log_trace("inc bx");
+        inc_word(cpu, &cpu->bx);
+    }
 }
 
 /*
@@ -200,8 +217,13 @@ OPCODE_DEFINE(43)
  */
 OPCODE_DEFINE(47)
 {
-    log_trace("inc di");
-    inc_word(cpu, &cpu->di);
+    if (CPU_PREFIX_STATE_OPERAND32(cpu)) {
+        log_trace("inc edi");
+        inc_long(cpu, &cpu->di);
+    } else {
+        log_trace("inc di");
+        inc_word(cpu, &cpu->di);
+    }
 }
 
 /*
@@ -295,9 +317,11 @@ OPCODE_DEFINE(75)
 {
     log_trace("jnz rel8");
     int8_t offset = cpu_fetch_instruction_byte(cpu);
-    uint32_t ip = cpu->ip.regs_16 + offset;
+    uint32_t ip = ((CPU_PREFIX_STATE_OPERAND32(cpu)) ? cpu->ip.regs_32 :
+                                                       cpu->ip.regs_16) +
+                  offset;
     if (!cpu->eflags.zero)
-        cpu->ip.regs_16 = ip;
+        cpu->ip.regs_32 = ip;
 }
 
 /*
@@ -352,11 +376,19 @@ OPCODE_DEFINE(89)
         // Direct addressing mode, reg is source, rm is dest because d == 0
         union cpu_register* source = modrm_to_register(cpu, modrm.reg);
         union cpu_register* dest = modrm_to_register(cpu, modrm.rm);
-        dest->regs_16 = source->regs_16;
+        if (CPU_PREFIX_STATE_OPERAND32(cpu)) {
+            dest->regs_32 = source->regs_32;
+        } else {
+            dest->regs_16 = source->regs_16;
+        }
     } else {
         union cpu_register* source = modrm_to_register(cpu, modrm.reg);
         addr_t dest = modrm_to_address(cpu, modrm.mod, modrm.rm);
-        cpu_store_word(cpu, &cpu->ds, dest, source->regs_16);
+        if (CPU_PREFIX_STATE_OPERAND32(cpu)) {
+            cpu_store_long(cpu, &cpu->ds, dest, source->regs_32);
+        } else {
+            cpu_store_word(cpu, &cpu->ds, dest, source->regs_16);
+        }
     }
 }
 
@@ -390,8 +422,13 @@ OPCODE_DEFINE(8B)
     } else {
         // Direct addressing mode, rm is source, reg is dest because d == 1
         union cpu_register* dest = modrm_to_register(cpu, modrm.reg);
-        dest->regs_16 = cpu_fetch_word(
-            cpu, &cpu->ds, modrm_to_address(cpu, modrm.mod, modrm.rm));
+        if (CPU_PREFIX_STATE_OPERAND32(cpu)) {
+            dest->regs_32 = cpu_fetch_long(
+                cpu, &cpu->ds, modrm_to_address(cpu, modrm.mod, modrm.rm));
+        } else {
+            dest->regs_16 = cpu_fetch_word(
+                cpu, &cpu->ds, modrm_to_address(cpu, modrm.mod, modrm.rm));
+        }
     }
 }
 
@@ -400,26 +437,41 @@ OPCODE_DEFINE(8B)
  */
 OPCODE_DEFINE(B8)
 {
-    log_trace("mov ax, imm16");
-    cpu->ax.regs_16 = cpu_fetch_instruction_word(cpu);
+    if (CPU_PREFIX_STATE_OPERAND32(cpu)) {
+        log_trace("mov eax, imm16");
+        cpu->ax.regs_32 = cpu_fetch_instruction_long(cpu);
+    } else {
+        log_trace("mov ax, imm16");
+        cpu->ax.regs_16 = cpu_fetch_instruction_word(cpu);
+    }
 }
 
 /*
- * 0xBB: MOV r16/32, imm16/32
+ * 0xBB: MOV bx, imm16/32
  */
 OPCODE_DEFINE(BB)
 {
-    log_trace("mov r16/32, imm16/32");
-    cpu->bx.regs_16 = cpu_fetch_instruction_word(cpu);
+    if (CPU_PREFIX_STATE_OPERAND32(cpu)) {
+        log_trace("mov ebx, imm16/32");
+        cpu->bx.regs_32 = cpu_fetch_instruction_long(cpu);
+    } else {
+        log_trace("mov bx, imm16/32");
+        cpu->bx.regs_16 = cpu_fetch_instruction_word(cpu);
+    }
 }
 
 /*
- * 0xBC: MOV r16/32, imm16/32
+ * 0xBC: MOV sp, imm16/32
  */
 OPCODE_DEFINE(BC)
 {
-    log_trace("mov r16/32, imm16/32");
-    cpu->sp.regs_16 = cpu_fetch_instruction_word(cpu);
+    if (CPU_PREFIX_STATE_OPERAND32(cpu)) {
+        log_trace("mov esp, imm16/32");
+        cpu->sp.regs_32 = cpu_fetch_instruction_long(cpu);
+    } else {
+        log_trace("mov sp, imm16/32");
+        cpu->sp.regs_16 = cpu_fetch_instruction_word(cpu);
+    }
 }
 /*
  * 0xC3: RETN
@@ -427,7 +479,11 @@ OPCODE_DEFINE(BC)
 OPCODE_DEFINE(C3)
 {
     log_trace("retn");
-    cpu->ip.regs_16 = pop_word(cpu);
+    if (CPU_PREFIX_STATE_OPERAND32(cpu)) {
+        cpu->ip.regs_32 = pop_long(cpu);
+    } else {
+        cpu->ip.regs_16 = pop_word(cpu);
+    }
 }
 
 /*
@@ -436,10 +492,17 @@ OPCODE_DEFINE(C3)
 OPCODE_DEFINE(E8)
 {
     log_trace("call rel16/32");
-    int16_t offset = cpu_fetch_instruction_word(cpu);
-    uint16_t eip = cpu->ip.regs_16 + offset;
-    push_word(cpu, cpu->ip.regs_16);
-    cpu->ip.regs_16 = eip;
+    if (CPU_PREFIX_STATE_OPERAND32(cpu)) {
+        int32_t offset = cpu_fetch_instruction_long(cpu);
+        uint32_t eip = cpu->ip.regs_32 + offset;
+        push_long(cpu, cpu->ip.regs_32);
+        cpu->ip.regs_32 = eip;
+    } else {
+        int16_t offset = cpu_fetch_instruction_word(cpu);
+        uint16_t eip = cpu->ip.regs_16 + offset;
+        push_word(cpu, cpu->ip.regs_16);
+        cpu->ip.regs_16 = eip;
+    }
 }
 
 /*
@@ -448,11 +511,20 @@ OPCODE_DEFINE(E8)
 OPCODE_DEFINE(EA)
 {
     log_trace("jmpf ptr16:16/32");
-    uint16_t eip = cpu_fetch_instruction_word(cpu);
+    uint32_t eip = 0;
+    if (CPU_PREFIX_STATE_OPERAND32(cpu)) {
+        eip = cpu_fetch_instruction_long(cpu);
+    } else {
+        eip = cpu_fetch_instruction_word(cpu);
+    }
     uint16_t cs = cpu_fetch_instruction_word(cpu);
     cpu->cs.base = cs << 4;
     cpu->cs.selector = cs;
-    cpu->ip.regs_16 = eip;
+    if (CPU_PREFIX_STATE_OPERAND32(cpu)) {
+        cpu->ip.regs_32 = eip;
+    } else {
+        cpu->ip.regs_16 = eip;
+    }
 }
 
 /*
