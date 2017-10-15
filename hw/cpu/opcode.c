@@ -600,7 +600,8 @@ void opcode_execute(struct cpu* cpu)
         log_fatal("Unknown opcode, should probably throw an Invalid Opcode "
                   "exception, got opcode 0x%X at IP 0x%X",
                   opcode, cpu->cs.base + cpu->ip.regs_16 - 1);
-        tinyx86_exit(1);
+        cpu->state = CPU_HALTED;
+        return;
     }
     opcode_table[opcode](cpu);
 
