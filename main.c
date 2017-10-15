@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <getopt.h>
+#include <gui/window.h>
 #include <hw/board.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -104,6 +105,8 @@ int main(int argc, char** argv)
         exit(1);
     }
     log_debug("Created board");
+    log_debug("Launching window...");
+    window_create(720, 400);
     board_poweron(board);
     log_debug("Powered on board");
     board_run(board);

@@ -15,6 +15,7 @@ set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_CFLAGS_RELEASE} -O3")
 include_directories(include)
 
 add_executable(tinyx86 log.c main.c tinyx86.c)
+add_subdirectory(gui)
 add_subdirectory(hw)
 
 INCLUDE(FindPkgConfig)
