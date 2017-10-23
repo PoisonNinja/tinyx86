@@ -15,12 +15,12 @@ struct cpu_segment {
     uint16_t selector;
 };
 
-#define CPU_EFLAGS_CF 0
-#define CPU_EFLAGS_PF 2
-#define CPU_EFLAGS_AF 4
-#define CPU_EFLAGS_ZF 6
-#define CPU_EFLAGS_SF 7
-#define CPU_EFLAGS_OF 11
+#define CPU_EFLAGS_CF 0x1
+#define CPU_EFLAGS_PF 0x4
+#define CPU_EFLAGS_AF 0x10
+#define CPU_EFLAGS_ZF 0x40
+#define CPU_EFLAGS_SF 0x80
+#define CPU_EFLAGS_OF 0x800
 
 // Convert EFLAGS struct to integer for use in binary ops
 #define CPU_EFLAGS_AS_INTEGER(eflags) (*(uint32_t*)&(eflags))
