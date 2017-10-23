@@ -1,3 +1,4 @@
+#include <hw/cpu/arithmetic.h>
 #include <hw/cpu/cpu.h>
 #include <hw/cpu/memory.h>
 #include <hw/cpu/opcode.h>
@@ -15,10 +16,7 @@ static const uint8_t ParityTable256[256] = {
 #define P2(n) n, n ^ 1, n ^ 1, n
 #define P4(n) P2(n), P2(n ^ 1), P2(n ^ 1), P2(n)
 #define P6(n) P4(n), P4(n ^ 1), P4(n ^ 1), P4(n)
-    P6(0),
-    P6(1),
-    P6(1),
-    P6(0),
+    P6(0), P6(1), P6(1), P6(0),
 };
 
 static uint8_t calculate_parity(uint32_t value)
@@ -86,6 +84,7 @@ uint32_t modrm_to_address_no_dis(struct cpu* cpu, uint8_t rm)
                 break;
             case 4:
                 // TODO: SIB decoding
+                return 0;
                 break;
             case 5:
                 return cpu_fetch_instruction_u32(cpu);
@@ -177,33 +176,6 @@ uint16_t pop_u32(struct cpu* cpu)
 }
 
 /*
- * Primitive operations (add, sub, etc.)
- */
-void inc_u16(struct cpu* cpu, union cpu_register* reg)
-{
-    uint32_t result = reg->regs_16 + 1;
-    cpu->eflags.parity = (calculate_parity(result) == 0);
-    cpu->eflags.adjust = (((reg->regs_16 ^ 1 ^ result) & 0x10) != 0);
-    cpu->eflags.zero = ((result & 0xFFFF) == 0);
-    cpu->eflags.sign = (result & 0x8000);
-    cpu->eflags.overflow =
-        (((result ^ reg->regs_16) & (result ^ 1) & 0x8000) != 0);
-    reg->regs_16 = (uint16_t)result;
-}
-
-void inc_u32(struct cpu* cpu, union cpu_register* reg)
-{
-    uint32_t result = reg->regs_32 + 1;
-    cpu->eflags.parity = (calculate_parity(result) == 0);
-    cpu->eflags.adjust = (((reg->regs_32 ^ 1 ^ result) & 0x10) != 0);
-    cpu->eflags.zero = ((result & 0xFFFFFFFF) == 0);
-    cpu->eflags.sign = (result & 0x80000000);
-    cpu->eflags.overflow =
-        (((result ^ reg->regs_32) & (result ^ 1) & 0x80000000) != 0);
-    reg->regs_16 = (uint16_t)result;
-}
-
-/*
  * 0x20: AND r/m8, r8
  */
 OPCODE_DEFINE(20)
@@ -216,13 +188,7 @@ OPCODE_DEFINE(20)
         union cpu_register* source = modrm_to_register(cpu, modrm.reg);
         union cpu_register* dest = modrm_to_register(cpu, modrm.rm);
         uint8_t result = source->regs_8 & dest->regs_8;
-        cpu->eflags.overflow = 0;
-        cpu->eflags.carry = 0;
-        cpu->eflags.parity = (calculate_parity(result) == 0);
-        cpu->eflags.zero = ((result & 0xFFFF) == 0);
-        cpu->eflags.sign = ((result & 0x8000) == 1);
-        dest->regs_8 = result;
-
+        cpu_arithmetic_and_u8(cpu, &dest->regs_8, &source->regs_8);
     } else {
         // TODO: Implement if mod != 3
         log_fatal("Only MOD 3 for opcode 0x20 is supported");
@@ -236,10 +202,10 @@ OPCODE_DEFINE(43)
 {
     if (CPU_PREFIX_STATE_OPERAND32(cpu)) {
         log_trace("inc ebx");
-        inc_u32(cpu, &cpu->bx);
+        cpu_arithmetic_inc_u32(cpu, &cpu->bx.regs_32);
     } else {
         log_trace("inc bx");
-        inc_u16(cpu, &cpu->bx);
+        cpu_arithmetic_inc_u16(cpu, &cpu->bx.regs_16);
     }
 }
 
@@ -250,10 +216,10 @@ OPCODE_DEFINE(47)
 {
     if (CPU_PREFIX_STATE_OPERAND32(cpu)) {
         log_trace("inc edi");
-        inc_u32(cpu, &cpu->di);
+        cpu_arithmetic_inc_u32(cpu, &cpu->di.regs_32);
     } else {
         log_trace("inc di");
-        inc_u16(cpu, &cpu->di);
+        cpu_arithmetic_inc_u16(cpu, &cpu->di.regs_16);
     }
 }
 

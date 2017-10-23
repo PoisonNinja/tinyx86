@@ -15,12 +15,16 @@ struct cpu_segment {
     uint16_t selector;
 };
 
-/*
- * Not a real representation of the EFLAGS register. Instead, for certain
- * flags, generally the arithmetic flags, the status of the field stores
- * whether we need to recompute the flag status. However, other flags,
- * such as the interrupt and direction flag remain real values.
- */
+#define CPU_EFLAGS_CF 0
+#define CPU_EFLAGS_PF 2
+#define CPU_EFLAGS_AF 4
+#define CPU_EFLAGS_ZF 6
+#define CPU_EFLAGS_SF 7
+#define CPU_EFLAGS_OF 11
+
+// Convert EFLAGS struct to integer for use in binary ops
+#define CPU_EFLAGS_AS_INTEGER(eflags) (*(uint32_t*)&(eflags))
+
 struct eflags {
     uint8_t carry : 1;
     uint8_t reserved_1 : 1;
@@ -44,7 +48,7 @@ struct eflags {
     uint8_t virtual_interrupt_pending : 1;
     uint8_t cpuid : 1;
     uint16_t reserved_5 : 10;
-};
+} __attribute__((packed));
 
 struct cpu_prefix_state {
     struct cpu_segment* segment;
@@ -56,10 +60,13 @@ struct cpu_prefix_state {
 
 struct cpu {
     struct board* board;
+    // CPU registers
     union cpu_register ax, bx, cx, dx;
     union cpu_register sp, bp, si, di, ip;
     struct cpu_segment cs, ds, ss, es, fs, gs;
+    // CPU EFLAGS + required support structures for lazy computation
     struct eflags eflags;
+    uint32_t eflags_dirty;
     struct cpu_prefix_state prefix_state;
 #define CPU_STOPPED 0x0
 #define CPU_RUNNING 0x1
