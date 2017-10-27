@@ -15,12 +15,12 @@ struct cpu_segment {
     uint16_t selector;
 };
 
-#define CPU_EFLAGS_CF 0x1
-#define CPU_EFLAGS_PF 0x4
-#define CPU_EFLAGS_AF 0x10
-#define CPU_EFLAGS_ZF 0x40
-#define CPU_EFLAGS_SF 0x80
-#define CPU_EFLAGS_OF 0x800
+#define CPU_EFLAGS_CF (1 << 0)
+#define CPU_EFLAGS_PF (1 << 2)
+#define CPU_EFLAGS_AF (1 << 4)
+#define CPU_EFLAGS_ZF (1 << 6)
+#define CPU_EFLAGS_SF (1 << 7)
+#define CPU_EFLAGS_OF (1 << 11)
 
 struct cpu_prefix_state {
     struct cpu_segment* segment;
@@ -39,6 +39,12 @@ struct cpu {
     // CPU EFLAGS + required support structures for lazy computation
     uint32_t eflags;
     uint32_t eflags_dirty;
+    uint32_t last_op1;
+    uint32_t last_op2;
+#define CPU_OPERAND_SIZE_8 1
+#define CPU_OPERAND_SIZE_16 2
+#define CPU_OPERAND_SIZE_32 4
+    uint8_t last_size;
     struct cpu_prefix_state prefix_state;
 #define CPU_STOPPED 0x0
 #define CPU_RUNNING 0x1

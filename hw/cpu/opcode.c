@@ -317,7 +317,7 @@ OPCODE_DEFINE(75)
     uint32_t ip = ((CPU_PREFIX_STATE_OPERAND32(cpu)) ? cpu->ip.regs_32 :
                                                        cpu->ip.regs_16) +
                   offset;
-    if (!cpu->eflags.zero)
+    if (!cpu_get_zf(cpu))
         cpu->ip.regs_32 = ip;
 }
 
