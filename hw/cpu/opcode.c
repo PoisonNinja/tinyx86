@@ -8,25 +8,6 @@ typedef void (*opcode_fn_t)(struct cpu* cpu);
 #define OPCODE_DEFINE(number) static void opcode##number(struct cpu* cpu)
 #define OPCODE_ENTRY(number) &opcode##number
 
-/*
- * Fast parity lookup borrowed from:
- * http://www.graphics.stanford.edu/~seander/bithacks.html#ParityLookupTable
- */
-static const uint8_t ParityTable256[256] = {
-#define P2(n) n, n ^ 1, n ^ 1, n
-#define P4(n) P2(n), P2(n ^ 1), P2(n ^ 1), P2(n)
-#define P6(n) P4(n), P4(n ^ 1), P4(n ^ 1), P4(n)
-    P6(0), P6(1), P6(1), P6(0),
-};
-
-static uint8_t calculate_parity(uint32_t value)
-{
-    value ^= value >> 16;
-    value ^= value >> 8;
-    uint8_t parity = ParityTable256[value & 0xff];
-    return parity;
-}
-
 static inline void raw_to_modrm(uint8_t raw, struct modrm* modrm)
 {
     uint8_t* tmp = (uint8_t*)modrm;

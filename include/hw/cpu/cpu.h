@@ -41,10 +41,8 @@ struct cpu {
     uint32_t eflags_dirty;
     uint32_t last_op1;
     uint32_t last_op2;
-#define CPU_OPERAND_SIZE_8 1
-#define CPU_OPERAND_SIZE_16 2
-#define CPU_OPERAND_SIZE_32 4
-    uint8_t last_size;
+    uint32_t last_result;
+    uint32_t last_op;
     struct cpu_prefix_state prefix_state;
 #define CPU_STOPPED 0x0
 #define CPU_RUNNING 0x1
