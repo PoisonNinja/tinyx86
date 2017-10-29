@@ -153,3 +153,13 @@ bool cpu_get_of(struct cpu* cpu)
     }
     return cpu->eflags & CPU_EFLAGS_OF;
 }
+
+void cpu_recompute_flags(struct cpu* cpu)
+{
+    cpu_get_cf(cpu);
+    cpu_get_pf(cpu);
+    cpu_get_af(cpu);
+    cpu_get_zf(cpu);
+    cpu_get_sf(cpu);
+    cpu_get_of(cpu);
+}
