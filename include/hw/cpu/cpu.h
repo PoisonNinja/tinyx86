@@ -42,7 +42,10 @@ struct cpu {
     uint32_t last_op1;
     uint32_t last_op2;
     uint32_t last_result;
-    uint32_t last_op;
+#define CPU_OP_SIZE_8 7
+#define CPU_OP_SIZE_16 15
+#define CPU_OP_SIZE_32 31
+    uint8_t last_size;
     struct cpu_prefix_state prefix_state;
 #define CPU_STOPPED 0x0
 #define CPU_RUNNING 0x1
