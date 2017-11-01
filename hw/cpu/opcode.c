@@ -168,7 +168,6 @@ OPCODE_DEFINE(20)
         // Direct addressing mode, reg is source, rm is dest because d == 0
         union cpu_register* source = modrm_to_register(cpu, modrm.reg);
         union cpu_register* dest = modrm_to_register(cpu, modrm.rm);
-        uint8_t result = source->regs_8 & dest->regs_8;
         cpu_arithmetic_and_u8(cpu, &dest->regs_8, &source->regs_8);
     } else {
         // TODO: Implement if mod != 3
