@@ -15,6 +15,10 @@ extern void cpu_arithmetic_sub_u16(struct cpu* cpu, uint16_t* dest,
 extern void cpu_arithmetic_sub_u32(struct cpu* cpu, uint32_t* dest,
                                    uint32_t* src);
 
+#define cpu_arithmetic_cmp_u8 cpu_arithmetic_sub_u8
+#define cpu_arithmetic_cmp_u16 cpu_arithmetic_sub_u16
+#define cpu_arithmetic_cmp_u32 cpu_arithmetic_sub_u32
+
 extern void cpu_arithmetic_and_u8(struct cpu* cpu, uint8_t* dest, uint8_t* src);
 extern void cpu_arithmetic_and_u16(struct cpu* cpu, uint16_t* dest,
                                    uint16_t* src);
