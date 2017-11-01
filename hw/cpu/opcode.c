@@ -118,11 +118,13 @@ uint32_t modrm_to_address(struct cpu* cpu, uint8_t mod, uint8_t rm)
             return modrm_to_address_no_dis(cpu, rm);
             break;
         case 1:
-            log_warn("modrm_to_address_one_dis is not implemented yet!");
+            log_fatal("modrm_to_address_one_dis is not implemented yet!");
             break;
         case 2:
-            log_warn("modrm_to_address_four_dis is not implemented yet!");
+            log_fatal("modrm_to_address_four_dis is not implemented yet!");
             break;
+        default:
+            log_fatal("modrm_to_address received invalid mod!");
     }
     return 0;
 }
@@ -299,6 +301,32 @@ OPCODE_DEFINE(75)
                   offset;
     if (!cpu_get_zf(cpu))
         cpu->ip.regs_32 = ip;
+}
+
+OPCODE_DEFINE(83)
+{
+    log_trace("add r/m16/32, imm8");
+    struct modrm modrm;
+    raw_to_modrm(cpu_fetch_instruction_u8(cpu), &modrm);
+    if (modrm.mod == 3) {
+        // TODO: Implement if mod != 0
+        log_fatal("Only MOD 0 for opcode 0x83 is supported");
+    } else {
+        if (CPU_PREFIX_STATE_OPERAND32(cpu)) {
+            uint16_t value = cpu_fetch_instruction_u16(cpu);
+            uint16_t imm8 = cpu_fetch_instruction_u8(cpu);
+            log_trace("Value: %X, imm8: %X\n", value, imm8);
+            switch (modrm.reg) {
+                case 7:
+                    cpu_arithmetic_cmp_u16(cpu, &value, &imm8);
+                    break;
+                default:
+                    log_fatal("Unsupported modrm.reg!");
+            }
+        } else {
+            log_fatal("Only 32-bit for opcode 0x83 is supported!");
+        }
+    }
 }
 
 /*
@@ -532,7 +560,7 @@ opcode_fn_t opcode_table[256] = {
     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
     NULL,     NULL,     NULL,     NULL,     NULL,     opcode75, NULL,
     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
-    NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
+    NULL,     NULL,     NULL,     NULL,     NULL,     opcode83, NULL,
     NULL,     opcode86, NULL,     opcode88, opcode89, opcode8A, opcode8B,
     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,     NULL,
