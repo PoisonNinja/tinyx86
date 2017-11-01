@@ -3,6 +3,18 @@
 #include <hw/cpu/cpu.h>
 #include <tinyx86.h>
 
+extern void cpu_arithmetic_add_u8(struct cpu* cpu, uint8_t* dest, uint8_t* src);
+extern void cpu_arithmetic_add_u16(struct cpu* cpu, uint16_t* dest,
+                                   uint16_t* src);
+extern void cpu_arithmetic_add_u32(struct cpu* cpu, uint32_t* dest,
+                                   uint32_t* src);
+
+extern void cpu_arithmetic_sub_u8(struct cpu* cpu, uint8_t* dest, uint8_t* src);
+extern void cpu_arithmetic_sub_u16(struct cpu* cpu, uint16_t* dest,
+                                   uint16_t* src);
+extern void cpu_arithmetic_sub_u32(struct cpu* cpu, uint32_t* dest,
+                                   uint32_t* src);
+
 extern void cpu_arithmetic_and_u8(struct cpu* cpu, uint8_t* dest, uint8_t* src);
 extern void cpu_arithmetic_and_u16(struct cpu* cpu, uint16_t* dest,
                                    uint16_t* src);

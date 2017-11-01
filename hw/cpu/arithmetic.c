@@ -1,11 +1,64 @@
 #include <hw/cpu/arithmetic.h>
 
+void cpu_arithmetic_add_u8(struct cpu* cpu, uint8_t* dest, uint8_t* src)
+{
+    cpu->last_op1 = *dest;
+    cpu->last_op2 = *src;
+    cpu->last_result = *dest = *dest + *src;
+    cpu->last_size = CPU_OP_SIZE_8;
+    cpu->eflags_dirty = CPU_EFLAGS_ALL;
+}
+
+void cpu_arithmetic_add_u16(struct cpu* cpu, uint16_t* dest, uint16_t* src)
+{
+    cpu->last_op1 = *dest;
+    cpu->last_op2 = *src;
+    cpu->last_result = *dest = *dest + *src;
+    cpu->last_size = CPU_OP_SIZE_16;
+    cpu->eflags_dirty = CPU_EFLAGS_ALL;
+}
+
+void cpu_arithmetic_add_u32(struct cpu* cpu, uint32_t* dest, uint32_t* src)
+{
+    cpu->last_op1 = *dest;
+    cpu->last_op2 = *src;
+    cpu->last_result = *dest = *dest + *src;
+    cpu->last_size = CPU_OP_SIZE_32;
+    cpu->eflags_dirty = CPU_EFLAGS_ALL;
+}
+
+void cpu_arithmetic_sub_u8(struct cpu* cpu, uint8_t* dest, uint8_t* src)
+{
+    cpu->last_result = *dest;
+    cpu->last_op2 = *src;
+    cpu->last_op1 = *dest = *dest - *src;
+    cpu->last_size = CPU_OP_SIZE_8;
+    cpu->eflags_dirty = CPU_EFLAGS_ALL;
+}
+
+void cpu_arithmetic_sub_u16(struct cpu* cpu, uint16_t* dest, uint16_t* src)
+{
+    cpu->last_result = *dest;
+    cpu->last_op2 = *src;
+    cpu->last_op1 = *dest = *dest - *src;
+    cpu->last_size = CPU_OP_SIZE_16;
+    cpu->eflags_dirty = CPU_EFLAGS_ALL;
+}
+
+void cpu_arithmetic_sub_u32(struct cpu* cpu, uint32_t* dest, uint32_t* src)
+{
+    cpu->last_result = *dest;
+    cpu->last_op2 = *src;
+    cpu->last_op1 = *dest = *dest - *src;
+    cpu->last_size = CPU_OP_SIZE_32;
+    cpu->eflags_dirty = CPU_EFLAGS_ALL;
+}
+
 void cpu_arithmetic_and_u8(struct cpu* cpu, uint8_t* dest, uint8_t* src)
 {
     cpu->last_op1 = *dest;
     cpu->last_op2 = *src;
     cpu->last_result = *dest = *dest & *src;
-    *dest = *dest & *src;
     cpu->eflags &= ~CPU_EFLAGS_CF & ~CPU_EFLAGS_OF;
     cpu->eflags_dirty = CPU_EFLAGS_PF | CPU_EFLAGS_ZF | CPU_EFLAGS_SF;
 }

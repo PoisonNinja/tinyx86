@@ -21,6 +21,9 @@ struct cpu_segment {
 #define CPU_EFLAGS_ZF (1 << 6)
 #define CPU_EFLAGS_SF (1 << 7)
 #define CPU_EFLAGS_OF (1 << 11)
+#define CPU_EFLAGS_ALL                                               \
+    (CPU_EFLAGS_CF | CPU_EFLAGS_CF | CPU_EFLAGS_AF | CPU_EFLAGS_ZF | \
+     CPU_EFLAGS_SF | CPU_EFLAGS_OF)
 
 struct cpu_prefix_state {
     struct cpu_segment* segment;
