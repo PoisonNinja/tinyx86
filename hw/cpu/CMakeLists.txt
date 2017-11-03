@@ -3,5 +3,7 @@ target_sources(tinyx86
     ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic.c
     ${CMAKE_CURRENT_SOURCE_DIR}/cpu.c
     ${CMAKE_CURRENT_SOURCE_DIR}/memory.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/opcode_common.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/opcode_two.c
     ${CMAKE_CURRENT_SOURCE_DIR}/opcode.c
 )
