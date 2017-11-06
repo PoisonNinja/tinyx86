@@ -3,8 +3,23 @@
 #include <hw/cpu/memory.h>
 #include <hw/cpu/opcode.h>
 
+/*
+ * 0x85: jnz rel16/32
+ */
 OPCODE_DEFINE(85)
 {
+    log_trace("jnz rel16/32");
+    if (CPU_PREFIX_STATE_OPERAND32(cpu)) {
+        int32_t offset = cpu_fetch_instruction_u32(cpu);
+        if (!cpu_get_zf(cpu)) {
+            cpu->ip.regs_32 += offset;
+        }
+    } else {
+        int16_t offset = cpu_fetch_instruction_u16(cpu);
+        if (!cpu_get_zf(cpu)) {
+            cpu->ip.regs_16 += offset;
+        }
+    }
 }
 
 static opcode_fn_t opcode_table[256] = {

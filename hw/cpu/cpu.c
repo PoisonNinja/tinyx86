@@ -55,6 +55,5 @@ void cpu_dump(struct cpu* cpu)
         "CS: 0x%04X DS: 0x%04X SS: 0x%04X ES: 0x%04X FS: 0x%04X GS: 0x%04X",
         cpu->cs.selector, cpu->ds.selector, cpu->ss.selector, cpu->es.selector,
         cpu->fs.selector, cpu->gs.selector);
-    log_trace("EFLAGS: 0x%08X", *(uint32_t*)&cpu->eflags);
     log_trace("============================================================");
 }
