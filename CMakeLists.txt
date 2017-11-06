@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
-project(tinyx86)
+project(tinyx86 C)
 
 # Check for in tree builds
 if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
