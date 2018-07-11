@@ -18,11 +18,10 @@ void cpu_reset(struct cpu* cpu)
     struct board* board = cpu->board;
     memset(cpu, 0, sizeof(struct cpu));
     cpu->board = board;
-    cpu->cs.selector = 0xF000;
-    cpu->cs.base = 0xFFFF0000;
-    cpu->cs.limit = 0xFFFF;
-    cpu->cs.selector = 0xF000;
-    cpu->ip.regs_16 = 0xFFF0;
+    cpu->cs.selector = 0;
+    cpu->cs.base = 0;
+    cpu->cs.limit = 0;
+    cpu->ip.regs_16 = 0;
     cpu->state = CPU_STOPPED;
 }
 
