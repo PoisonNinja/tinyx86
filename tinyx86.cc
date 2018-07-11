@@ -2,7 +2,6 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <getopt.h>
-#include <gui/window.h>
 #include <hw/board.h>
 #include <stdio.h>
 #include <stdlib.h>
