@@ -229,16 +229,8 @@ OPCODE_DEFINE(86)
 OPCODE_DEFINE(88)
 {
     log_trace("mov r/m8, r8");
-    struct modrm modrm;
-    raw_to_modrm(cpu_fetch_instruction_u8(cpu), &modrm);
-    if (modrm.mod == 3) {
-        // TODO; Implement if mod == 3
-        log_fatal("MOD 3 for opcode 0x88 is unsupported");
-    } else {
-        union cpu_register* source = modrm_to_register(cpu, modrm.reg);
-        addr_t dest = modrm_to_address(cpu, modrm.mod, modrm.rm);
-        cpu_store_u8(cpu, &cpu->ds, dest, source->regs_8);
-    }
+    cpu->modrm = cpu_fetch_instruction_u8(cpu);
+    store_modrm_rm8(cpu, fetch_modrm_r8(cpu));
 }
 
 /*

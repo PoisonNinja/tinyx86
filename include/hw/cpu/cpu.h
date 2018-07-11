@@ -45,6 +45,8 @@ struct cpu {
     uint32_t last_op1;
     uint32_t last_op2;
     uint32_t last_result;
+    // ModRM byte
+    uint8_t modrm;
 #define CPU_OP_SIZE_8 7
 #define CPU_OP_SIZE_16 15
 #define CPU_OP_SIZE_32 31
@@ -57,10 +59,7 @@ struct cpu {
 };
 
 extern void cpu_cycle(struct cpu* cpu);
-
 extern void cpu_reset(struct cpu* cpu);
-
 extern struct cpu* cpu_create(void);
 extern void cpu_destroy(struct cpu* cpu);
-
 extern void cpu_dump(struct cpu* cpu);

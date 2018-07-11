@@ -25,3 +25,10 @@ extern uint32_t modrm_to_address(struct cpu* cpu, uint8_t mod, uint8_t rm);
 typedef void (*opcode_fn_t)(struct cpu* cpu);
 
 #define OPCODE_DEFINE(number) static void opcode##number(struct cpu* cpu)
+
+extern uint8_t fetch_modrm_r8(struct cpu* cpu);
+extern uint8_t fetch_modrm_rm8(struct cpu* cpu);
+extern void store_modrm_r8(struct cpu* cpu, uint8_t val);
+extern void store_modrm_rm8(struct cpu* cpu, uint8_t val);
+
+extern void far_jump(struct cpu* cpu, uint32_t eip, uint16_t cs);

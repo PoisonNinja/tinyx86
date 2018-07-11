@@ -122,3 +122,41 @@ uint32_t modrm_to_address(struct cpu* cpu, uint8_t mod, uint8_t rm)
     }
     return 0;
 }
+
+uint8_t fetch_modrm_r8(struct cpu* cpu)
+{
+    struct modrm* modrm = &cpu->modrm;
+    return modrm_to_register(cpu, modrm->reg)->regs_8;
+}
+
+uint8_t fetch_modrm_rm8(struct cpu* cpu)
+{
+    struct modrm* modrm = &cpu->modrm;
+    if (modrm->mod == 3) {
+        return modrm_to_register(cpu, modrm->reg)->regs_8;
+    } else {
+        return cpu_fetch_u8(
+            cpu,
+            (cpu->prefix_state.segment) ? cpu->prefix_state.segment : &cpu->ds,
+            modrm_to_address(cpu, modrm->mod, modrm->rm));
+    }
+}
+
+void store_modrm_r8(struct cpu* cpu, uint8_t val)
+{
+    struct modrm* modrm = &cpu->modrm;
+    modrm_to_register(cpu, modrm->reg)->regs_8 = val;
+}
+
+void store_modrm_rm8(struct cpu* cpu, uint8_t val)
+{
+    struct modrm* modrm = &cpu->modrm;
+    if (modrm->mod == 3) {
+        modrm_to_register(cpu, modrm->reg)->regs_8 = val;
+    } else {
+        cpu_store_u8(
+            cpu,
+            (cpu->prefix_state.segment) ? cpu->prefix_state.segment : &cpu->ds,
+            modrm_to_address(cpu, modrm->mod, modrm->rm), val);
+    }
+}
