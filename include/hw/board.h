@@ -1,5 +1,6 @@
 #pragma once
 
+#include <hw/chipset/memory/controller.h>
 #include <spdlog/spdlog.h>
 #include <tinyx86.h>
 
@@ -12,5 +13,6 @@ public:
     void stop();
 
 private:
+    MemoryController memory;
     std::shared_ptr<spdlog::logger> log;
 };
