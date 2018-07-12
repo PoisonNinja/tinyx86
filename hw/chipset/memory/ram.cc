@@ -15,7 +15,7 @@ addr_t RAM::base()
     return this->b;
 }
 
-addr_t RAM::size()
+size_t RAM::size()
 {
     return this->s;
 }

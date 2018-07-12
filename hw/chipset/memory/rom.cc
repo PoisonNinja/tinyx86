@@ -15,7 +15,7 @@ addr_t ROM::base()
     return this->b;
 }
 
-addr_t ROM::size()
+size_t ROM::size()
 {
     return this->s;
 }
