@@ -1,13 +1,12 @@
-#include <ctype.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <getopt.h>
+#include <cxxopts.h>
 #include <hw/board.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/spdlog.h>
 #include <tinyx86.h>
-#include <unistd.h>
+#include <string>
+
+constexpr size_t minimum_ram = 128;
+constexpr size_t maximum_ram = 1024;
 
 // static struct board* board = NULL;
 
@@ -65,43 +64,57 @@
 //     }
 // }
 
-int main(int argc, char** argv)
+int main(int argc, const char** argv)
 {
-    //     int c, long_index;
-    //     char* end = NULL;
-    //     int log_level = LOG_FATAL;
-    //     size_t memory = TINYX86_MINIMUM_MEMORY;
-    //     while ((c = getopt_long(argc, argv, "hm:v", long_options,
-    //     &long_index))
-    //     !=
-    //            -1) {
-    //         switch (c) {
-    //             case GETOPT_LOG_LEVEL:
-    //                 log_level = atoi(optarg);
-    //                 validate_log_level(&log_level);
-    //                 break;
-    //             case 'h':
-    //                 print_usage(argv);
-    //                 exit(0);
-    //             case 'm':
-    //                 memory = strtoll(optarg, &end, 0);
-    //                 if (*end) {
-    //                     fprintf(stderr,
-    //                             "%s: Option -m requires a numerical
-    //                             argument.\n", argv[0]);
-    //                     exit(1);
-    //                 }
-    //                 validate_memory(&memory);
-    //                 break;
-    //             case 'v':
-    //                 print_version();
-    //                 exit(0);
-    //             default:
-    //                 exit(1);
-    //         }
-    //     }
-    //     log_set_level(log_level);
-    //     log_info("Memory: %zuMB", memory);
+    auto stdout = spdlog::stderr_color_mt("stdout");
+    stdout->set_level(spdlog::level::info);
+
+    size_t memory = minimum_ram;
+
+    cxxopts::Options options("tinyx86", "A tiny and simple x86 emulator");
+    options.add_options()("h,help", "Print help")(
+        "log-level", "Minimum log level to be printed", cxxopts::value<int>())(
+        "m,memory", "Memory allocated for the board", cxxopts::value<size_t>());
+
+    try {
+        auto result = options.parse(argc, argv);
+
+        if (result.count("help")) {
+            std::cerr << options.help({"", "Group"}) << std::endl;
+            return 0;
+        }
+
+        if (result.count("memory")) {
+            if (result["memory"].as<size_t>() < minimum_ram) {
+                memory = minimum_ram;
+            } else if (result["memory"].as<size_t>() > maximum_ram) {
+                memory = maximum_ram;
+            } else {
+                memory = result["memory"].as<size_t>();
+            }
+        }
+
+        if (result.count("log-level")) {
+            if (result["log-level"].as<int>() <
+                    static_cast<int>(spdlog::level::level_enum::trace) ||
+                result["log-level"].as<int>() >
+                    static_cast<int>(spdlog::level::level_enum::off)) {
+                std::cerr << "Invalid log level set. Valid range is from "
+                          << static_cast<int>(spdlog::level::level_enum::trace)
+                          << " to "
+                          << static_cast<int>(spdlog::level::level_enum::off)
+                          << "\n";
+            } else {
+                stdout->set_level(static_cast<spdlog::level::level_enum>(
+                    result["log-level"].as<int>()));
+            }
+        }
+    } catch (const cxxopts::OptionException& e) {
+        std::cerr << "Error parsing option: " << e.what() << "\n\n";
+        std::cerr << options.help({"", "Group"}) << std::endl;
+        return 0;
+    }
+    stdout->info("Memory: {} MiB", memory);
     //     board = board_create(memory);
     //     if (!board) {
     //         exit(1);

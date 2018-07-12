@@ -14,5 +14,3 @@
 
 typedef size_t addr_t;
 
-#define TINYX86_MINIMUM_MEMORY 128
-#define TINYX86_MAXIMUM_MEMORY 1024
