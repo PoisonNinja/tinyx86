@@ -7,7 +7,7 @@ RAM::RAM(addr_t base, size_t size) : b(base), s(size)
 
 RAM::~RAM()
 {
-    delete host_base;
+    delete[] host_base;
 }
 
 addr_t RAM::base()
