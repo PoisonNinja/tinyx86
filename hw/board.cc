@@ -2,12 +2,25 @@
 #include <hw/chipset/memory/ram.h>
 #include <hw/chipset/memory/rom.h>
 
+#include <fstream>
+
 Board::Board(size_t size) : cpu(*this)
 {
     this->log = spdlog::get("stdout");
 
     // Initialize system RAM
     this->memory.register_memory(new RAM(0, size * 1024 * 1024));
+
+    // Kludge
+    std::ifstream bios;
+    bios.open("../fw/hello.bin");
+    bios.seekg(0, std::ios::end);
+    size_t fileSize = bios.tellg();
+    bios.seekg(0, std::ios::beg);
+    char* buffer = new char[fileSize];
+    bios.read(buffer, fileSize);
+    this->memory.register_memory(new ROM(buffer, fileSize, 0, 128));
+    delete[] buffer;
 }
 
 Board::~Board()
