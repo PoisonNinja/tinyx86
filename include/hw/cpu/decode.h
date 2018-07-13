@@ -20,6 +20,9 @@ public:
     void tick();
     void reset();
 
+    // Instructions
+    void add_rm8_r8();
+
 private:
     CPU& cpu;
 
