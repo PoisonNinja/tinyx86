@@ -6,7 +6,7 @@
 class ROM : public Memory
 {
 public:
-    ROM(addr_t base, size_t size);
+    ROM(void* initial, size_t initial_size, addr_t base, size_t size);
     ~ROM() override;
 
     addr_t base() override;
