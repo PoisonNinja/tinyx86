@@ -146,6 +146,8 @@ CPU::~CPU()
 
 void CPU::tick()
 {
+    this->state = CPUState::RUNNING;
+    this->decoder.tick();
 }
 
 void CPU::reset()
@@ -236,4 +238,9 @@ void CPU::write_mem16(addr_t addr, uint16_t value)
 void CPU::write_mem32(addr_t addr, uint32_t value)
 {
     board.write32(addr, value);
+}
+
+CPUState CPU::get_state()
+{
+    return this->state;
 }

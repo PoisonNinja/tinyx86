@@ -14,6 +14,13 @@ Board::~Board()
 {
 }
 
+void Board::run()
+{
+    do {
+        cpu.tick();
+    } while (cpu.get_state() != CPUState::STOPPED);
+}
+
 uint8_t Board::read8(addr_t addr)
 {
     return this->memory.read8(addr);

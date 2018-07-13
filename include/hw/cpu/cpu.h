@@ -96,7 +96,6 @@ public:
     void tick();
     void reset();
 
-private:
     // Register operations
     uint8_t read_gpreg8(GPRegister reg);
     uint16_t read_gpreg16(GPRegister reg);
@@ -109,6 +108,12 @@ private:
     uint16_t read_sgreg(SGRegister reg);
     void write_sgreg(SGRegister reg, uint16_t selector);
 
+    uint16_t read_ip();
+    uint32_t read_eip();
+
+    void write_ip(uint16_t value);
+    void write_eip(uint32_t value);
+
     // Memory interface
     uint8_t read_mem8(addr_t addr);
     uint16_t read_mem16(addr_t addr);
@@ -118,10 +123,11 @@ private:
     void write_mem16(addr_t addr, uint16_t value);
     void write_mem32(addr_t addr, uint32_t value);
 
+    CPUState get_state();
+
 private:
     Board& board;  // Parent board
 
-    friend class InstructionDecoder;
     InstructionDecoder decoder;
 
     CPUState state;

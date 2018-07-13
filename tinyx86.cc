@@ -61,8 +61,6 @@ int main(int argc, const char** argv)
     stdout->info("Memory: {} MiB", memory);
     Board board(memory);
     stdout->info("Board created");
-    //     board_poweron(board);
-    //     log_debug("Powered on board");
-    //     board_run(board);
-    //     return 0;
+    board.run();
+    return 0;
 }
