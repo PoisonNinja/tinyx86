@@ -139,3 +139,45 @@ void CPU::reset()
 {
     this->ip.regs_32 = 0;
 }
+
+uint8_t CPU::read_gpreg8(GPRegister reg)
+{
+    return gpregs[static_cast<int>(reg)].regs_8;
+}
+
+uint16_t CPU::read_gpreg16(GPRegister reg)
+{
+    return gpregs[static_cast<int>(reg)].regs_16;
+}
+
+uint32_t CPU::read_gpreg32(GPRegister reg)
+{
+    return gpregs[static_cast<int>(reg)].regs_32;
+}
+
+void CPU::write_gpreg8(GPRegister reg, uint8_t value)
+{
+    gpregs[static_cast<int>(reg)].regs_8 = value;
+}
+
+void CPU::write_gpreg16(GPRegister reg, uint16_t value)
+{
+    gpregs[static_cast<int>(reg)].regs_16 = value;
+}
+
+void CPU::write_gpreg32(GPRegister reg, uint32_t value)
+{
+    gpregs[static_cast<int>(reg)].regs_32 = value;
+}
+
+uint16_t CPU::read_sgreg(SGRegister reg)
+{
+    return sgregs[static_cast<int>(reg)].selector;
+}
+
+void CPU::write_sgreg(SGRegister reg, uint16_t value)
+{
+    // TODO: Protected mode
+    sgregs[static_cast<int>(reg)].selector = value;
+    sgregs[static_cast<int>(reg)].base = value << 4;
+}

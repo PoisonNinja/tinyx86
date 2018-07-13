@@ -97,6 +97,7 @@ public:
     void tick();
     void reset();
 
+    // Register operations
     uint8_t read_gpreg8(GPRegister reg);
     uint16_t read_gpreg16(GPRegister reg);
     uint32_t read_gpreg32(GPRegister reg);
