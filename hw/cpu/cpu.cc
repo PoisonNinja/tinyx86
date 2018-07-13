@@ -134,7 +134,7 @@ bool EFLAGS::get_of()
     return eflags & eflags_of;
 }
 
-CPU::CPU(Board& b) : board(b)
+CPU::CPU(Board& b) : board(b), decoder(*this)
 {
     this->state = CPUState::STOPPED;
     this->reset();
@@ -161,7 +161,6 @@ void CPU::reset()
     }
     this->ip.regs_32 = 0;
     this->eflags.reset();
-    this->modrm = 0;
 
     // Set to reset vector
     this->ip.regs_32 = 0;

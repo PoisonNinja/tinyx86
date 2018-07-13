@@ -3,6 +3,7 @@
 #include <tinyx86.h>
 #include <cstddef>
 #include <cstdint>
+#include "decode.h"
 
 union Register {
     uint32_t regs_32;
@@ -83,13 +84,6 @@ enum class CPUState {
     RUNNING,
 };
 
-struct PrefixState {
-    struct Segment* segment;
-    uint8_t operand32;
-    uint8_t repne;
-    uint8_t repe;
-};
-
 class Board;
 class MemoryController;
 
@@ -102,6 +96,7 @@ public:
     void tick();
     void reset();
 
+private:
     // Register operations
     uint8_t read_gpreg8(GPRegister reg);
     uint16_t read_gpreg16(GPRegister reg);
@@ -126,6 +121,9 @@ public:
 private:
     Board& board;  // Parent board
 
+    friend class InstructionDecoder;
+    InstructionDecoder decoder;
+
     CPUState state;
 
     // General purpose registers
@@ -134,14 +132,9 @@ private:
     // Segment registers + cached values
     Segment sgregs[num_sgregs];
 
-    PrefixState prefixes;
-
     // Instruction pointer
     Register ip;
 
     // EFLAGS
     EFLAGS eflags;
-
-    // ModRM byte
-    uint8_t modrm;
 };
