@@ -123,6 +123,12 @@ public:
     void write_mem16(addr_t addr, uint16_t value);
     void write_mem32(addr_t addr, uint32_t value);
 
+    uint8_t read_instruction8();
+    uint16_t read_instruction16();
+    uint32_t read_instruction32();
+
+    addr_t segment_to_linear(SGRegister seg, addr_t offset);
+
     CPUState get_state();
 
 private:

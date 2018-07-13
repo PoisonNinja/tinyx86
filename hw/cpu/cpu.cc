@@ -240,6 +240,29 @@ void CPU::write_mem32(addr_t addr, uint32_t value)
     board.write32(addr, value);
 }
 
+uint8_t CPU::read_instruction8()
+{
+    addr_t ip = segment_to_linear(SGRegister::CS, this->ip.regs_16);
+    return this->ip.regs_16++, read_mem8(ip);
+}
+
+uint16_t CPU::read_instruction16()
+{
+    addr_t ip = segment_to_linear(SGRegister::CS, this->ip.regs_16);
+    return this->ip.regs_16 += 2, read_mem16(ip);
+}
+
+uint32_t CPU::read_instruction32()
+{
+    addr_t ip = segment_to_linear(SGRegister::CS, this->ip.regs_32);
+    return this->ip.regs_32 += 4, read_mem32(ip);
+}
+
+addr_t CPU::segment_to_linear(SGRegister reg, addr_t offset)
+{
+    return sgregs[static_cast<int>(reg)].base + offset;
+}
+
 CPUState CPU::get_state()
 {
     return this->state;
