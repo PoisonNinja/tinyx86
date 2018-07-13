@@ -9,6 +9,17 @@ EFLAGS::~EFLAGS()
 {
 }
 
+void EFLAGS::reset()
+{
+    this->eflags = 0;
+    this->eflags_dirty = 0;
+    this->last_op1 = 0;
+    this->last_op2 = 0;
+    this->last_result = 0;
+    this->last_add_result = 0;
+    this->last_size = 0;
+}
+
 uint32_t EFLAGS::get_eflags()
 {
     get_cf();
@@ -126,7 +137,6 @@ bool EFLAGS::get_of()
 CPU::CPU(Board& b) : board(b)
 {
     this->state = CPUState::STOPPED;
-    this->modrm = 0;
     this->reset();
 }
 
@@ -140,6 +150,20 @@ void CPU::tick()
 
 void CPU::reset()
 {
+    // Reset all registers to 0
+    for (size_t i = 0; i < num_gpregs; i++) {
+        this->gpregs[i].regs_32 = 0;
+    }
+    for (size_t i = 0; i < num_sgregs; i++) {
+        this->sgregs[i].selector = 0;
+        this->sgregs[i].base = 0;
+        this->sgregs[i].limit = 0;
+    }
+    this->ip.regs_32 = 0;
+    this->eflags.reset();
+    this->modrm = 0;
+
+    // Set to reset vector
     this->ip.regs_32 = 0;
 }
 

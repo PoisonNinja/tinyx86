@@ -37,6 +37,8 @@ public:
     EFLAGS();
     ~EFLAGS();
 
+    void reset();
+
     uint32_t get_eflags();  // Gets EFLAGS and recomputes as necessary
     bool get_cf();
     bool get_pf();
