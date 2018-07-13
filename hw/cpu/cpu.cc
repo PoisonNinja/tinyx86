@@ -1,3 +1,4 @@
+#include <hw/board.h>
 #include <hw/cpu/cpu.h>
 
 EFLAGS::EFLAGS()
@@ -124,6 +125,8 @@ bool EFLAGS::get_of()
 
 CPU::CPU(Board& b) : board(b)
 {
+    this->state = CPUState::STOPPED;
+    this->modrm = 0;
     this->reset();
 }
 
@@ -175,9 +178,39 @@ uint16_t CPU::read_sgreg(SGRegister reg)
     return sgregs[static_cast<int>(reg)].selector;
 }
 
-void CPU::write_sgreg(SGRegister reg, uint16_t value)
+void CPU::write_sgreg(SGRegister reg, uint16_t selector)
 {
     // TODO: Protected mode
-    sgregs[static_cast<int>(reg)].selector = value;
-    sgregs[static_cast<int>(reg)].base = value << 4;
+    sgregs[static_cast<int>(reg)].selector = selector;
+    sgregs[static_cast<int>(reg)].base = selector << 4;
+}
+
+uint8_t CPU::read_mem8(addr_t addr)
+{
+    return board.read8(addr);
+}
+
+uint16_t CPU::read_mem16(addr_t addr)
+{
+    return board.read16(addr);
+}
+
+uint32_t CPU::read_mem32(addr_t addr)
+{
+    return board.read32(addr);
+}
+
+void CPU::write_mem8(addr_t addr, uint8_t value)
+{
+    board.write8(addr, value);
+}
+
+void CPU::write_mem16(addr_t addr, uint16_t value)
+{
+    board.write16(addr, value);
+}
+
+void CPU::write_mem32(addr_t addr, uint32_t value)
+{
+    board.write32(addr, value);
 }

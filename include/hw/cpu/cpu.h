@@ -1,6 +1,6 @@
 #pragma once
 
-#include <hw/board.h>
+#include <tinyx86.h>
 #include <cstddef>
 #include <cstdint>
 
@@ -88,6 +88,9 @@ struct PrefixState {
     uint8_t repe;
 };
 
+class Board;
+class MemoryController;
+
 class CPU
 {
 public:
@@ -107,7 +110,16 @@ public:
     void write_gpreg32(GPRegister reg, uint32_t value);
 
     uint16_t read_sgreg(SGRegister reg);
-    void write_sgreg(SGRegister reg, uint16_t value);
+    void write_sgreg(SGRegister reg, uint16_t selector);
+
+    // Memory interface
+    uint8_t read_mem8(addr_t addr);
+    uint16_t read_mem16(addr_t addr);
+    uint32_t read_mem32(addr_t addr);
+
+    void write_mem8(addr_t addr, uint8_t value);
+    void write_mem16(addr_t addr, uint16_t value);
+    void write_mem32(addr_t addr, uint32_t value);
 
 private:
     Board& board;  // Parent board
