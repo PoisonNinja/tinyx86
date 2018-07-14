@@ -8,7 +8,8 @@ InstructionDecoder::InstructionDecoder(CPU& cpu) : cpu(cpu)
     this->reset();
 
     for (size_t i = 0; i < 256; i++) {
-        this->opcodes[i] = nullptr;
+        this->opcodes16[i] = nullptr;
+        this->opcodes32[i] = nullptr;
     }
 
     // Initialize instruction table
@@ -29,17 +30,24 @@ void InstructionDecoder::tick()
                 this->log->trace("Prefix overriding to CS");
                 this->prefixes.segment = SGRegister::CS;
                 break;
+            case 0x66:
+                this->log->trace("Prefix overriding operand size");
+                this->prefixes.opsize = true;
+                break;
             default:
                 isPrefix = false;
                 break;
         }
     }
     this->log->trace("Opcode: 0x{:X}", opcode);
-    if (!this->opcodes[opcode]) {
+    // TODO: Check for 32 bit. We assume 16 bit by default
+    InstructionPointer* opcodes =
+        (this->prefixes.opsize) ? this->opcodes32 : this->opcodes16;
+    if (!opcodes[opcode]) {
         this->log->error("Unknown opcode 0x{:X}, halting...", opcode);
         this->cpu.stop();
     } else {
-        InstructionPointer instr = this->opcodes[opcode];
+        InstructionPointer instr = opcodes[opcode];
         (this->*instr)();
     }
 }

@@ -36,7 +36,8 @@ private:
 
     typedef void (InstructionDecoder::*InstructionPointer)();
 
-    InstructionPointer opcodes[256];
+    InstructionPointer opcodes16[256];
+    InstructionPointer opcodes32[256];
 
     // Instructions
     void add_rm8_r8();
