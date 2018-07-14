@@ -42,8 +42,6 @@ private:
     InstructionPointer opcodes32[256];
 
     // Instructions
-    void add_rm8_r8();
-
     void mov_sp_imm16();
     void mov_esp_imm32();
 };

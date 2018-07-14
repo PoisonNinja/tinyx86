@@ -1,10 +1,6 @@
 #include <hw/cpu/cpu.h>
 #include <hw/cpu/decode.h>
 
-void InstructionDecoder::add_rm8_r8()
-{
-}
-
 void InstructionDecoder::mov_sp_imm16()
 {
     this->log->trace("mov_sp_imm16");
