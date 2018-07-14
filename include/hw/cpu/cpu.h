@@ -1,5 +1,6 @@
 #pragma once
 
+#include <spdlog/spdlog.h>
 #include <tinyx86.h>
 #include <cstddef>
 #include <cstdint>
@@ -129,10 +130,14 @@ public:
 
     addr_t segment_to_linear(SGRegister seg, addr_t offset);
 
+    void halt();
+    void stop();
+
     CPUState get_state();
 
 private:
     Board& board;  // Parent board
+    std::shared_ptr<spdlog::logger> log;
 
     InstructionDecoder decoder;
 

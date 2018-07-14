@@ -136,6 +136,7 @@ bool EFLAGS::get_of()
 
 CPU::CPU(Board& b) : board(b), decoder(*this)
 {
+    this->log = spdlog::get("stdout");
     this->state = CPUState::STOPPED;
     this->reset();
 }
@@ -261,6 +262,16 @@ uint32_t CPU::read_instruction32()
 addr_t CPU::segment_to_linear(SGRegister reg, addr_t offset)
 {
     return sgregs[static_cast<int>(reg)].base + offset;
+}
+
+void CPU::halt()
+{
+    this->state = CPUState::HALTED;
+}
+
+void CPU::stop()
+{
+    this->state = CPUState::STOPPED;
 }
 
 CPUState CPU::get_state()

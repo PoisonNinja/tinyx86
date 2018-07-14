@@ -1,11 +1,15 @@
 #pragma once
 
+#include <spdlog/spdlog.h>
 #include <cstdint>
 
 class CPU;
 
+enum class SGRegister : int;
+enum class GPRegister : int;
+
 struct PrefixState {
-    struct Segment* segment;
+    SGRegister segment;
     uint8_t operand32;
     uint8_t repne;
     uint8_t repe;
@@ -20,10 +24,9 @@ public:
     void tick();
     void reset();
 
-    // Instructions
-    void add_rm8_r8();
-
 private:
+    std::shared_ptr<spdlog::logger> log;
+
     CPU& cpu;
 
     PrefixState prefixes;
@@ -34,4 +37,7 @@ private:
     typedef void (InstructionDecoder::*InstructionPointer)();
 
     InstructionPointer opcodes[256];
+
+    // Instructions
+    void add_rm8_r8();
 };
