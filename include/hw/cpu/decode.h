@@ -10,9 +10,11 @@ enum class GPRegister : int;
 
 struct PrefixState {
     SGRegister segment;
-    uint8_t operand32;
+    bool opsize;
+    bool addrsize;
     uint8_t repne;
     uint8_t repe;
+    void reset();
 };
 
 class InstructionDecoder
@@ -41,4 +43,7 @@ private:
 
     // Instructions
     void add_rm8_r8();
+
+    void mov_sp_imm16();
+    void mov_esp_imm32();
 };

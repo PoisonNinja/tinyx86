@@ -1,6 +1,15 @@
 #include <hw/cpu/cpu.h>
 #include <hw/cpu/decode.h>
 
+void PrefixState::reset()
+{
+    segment = SGRegister::DS;
+    opsize = false;
+    addrsize = false;
+    repne = 0;
+    repe = 0;
+}
+
 InstructionDecoder::InstructionDecoder(CPU& cpu) : cpu(cpu)
 {
     this->log = spdlog::get("stdout");
@@ -13,7 +22,10 @@ InstructionDecoder::InstructionDecoder(CPU& cpu) : cpu(cpu)
     }
 
     // Initialize instruction table
-    this->opcodes[0x00] = &InstructionDecoder::add_rm8_r8;
+    this->opcodes16[0x00] = this->opcodes32[0x00] =
+        &InstructionDecoder::add_rm8_r8;
+    this->opcodes16[0xBC] = &InstructionDecoder::mov_sp_imm16;
+    this->opcodes32[0xBC] = &InstructionDecoder::mov_esp_imm32;
 }
 
 InstructionDecoder::~InstructionDecoder()
@@ -22,6 +34,7 @@ InstructionDecoder::~InstructionDecoder()
 
 void InstructionDecoder::tick()
 {
+    this->prefixes.reset();
     uint8_t opcode = this->cpu.read_instruction8();
     bool isPrefix = true;
     while (isPrefix) {
