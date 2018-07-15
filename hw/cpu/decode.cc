@@ -22,6 +22,10 @@ InstructionDecoder::InstructionDecoder(CPU& cpu) : cpu(cpu)
     }
 
     // Initialize instruction table
+    this->opcodes16[0x52] = &InstructionDecoder::push_dx;
+    this->opcodes32[0x52] = &InstructionDecoder::push_edx;
+    this->opcodes16[0x53] = &InstructionDecoder::push_bx;
+    this->opcodes32[0x53] = &InstructionDecoder::push_ebx;
     this->opcodes16[0xB8] = &InstructionDecoder::mov_ax_imm16;
     this->opcodes32[0xB8] = &InstructionDecoder::mov_eax_imm32;
     this->opcodes16[0xBC] = &InstructionDecoder::mov_sp_imm16;

@@ -1,6 +1,30 @@
 #include <hw/cpu/cpu.h>
 #include <hw/cpu/decode.h>
 
+void InstructionDecoder::push_dx()
+{
+    this->log->trace("push dx");
+    this->cpu.push16(this->cpu.read_gpreg16(GPRegister::DX));
+}
+
+void InstructionDecoder::push_edx()
+{
+    this->log->trace("push edx");
+    this->cpu.push32(this->cpu.read_gpreg32(GPRegister::DX));
+}
+
+void InstructionDecoder::push_bx()
+{
+    this->log->trace("push bx");
+    this->cpu.push16(this->cpu.read_gpreg16(GPRegister::BX));
+}
+
+void InstructionDecoder::push_ebx()
+{
+    this->log->trace("push ebx");
+    this->cpu.push32(this->cpu.read_gpreg32(GPRegister::BX));
+}
+
 void InstructionDecoder::mov_ax_imm16()
 {
     uint16_t val = this->cpu.read_instruction16();

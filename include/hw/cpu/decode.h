@@ -42,6 +42,11 @@ private:
     InstructionPointer opcodes32[256];
 
     // Instructions
+    void push_dx();  // 0x52
+    void push_edx();
+    void push_bx();  // 0x53
+    void push_ebx();
+
     void mov_ax_imm16();  // 0xB8
     void mov_eax_imm32();
     void mov_sp_imm16();  // 0xBC
