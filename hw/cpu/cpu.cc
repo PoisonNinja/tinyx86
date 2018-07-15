@@ -171,7 +171,9 @@ void CPU::reset()
 
 uint8_t CPU::read_gpreg8(GPRegister reg)
 {
-    return gpregs[static_cast<int>(reg)].regs_8;
+    if (reg <= GPRegister::DX) {
+        return gpregs[static_cast<int>(reg)].regs_8;
+    }
 }
 
 uint16_t CPU::read_gpreg16(GPRegister reg)
