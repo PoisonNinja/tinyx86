@@ -211,6 +211,26 @@ void CPU::write_sgreg(SGRegister reg, uint16_t selector)
     sgregs[static_cast<int>(reg)].base = selector << 4;
 }
 
+uint16_t CPU::read_ip()
+{
+    return this->ip.regs_16;
+}
+
+uint32_t CPU::read_eip()
+{
+    return this->ip.regs_32;
+}
+
+void CPU::write_ip(uint16_t value)
+{
+    this->ip.regs_16 = value;
+}
+
+void CPU::write_eip(uint32_t value)
+{
+    this->ip.regs_32 = value;
+}
+
 uint8_t CPU::read_mem8(addr_t addr)
 {
     return board.read8(addr);
