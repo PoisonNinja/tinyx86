@@ -279,6 +279,36 @@ uint32_t CPU::read_instruction32()
     return this->ip.regs_32 += 4, read_mem32(ip);
 }
 
+void CPU::push16(uint16_t value)
+{
+    union Register& sp = this->gpregs[static_cast<int>(GPRegister::SP)];
+    addr_t addr = segment_to_linear(SGRegister::SS, (sp.regs_16 - 2));
+    write_mem16(addr, value);
+    sp.regs_16 -= 2;
+}
+
+void CPU::push32(uint32_t value)
+{
+    union Register& sp = this->gpregs[static_cast<int>(GPRegister::SP)];
+    addr_t addr = segment_to_linear(SGRegister::SS, sp.regs_16 - 4);
+    write_mem32(addr, value);
+    sp.regs_16 -= 4;
+}
+
+uint16_t CPU::pop16()
+{
+    union Register& sp = this->gpregs[static_cast<int>(GPRegister::SP)];
+    addr_t addr = segment_to_linear(SGRegister::SS, sp.regs_16);
+    return sp.regs_16 += 2, read_mem16(addr);
+}
+
+uint32_t CPU::pop32()
+{
+    union Register& sp = this->gpregs[static_cast<int>(GPRegister::SP)];
+    addr_t addr = segment_to_linear(SGRegister::SS, sp.regs_32);
+    return sp.regs_16 += 4, read_mem32(addr);
+}
+
 addr_t CPU::segment_to_linear(SGRegister reg, addr_t offset)
 {
     return sgregs[static_cast<int>(reg)].base + offset;
