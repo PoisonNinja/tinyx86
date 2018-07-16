@@ -62,7 +62,7 @@ private:
     uint8_t last_size;         // Size of last operation
 };
 
-enum class GPRegister8 : int {
+enum class GPRegister8 : uint8_t {
     AL = 0,
     CL,
     DL,
@@ -73,7 +73,7 @@ enum class GPRegister8 : int {
     BH,
 };
 
-enum class GPRegister16 : int {
+enum class GPRegister16 : uint8_t {
     AX = 0,
     CX,
     DX,
@@ -84,7 +84,7 @@ enum class GPRegister16 : int {
     DI,
 };
 
-enum class GPRegister32 : int {
+enum class GPRegister32 : uint8_t {
     EAX = 0,
     ECX,
     EDX,

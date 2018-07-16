@@ -17,6 +17,12 @@ struct PrefixState {
     void reset();
 };
 
+struct ModRM {
+    uint8_t rm : 3;
+    uint8_t reg : 3;
+    uint8_t mod : 2;
+} __attribute__((packed));
+
 class InstructionDecoder
 {
 public:
@@ -35,6 +41,8 @@ private:
 
     // ModRM byte
     uint8_t modrm;
+    const struct ModRM* raw_to_modrm();
+    addr_t modrm_to_address(uint8_t mod, uint8_t rm);
 
     typedef void (InstructionDecoder::*InstructionPointer)();
 
