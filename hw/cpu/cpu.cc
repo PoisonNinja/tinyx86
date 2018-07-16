@@ -175,7 +175,7 @@ uint8_t CPU::read_gpreg8(GPRegister8 reg)
         return gpregs[static_cast<int>(reg)].regs_8l;
     } else {
         return gpregs[static_cast<int>(reg) - static_cast<int>(GPRegister8::AH)]
-            .regs_8l;
+            .regs_8h;
     }
 }
 
@@ -195,7 +195,7 @@ void CPU::write_gpreg8(GPRegister8 reg, uint8_t value)
         gpregs[static_cast<int>(reg)].regs_8l = value;
     } else {
         gpregs[static_cast<int>(reg) - static_cast<int>(GPRegister8::AH)]
-            .regs_8l = value;
+            .regs_8h = value;
     }
 }
 
