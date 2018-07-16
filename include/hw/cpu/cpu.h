@@ -9,7 +9,10 @@
 union Register {
     uint32_t regs_32;
     uint16_t regs_16;
-    uint8_t regs_8;
+    struct {
+        uint8_t regs_8l;
+        uint8_t regs_8h;
+    };
 };
 
 struct Segment {
@@ -59,15 +62,37 @@ private:
     uint8_t last_size;         // Size of last operation
 };
 
-enum class GPRegister : int {
+enum class GPRegister8 : int {
+    AL = 0,
+    CL,
+    DL,
+    BL,
+    AH,
+    CH,
+    DH,
+    BH,
+};
+
+enum class GPRegister16 : int {
     AX = 0,
-    BX,
     CX,
     DX,
+    BX,
     SP,
     BP,
     SI,
     DI,
+};
+
+enum class GPRegister32 : int {
+    EAX = 0,
+    ECX,
+    EDX,
+    EBX,
+    ESP,
+    EBP,
+    ESI,
+    EDI,
 };
 
 enum class SGRegister : int {
@@ -98,13 +123,13 @@ public:
     void reset();
 
     // Register operations
-    uint8_t read_gpreg8(GPRegister reg);
-    uint16_t read_gpreg16(GPRegister reg);
-    uint32_t read_gpreg32(GPRegister reg);
+    uint8_t read_gpreg8(GPRegister8 reg);
+    uint16_t read_gpreg16(GPRegister16 reg);
+    uint32_t read_gpreg32(GPRegister32 reg);
 
-    void write_gpreg8(GPRegister reg, uint8_t value);
-    void write_gpreg16(GPRegister reg, uint16_t value);
-    void write_gpreg32(GPRegister reg, uint32_t value);
+    void write_gpreg8(GPRegister8 reg, uint8_t value);
+    void write_gpreg16(GPRegister16 reg, uint16_t value);
+    void write_gpreg32(GPRegister32 reg, uint32_t value);
 
     uint16_t read_sgreg(SGRegister reg);
     void write_sgreg(SGRegister reg, uint16_t selector);

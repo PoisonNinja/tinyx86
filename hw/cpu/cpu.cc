@@ -169,34 +169,42 @@ void CPU::reset()
     this->ip.regs_32 = 0;
 }
 
-uint8_t CPU::read_gpreg8(GPRegister reg)
+uint8_t CPU::read_gpreg8(GPRegister8 reg)
 {
-    if (reg <= GPRegister::DX) {
-        return gpregs[static_cast<int>(reg)].regs_8;
+    if (reg <= GPRegister8::BL) {
+        return gpregs[static_cast<int>(reg)].regs_8l;
+    } else {
+        return gpregs[static_cast<int>(reg) - static_cast<int>(GPRegister8::AH)]
+            .regs_8l;
     }
 }
 
-uint16_t CPU::read_gpreg16(GPRegister reg)
+uint16_t CPU::read_gpreg16(GPRegister16 reg)
 {
     return gpregs[static_cast<int>(reg)].regs_16;
 }
 
-uint32_t CPU::read_gpreg32(GPRegister reg)
+uint32_t CPU::read_gpreg32(GPRegister32 reg)
 {
     return gpregs[static_cast<int>(reg)].regs_32;
 }
 
-void CPU::write_gpreg8(GPRegister reg, uint8_t value)
+void CPU::write_gpreg8(GPRegister8 reg, uint8_t value)
 {
-    gpregs[static_cast<int>(reg)].regs_8 = value;
+    if (reg <= GPRegister8::BL) {
+        gpregs[static_cast<int>(reg)].regs_8l = value;
+    } else {
+        gpregs[static_cast<int>(reg) - static_cast<int>(GPRegister8::AH)]
+            .regs_8l = value;
+    }
 }
 
-void CPU::write_gpreg16(GPRegister reg, uint16_t value)
+void CPU::write_gpreg16(GPRegister16 reg, uint16_t value)
 {
     gpregs[static_cast<int>(reg)].regs_16 = value;
 }
 
-void CPU::write_gpreg32(GPRegister reg, uint32_t value)
+void CPU::write_gpreg32(GPRegister32 reg, uint32_t value)
 {
     gpregs[static_cast<int>(reg)].regs_32 = value;
 }
@@ -283,7 +291,7 @@ uint32_t CPU::read_instruction32()
 
 void CPU::push16(uint16_t value)
 {
-    union Register& sp = this->gpregs[static_cast<int>(GPRegister::SP)];
+    union Register& sp = this->gpregs[static_cast<int>(GPRegister16::SP)];
     addr_t addr = segment_to_linear(SGRegister::SS, (sp.regs_16 - 2));
     write_mem16(addr, value);
     sp.regs_16 -= 2;
@@ -291,7 +299,7 @@ void CPU::push16(uint16_t value)
 
 void CPU::push32(uint32_t value)
 {
-    union Register& sp = this->gpregs[static_cast<int>(GPRegister::SP)];
+    union Register& sp = this->gpregs[static_cast<int>(GPRegister32::ESP)];
     addr_t addr = segment_to_linear(SGRegister::SS, sp.regs_16 - 4);
     write_mem32(addr, value);
     sp.regs_16 -= 4;
@@ -299,14 +307,14 @@ void CPU::push32(uint32_t value)
 
 uint16_t CPU::pop16()
 {
-    union Register& sp = this->gpregs[static_cast<int>(GPRegister::SP)];
+    union Register& sp = this->gpregs[static_cast<int>(GPRegister16::SP)];
     addr_t addr = segment_to_linear(SGRegister::SS, sp.regs_16);
     return sp.regs_16 += 2, read_mem16(addr);
 }
 
 uint32_t CPU::pop32()
 {
-    union Register& sp = this->gpregs[static_cast<int>(GPRegister::SP)];
+    union Register& sp = this->gpregs[static_cast<int>(GPRegister32::ESP)];
     addr_t addr = segment_to_linear(SGRegister::SS, sp.regs_32);
     return sp.regs_16 += 4, read_mem32(addr);
 }
