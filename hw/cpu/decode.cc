@@ -63,7 +63,7 @@ void InstructionDecoder::tick()
     this->log->trace("Opcode: 0x{:X}", opcode);
     // TODO: Check for 32 bit. We assume 16 bit by default
     InstructionPointer* opcodes =
-        (this->prefixes.opsize) ? this->opcodes32 : this->opcodes16;
+        (this->is_osize_32()) ? this->opcodes32 : this->opcodes16;
     if (!opcodes[opcode]) {
         this->log->error("Unknown opcode 0x{:X}, halting...", opcode);
         this->cpu.stop();
