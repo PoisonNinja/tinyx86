@@ -40,8 +40,9 @@ private:
     PrefixState prefixes;
 
     // ModRM byte
-    uint8_t modrm;
-    const struct ModRM* raw_to_modrm();
+    uint8_t raw_modrm;
+    struct ModRM* modrm;
+    void load_modrm();
     addr_t modrm_to_address(uint8_t mod, uint8_t rm);
 
     // Operand size

@@ -14,6 +14,8 @@ InstructionDecoder::InstructionDecoder(CPU& cpu) : cpu(cpu)
 {
     this->log = spdlog::get("stdout");
 
+    this->modrm = reinterpret_cast<struct ModRM*>(&this->raw_modrm);
+
     this->reset();
 
     for (size_t i = 0; i < 256; i++) {

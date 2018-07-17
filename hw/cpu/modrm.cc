@@ -1,9 +1,9 @@
 #include <hw/cpu/cpu.h>
 #include <hw/cpu/decode.h>
 
-const struct ModRM* InstructionDecoder::raw_to_modrm()
+void InstructionDecoder::load_modrm()
 {
-    return reinterpret_cast<struct ModRM*>(&this->modrm);
+    this->raw_modrm = this->cpu.read_instruction8();
 }
 
 addr_t InstructionDecoder::modrm_to_address(uint8_t mod, uint8_t rm)
@@ -197,14 +197,13 @@ addr_t InstructionDecoder::modrm_to_address(uint8_t mod, uint8_t rm)
 
 uint8_t InstructionDecoder::read_modrm_r8()
 {
-    return this->cpu.read_gpreg8(
-        static_cast<GPRegister8>(this->raw_to_modrm()->reg));
+    return this->cpu.read_gpreg8(static_cast<GPRegister8>(this->modrm->reg));
 }
 
 uint8_t InstructionDecoder::read_modrm_rm8()
 {
-    uint8_t mod = this->raw_to_modrm()->mod;
-    uint8_t rm = this->raw_to_modrm()->rm;
+    uint8_t mod = this->modrm->mod;
+    uint8_t rm = this->modrm->rm;
     if (mod == 3) {
         return this->cpu.read_gpreg8(static_cast<GPRegister8>(rm));
     } else {
@@ -215,14 +214,13 @@ uint8_t InstructionDecoder::read_modrm_rm8()
 
 uint16_t InstructionDecoder::read_modrm_r16()
 {
-    return this->cpu.read_gpreg16(
-        static_cast<GPRegister16>(this->raw_to_modrm()->reg));
+    return this->cpu.read_gpreg16(static_cast<GPRegister16>(this->modrm->reg));
 }
 
 uint16_t InstructionDecoder::read_modrm_rm16()
 {
-    uint8_t mod = this->raw_to_modrm()->mod;
-    uint8_t rm = this->raw_to_modrm()->rm;
+    uint8_t mod = this->modrm->mod;
+    uint8_t rm = this->modrm->rm;
     if (mod == 3) {
         return this->cpu.read_gpreg16(static_cast<GPRegister16>(rm));
     } else {
@@ -233,14 +231,13 @@ uint16_t InstructionDecoder::read_modrm_rm16()
 
 uint32_t InstructionDecoder::read_modrm_r32()
 {
-    return this->cpu.read_gpreg32(
-        static_cast<GPRegister32>(this->raw_to_modrm()->reg));
+    return this->cpu.read_gpreg32(static_cast<GPRegister32>(this->modrm->reg));
 }
 
 uint32_t InstructionDecoder::read_modrm_rm32()
 {
-    uint8_t mod = this->raw_to_modrm()->mod;
-    uint8_t rm = this->raw_to_modrm()->rm;
+    uint8_t mod = this->modrm->mod;
+    uint8_t rm = this->modrm->rm;
     if (mod == 3) {
         return this->cpu.read_gpreg32(static_cast<GPRegister32>(rm));
     } else {
@@ -251,14 +248,13 @@ uint32_t InstructionDecoder::read_modrm_rm32()
 
 void InstructionDecoder::write_modrm_r8(uint8_t value)
 {
-    this->cpu.write_gpreg8(static_cast<GPRegister8>(this->raw_to_modrm()->reg),
-                           value);
+    this->cpu.write_gpreg8(static_cast<GPRegister8>(this->modrm->reg), value);
 }
 
 void InstructionDecoder::write_modrm_rm8(uint8_t value)
 {
-    uint8_t mod = this->raw_to_modrm()->mod;
-    uint8_t rm = this->raw_to_modrm()->rm;
+    uint8_t mod = this->modrm->mod;
+    uint8_t rm = this->modrm->rm;
     if (mod == 3) {
         this->cpu.write_gpreg8(static_cast<GPRegister8>(rm), value);
     } else {
@@ -269,14 +265,13 @@ void InstructionDecoder::write_modrm_rm8(uint8_t value)
 
 void InstructionDecoder::write_modrm_r16(uint16_t value)
 {
-    this->cpu.write_gpreg16(
-        static_cast<GPRegister16>(this->raw_to_modrm()->reg), value);
+    this->cpu.write_gpreg16(static_cast<GPRegister16>(this->modrm->reg), value);
 }
 
 void InstructionDecoder::write_modrm_rm16(uint16_t value)
 {
-    uint8_t mod = this->raw_to_modrm()->mod;
-    uint8_t rm = this->raw_to_modrm()->rm;
+    uint8_t mod = this->modrm->mod;
+    uint8_t rm = this->modrm->rm;
     if (mod == 3) {
         this->cpu.write_gpreg16(static_cast<GPRegister16>(rm), value);
     } else {
@@ -287,14 +282,13 @@ void InstructionDecoder::write_modrm_rm16(uint16_t value)
 
 void InstructionDecoder::write_modrm_r32(uint32_t value)
 {
-    this->cpu.write_gpreg32(
-        static_cast<GPRegister32>(this->raw_to_modrm()->reg), value);
+    this->cpu.write_gpreg32(static_cast<GPRegister32>(this->modrm->reg), value);
 }
 
 void InstructionDecoder::write_modrm_rm32(uint32_t value)
 {
-    uint8_t mod = this->raw_to_modrm()->mod;
-    uint8_t rm = this->raw_to_modrm()->rm;
+    uint8_t mod = this->modrm->mod;
+    uint8_t rm = this->modrm->rm;
     if (mod == 3) {
         this->cpu.write_gpreg32(static_cast<GPRegister32>(rm), value);
     } else {
