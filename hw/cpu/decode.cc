@@ -75,3 +75,13 @@ void InstructionDecoder::reset()
 {
     this->modrm = 0;
 }
+
+bool InstructionDecoder::is_osize_32()
+{
+    return this->prefixes.opsize != this->cpu.is_32();
+}
+
+bool InstructionDecoder::is_asize_32()
+{
+    return this->prefixes.addrsize != this->cpu.is_32();
+}

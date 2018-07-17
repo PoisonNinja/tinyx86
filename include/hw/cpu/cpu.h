@@ -160,6 +160,8 @@ public:
     uint16_t pop16();
     uint32_t pop32();
 
+    bool is_32();
+
     addr_t segment_to_linear(SGRegister seg, addr_t offset);
 
     void halt();

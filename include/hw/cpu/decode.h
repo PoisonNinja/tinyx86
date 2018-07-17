@@ -44,6 +44,10 @@ private:
     const struct ModRM* raw_to_modrm();
     addr_t modrm_to_address(uint8_t mod, uint8_t rm);
 
+    // Operand size
+    bool is_osize_32();
+    bool is_asize_32();
+
     typedef void (InstructionDecoder::*InstructionPointer)();
 
     InstructionPointer opcodes16[256];

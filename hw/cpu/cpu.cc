@@ -319,6 +319,12 @@ uint32_t CPU::pop32()
     return sp.regs_16 += 4, read_mem32(addr);
 }
 
+bool CPU::is_32()
+{
+    // TODO: Eventually figure out of we are actually 32-bit based on GDT
+    return false;
+}
+
 addr_t CPU::segment_to_linear(SGRegister reg, addr_t offset)
 {
     return sgregs[static_cast<int>(reg)].base + offset;
