@@ -195,6 +195,12 @@ uint16_t InstructionDecoder::read_modrm_rm16()
 {
     uint8_t mod = this->raw_to_modrm()->mod;
     uint8_t rm = this->raw_to_modrm()->rm;
+    if (mod == 3) {
+        return this->cpu.read_gpreg16(static_cast<GPRegister16>(rm));
+    } else {
+        addr_t addr = this->modrm_to_address(mod, rm);
+        return this->cpu.read_mem16(addr);
+    }
 }
 
 uint32_t InstructionDecoder::read_modrm_r32()
@@ -207,6 +213,12 @@ uint32_t InstructionDecoder::read_modrm_rm32()
 {
     uint8_t mod = this->raw_to_modrm()->mod;
     uint8_t rm = this->raw_to_modrm()->rm;
+    if (mod == 3) {
+        return this->cpu.read_gpreg32(static_cast<GPRegister32>(rm));
+    } else {
+        addr_t addr = this->modrm_to_address(mod, rm);
+        return this->cpu.read_mem32(addr);
+    }
 }
 
 void InstructionDecoder::write_modrm_r8(uint8_t value)
@@ -219,6 +231,12 @@ void InstructionDecoder::write_modrm_rm8(uint8_t value)
 {
     uint8_t mod = this->raw_to_modrm()->mod;
     uint8_t rm = this->raw_to_modrm()->rm;
+    if (mod == 3) {
+        this->cpu.write_gpreg8(static_cast<GPRegister8>(rm), value);
+    } else {
+        addr_t addr = this->modrm_to_address(mod, rm);
+        this->cpu.write_mem8(addr, value);
+    }
 }
 
 void InstructionDecoder::write_modrm_r16(uint16_t value)
@@ -231,6 +249,12 @@ void InstructionDecoder::write_modrm_rm16(uint16_t value)
 {
     uint8_t mod = this->raw_to_modrm()->mod;
     uint8_t rm = this->raw_to_modrm()->rm;
+    if (mod == 3) {
+        this->cpu.write_gpreg16(static_cast<GPRegister16>(rm), value);
+    } else {
+        addr_t addr = this->modrm_to_address(mod, rm);
+        this->cpu.write_mem16(addr, value);
+    }
 }
 
 void InstructionDecoder::write_modrm_r32(uint32_t value)
@@ -243,4 +267,10 @@ void InstructionDecoder::write_modrm_rm32(uint32_t value)
 {
     uint8_t mod = this->raw_to_modrm()->mod;
     uint8_t rm = this->raw_to_modrm()->rm;
+    if (mod == 3) {
+        this->cpu.write_gpreg32(static_cast<GPRegister32>(rm), value);
+    } else {
+        addr_t addr = this->modrm_to_address(mod, rm);
+        this->cpu.write_mem32(addr, value);
+    }
 }
