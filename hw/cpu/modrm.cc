@@ -9,159 +9,187 @@ const struct ModRM* InstructionDecoder::raw_to_modrm()
 addr_t InstructionDecoder::modrm_to_address(uint8_t mod, uint8_t rm)
 {
     // TODO: Switch based on real/protected mode
-    if (mod == 0) {
-        switch (rm) {
-            case 0:
-                return this->cpu.segment_to_linear(
-                    SGRegister::DS, (this->cpu.read_gpreg16(GPRegister16::BX) +
-                                     this->cpu.read_gpreg16(GPRegister16::SI)) &
-                                        0xFFFF);
-                break;
-            case 1:
-                return this->cpu.segment_to_linear(
-                    SGRegister::DS, (this->cpu.read_gpreg16(GPRegister16::BX) +
-                                     this->cpu.read_gpreg16(GPRegister16::DI)) &
-                                        0xFFFF);
-                break;
-            case 2:
-                return this->cpu.segment_to_linear(
-                    SGRegister::DS, (this->cpu.read_gpreg16(GPRegister16::BP) +
-                                     this->cpu.read_gpreg16(GPRegister16::SI)) &
-                                        0xFFFF);
-                break;
-            case 3:
-                return this->cpu.segment_to_linear(
-                    SGRegister::DS, (this->cpu.read_gpreg16(GPRegister16::BP) +
-                                     this->cpu.read_gpreg16(GPRegister16::DI)) &
-                                        0xFFFF);
-                break;
-            case 4:
-                return this->cpu.segment_to_linear(
-                    SGRegister::DS, this->cpu.read_gpreg16(GPRegister16::SI));
-                break;
-            case 5:
-                return this->cpu.segment_to_linear(
-                    SGRegister::DS, this->cpu.read_gpreg16(GPRegister16::DI));
-                break;
-            case 6:
-                return this->cpu.segment_to_linear(
-                    SGRegister::DS, this->cpu.read_instruction16());
-                break;
-            case 7:
-                return this->cpu.segment_to_linear(
-                    SGRegister::DS, this->cpu.read_gpreg16(GPRegister16::BX));
-                break;
+    if (!this->is_asize_32()) {
+        if (mod == 0) {
+            switch (rm) {
+                case 0:
+                    return this->cpu.segment_to_linear(
+                        SGRegister::DS,
+                        (this->cpu.read_gpreg16(GPRegister16::BX) +
+                         this->cpu.read_gpreg16(GPRegister16::SI)) &
+                            0xFFFF);
+                    break;
+                case 1:
+                    return this->cpu.segment_to_linear(
+                        SGRegister::DS,
+                        (this->cpu.read_gpreg16(GPRegister16::BX) +
+                         this->cpu.read_gpreg16(GPRegister16::DI)) &
+                            0xFFFF);
+                    break;
+                case 2:
+                    return this->cpu.segment_to_linear(
+                        SGRegister::DS,
+                        (this->cpu.read_gpreg16(GPRegister16::BP) +
+                         this->cpu.read_gpreg16(GPRegister16::SI)) &
+                            0xFFFF);
+                    break;
+                case 3:
+                    return this->cpu.segment_to_linear(
+                        SGRegister::DS,
+                        (this->cpu.read_gpreg16(GPRegister16::BP) +
+                         this->cpu.read_gpreg16(GPRegister16::DI)) &
+                            0xFFFF);
+                    break;
+                case 4:
+                    return this->cpu.segment_to_linear(
+                        SGRegister::DS,
+                        this->cpu.read_gpreg16(GPRegister16::SI));
+                    break;
+                case 5:
+                    return this->cpu.segment_to_linear(
+                        SGRegister::DS,
+                        this->cpu.read_gpreg16(GPRegister16::DI));
+                    break;
+                case 6:
+                    return this->cpu.segment_to_linear(
+                        SGRegister::DS, this->cpu.read_instruction16());
+                    break;
+                case 7:
+                    return this->cpu.segment_to_linear(
+                        SGRegister::DS,
+                        this->cpu.read_gpreg16(GPRegister16::BX));
+                    break;
+            }
+        } else if (mod == 1) {
+            switch (rm) {
+                case 0:
+                    return this->cpu.segment_to_linear(
+                        SGRegister::DS,
+                        (this->cpu.read_gpreg16(GPRegister16::BX) +
+                         this->cpu.read_gpreg16(GPRegister16::SI) +
+                         this->cpu.read_instruction8()) &
+                            0xFFFF);
+                    break;
+                case 1:
+                    return this->cpu.segment_to_linear(
+                        SGRegister::DS,
+                        (this->cpu.read_gpreg16(GPRegister16::BX) +
+                         this->cpu.read_gpreg16(GPRegister16::DI) +
+                         this->cpu.read_instruction8()) &
+                            0xFFFF);
+                    break;
+                case 2:
+                    return this->cpu.segment_to_linear(
+                        SGRegister::DS,
+                        (this->cpu.read_gpreg16(GPRegister16::BP) +
+                         this->cpu.read_gpreg16(GPRegister16::SI) +
+                         this->cpu.read_instruction8()) &
+                            0xFFFF);
+                    break;
+                case 3:
+                    return this->cpu.segment_to_linear(
+                        SGRegister::DS,
+                        (this->cpu.read_gpreg16(GPRegister16::BP) +
+                         this->cpu.read_gpreg16(GPRegister16::DI) +
+                         this->cpu.read_instruction8()) &
+                            0xFFFF);
+                    break;
+                case 4:
+                    return this->cpu.segment_to_linear(
+                        SGRegister::DS,
+                        (this->cpu.read_gpreg16(GPRegister16::SI) +
+                         this->cpu.read_instruction8()) &
+                            0xFFFF);
+                    break;
+                case 5:
+                    return this->cpu.segment_to_linear(
+                        SGRegister::DS,
+                        (this->cpu.read_gpreg16(GPRegister16::DI) +
+                         this->cpu.read_instruction8()) &
+                            0xFFFF);
+                    break;
+                case 6:
+                    return this->cpu.segment_to_linear(
+                        SGRegister::DS,
+                        (this->cpu.read_gpreg16(GPRegister16::BP) +
+                         this->cpu.read_instruction8()) &
+                            0xFFFF);
+                    break;
+                case 7:
+                    return this->cpu.segment_to_linear(
+                        SGRegister::DS,
+                        (this->cpu.read_gpreg16(GPRegister16::BX) +
+                         this->cpu.read_instruction8()) &
+                            0xFFFF);
+                    break;
+            }
+        } else if (mod == 2) {
+            switch (rm) {
+                case 0:
+                    return this->cpu.segment_to_linear(
+                        SGRegister::DS,
+                        (this->cpu.read_gpreg16(GPRegister16::BX) +
+                         this->cpu.read_gpreg16(GPRegister16::SI) +
+                         this->cpu.read_instruction16()) &
+                            0xFFFF);
+                    break;
+                case 1:
+                    return this->cpu.segment_to_linear(
+                        SGRegister::DS,
+                        (this->cpu.read_gpreg16(GPRegister16::BX) +
+                         this->cpu.read_gpreg16(GPRegister16::DI) +
+                         this->cpu.read_instruction16()) &
+                            0xFFFF);
+                    break;
+                case 2:
+                    return this->cpu.segment_to_linear(
+                        SGRegister::DS,
+                        (this->cpu.read_gpreg16(GPRegister16::BP) +
+                         this->cpu.read_gpreg16(GPRegister16::SI) +
+                         this->cpu.read_instruction16()) &
+                            0xFFFF);
+                    break;
+                case 3:
+                    return this->cpu.segment_to_linear(
+                        SGRegister::DS,
+                        (this->cpu.read_gpreg16(GPRegister16::BP) +
+                         this->cpu.read_gpreg16(GPRegister16::DI) +
+                         this->cpu.read_instruction16()) &
+                            0xFFFF);
+                    break;
+                case 4:
+                    return this->cpu.segment_to_linear(
+                        SGRegister::DS,
+                        (this->cpu.read_gpreg16(GPRegister16::SI) +
+                         this->cpu.read_instruction16()) &
+                            0xFFFF);
+                    break;
+                case 5:
+                    return this->cpu.segment_to_linear(
+                        SGRegister::DS,
+                        (this->cpu.read_gpreg16(GPRegister16::DI) +
+                         this->cpu.read_instruction16()) &
+                            0xFFFF);
+                    break;
+                case 6:
+                    return this->cpu.segment_to_linear(
+                        SGRegister::DS,
+                        (this->cpu.read_gpreg16(GPRegister16::BP) +
+                         this->cpu.read_instruction16()) &
+                            0xFFFF);
+                    break;
+                case 7:
+                    return this->cpu.segment_to_linear(
+                        SGRegister::DS,
+                        (this->cpu.read_gpreg16(GPRegister16::BX) +
+                         this->cpu.read_instruction16()) &
+                            0xFFFF);
+                    break;
+            }
         }
-    } else if (mod == 1) {
-        switch (rm) {
-            case 0:
-                return this->cpu.segment_to_linear(
-                    SGRegister::DS, (this->cpu.read_gpreg16(GPRegister16::BX) +
-                                     this->cpu.read_gpreg16(GPRegister16::SI) +
-                                     this->cpu.read_instruction8()) &
-                                        0xFFFF);
-                break;
-            case 1:
-                return this->cpu.segment_to_linear(
-                    SGRegister::DS, (this->cpu.read_gpreg16(GPRegister16::BX) +
-                                     this->cpu.read_gpreg16(GPRegister16::DI) +
-                                     this->cpu.read_instruction8()) &
-                                        0xFFFF);
-                break;
-            case 2:
-                return this->cpu.segment_to_linear(
-                    SGRegister::DS, (this->cpu.read_gpreg16(GPRegister16::BP) +
-                                     this->cpu.read_gpreg16(GPRegister16::SI) +
-                                     this->cpu.read_instruction8()) &
-                                        0xFFFF);
-                break;
-            case 3:
-                return this->cpu.segment_to_linear(
-                    SGRegister::DS, (this->cpu.read_gpreg16(GPRegister16::BP) +
-                                     this->cpu.read_gpreg16(GPRegister16::DI) +
-                                     this->cpu.read_instruction8()) &
-                                        0xFFFF);
-                break;
-            case 4:
-                return this->cpu.segment_to_linear(
-                    SGRegister::DS, (this->cpu.read_gpreg16(GPRegister16::SI) +
-                                     this->cpu.read_instruction8()) &
-                                        0xFFFF);
-                break;
-            case 5:
-                return this->cpu.segment_to_linear(
-                    SGRegister::DS, (this->cpu.read_gpreg16(GPRegister16::DI) +
-                                     this->cpu.read_instruction8()) &
-                                        0xFFFF);
-                break;
-            case 6:
-                return this->cpu.segment_to_linear(
-                    SGRegister::DS, (this->cpu.read_gpreg16(GPRegister16::BP) +
-                                     this->cpu.read_instruction8()) &
-                                        0xFFFF);
-                break;
-            case 7:
-                return this->cpu.segment_to_linear(
-                    SGRegister::DS, (this->cpu.read_gpreg16(GPRegister16::BX) +
-                                     this->cpu.read_instruction8()) &
-                                        0xFFFF);
-                break;
-        }
-    } else if (mod == 2) {
-        switch (rm) {
-            case 0:
-                return this->cpu.segment_to_linear(
-                    SGRegister::DS, (this->cpu.read_gpreg16(GPRegister16::BX) +
-                                     this->cpu.read_gpreg16(GPRegister16::SI) +
-                                     this->cpu.read_instruction16()) &
-                                        0xFFFF);
-                break;
-            case 1:
-                return this->cpu.segment_to_linear(
-                    SGRegister::DS, (this->cpu.read_gpreg16(GPRegister16::BX) +
-                                     this->cpu.read_gpreg16(GPRegister16::DI) +
-                                     this->cpu.read_instruction16()) &
-                                        0xFFFF);
-                break;
-            case 2:
-                return this->cpu.segment_to_linear(
-                    SGRegister::DS, (this->cpu.read_gpreg16(GPRegister16::BP) +
-                                     this->cpu.read_gpreg16(GPRegister16::SI) +
-                                     this->cpu.read_instruction16()) &
-                                        0xFFFF);
-                break;
-            case 3:
-                return this->cpu.segment_to_linear(
-                    SGRegister::DS, (this->cpu.read_gpreg16(GPRegister16::BP) +
-                                     this->cpu.read_gpreg16(GPRegister16::DI) +
-                                     this->cpu.read_instruction16()) &
-                                        0xFFFF);
-                break;
-            case 4:
-                return this->cpu.segment_to_linear(
-                    SGRegister::DS, (this->cpu.read_gpreg16(GPRegister16::SI) +
-                                     this->cpu.read_instruction16()) &
-                                        0xFFFF);
-                break;
-            case 5:
-                return this->cpu.segment_to_linear(
-                    SGRegister::DS, (this->cpu.read_gpreg16(GPRegister16::DI) +
-                                     this->cpu.read_instruction16()) &
-                                        0xFFFF);
-                break;
-            case 6:
-                return this->cpu.segment_to_linear(
-                    SGRegister::DS, (this->cpu.read_gpreg16(GPRegister16::BP) +
-                                     this->cpu.read_instruction16()) &
-                                        0xFFFF);
-                break;
-            case 7:
-                return this->cpu.segment_to_linear(
-                    SGRegister::DS, (this->cpu.read_gpreg16(GPRegister16::BX) +
-                                     this->cpu.read_instruction16()) &
-                                        0xFFFF);
-                break;
-        }
+    } else {
+        this->log->warn("Trying to decode a 32-bit address, should probably "
+                        "implement this");
     }
     // Shut up Clang
     return 0;
