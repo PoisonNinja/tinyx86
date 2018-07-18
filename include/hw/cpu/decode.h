@@ -81,6 +81,8 @@ private:
     T inc(T v);
 
     // Instructions
+    void and_rm8_r8();  // 0x20
+
     void inc_bx();  // 0x43
     void inc_ebx();
     void inc_di();  // 0x47
@@ -93,10 +95,14 @@ private:
     void push_di();  // 0x57
     void push_edi();
 
+    void pop_dx();  // 0x5A
+    void pop_edx();
     void pop_bx();  // 0x5B
     void pop_ebx();
     void pop_di();  // 0x5F
     void pop_edi();
+
+    void jmpnz_ne();  // 0x75
 
     void xchg_r8_rm8();  // 0x86
 

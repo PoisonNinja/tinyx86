@@ -1,6 +1,13 @@
 #include <hw/cpu/cpu.h>
 #include <hw/cpu/decode.h>
 
+void InstructionDecoder::and_rm8_r8()
+{
+    this->load_modrm();
+    this->write_modrm_rm8(
+        this->ando(this->read_modrm_rm8(), this->read_modrm_r8()));
+}
+
 void InstructionDecoder::inc_bx()
 {
     this->cpu.write_gpreg16(
@@ -57,6 +64,16 @@ void InstructionDecoder::push_edi()
     this->cpu.push32(this->cpu.read_gpreg32(GPRegister32::EDI));
 }
 
+void InstructionDecoder::pop_dx()
+{
+    this->cpu.write_gpreg16(GPRegister16::DX, this->cpu.pop16());
+}
+
+void InstructionDecoder::pop_edx()
+{
+    this->cpu.write_gpreg32(GPRegister32::EDX, this->cpu.pop32());
+}
+
 void InstructionDecoder::pop_bx()
 {
     this->cpu.write_gpreg16(GPRegister16::BX, this->cpu.pop16());
@@ -75,6 +92,14 @@ void InstructionDecoder::pop_di()
 void InstructionDecoder::pop_edi()
 {
     this->cpu.write_gpreg32(GPRegister32::EDI, this->cpu.pop32());
+}
+
+void InstructionDecoder::jmpnz_ne()
+{
+    int8_t imm = this->cpu.read_instruction8();
+    if (!this->cpu.get_zf()) {
+        this->cpu.write_ip(this->cpu.read_ip() + imm);
+    }
 }
 
 void InstructionDecoder::xchg_r8_rm8()
