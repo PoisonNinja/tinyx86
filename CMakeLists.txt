@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.1)
 project(tinyx86 CXX)
 
+# Check for LTO support
+cmake_policy(SET CMP0069 NEW)
+include(CheckIPOSupported)
+check_ipo_supported()
+
 # Check for in tree builds
 if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
     message(FATAL_ERROR "In-source builds are not allowed.")
@@ -16,6 +21,9 @@ include_directories(include)
 
 add_executable(tinyx86 tinyx86.cc)
 add_subdirectory(hw)
+
+# Enable LTO
+set_target_properties(tinyx86 PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
 
 # INCLUDE(FindPkgConfig)
 
