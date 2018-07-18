@@ -75,7 +75,7 @@ void InstructionDecoder::tick()
 
 void InstructionDecoder::reset()
 {
-    this->modrm = 0;
+    this->raw_modrm = 0;
 }
 
 bool InstructionDecoder::is_osize_32()
