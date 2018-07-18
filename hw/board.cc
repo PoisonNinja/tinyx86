@@ -19,7 +19,7 @@ Board::Board(size_t size) : cpu(*this)
     bios.seekg(0, std::ios::beg);
     char* buffer = new char[fileSize];
     bios.read(buffer, fileSize);
-    this->memory.register_memory(new ROM(buffer, fileSize, 0, 128));
+    this->memory.register_memory(new RAM(buffer, fileSize, 0, 128));
     delete[] buffer;
 }
 
