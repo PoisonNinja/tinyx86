@@ -76,6 +76,8 @@ private:
 
     // Arithmetic
     template <typename T>
+    T ando(T a, T b);  // and is a keyword in C++, alternative to &&
+    template <typename T>
     T inc(T v);
 
     // Instructions
