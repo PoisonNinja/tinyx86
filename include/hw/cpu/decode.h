@@ -1,6 +1,7 @@
 #pragma once
 
 #include <spdlog/spdlog.h>
+#include <tinyx86.h>
 #include <cstdint>
 
 class CPU;
@@ -72,6 +73,10 @@ private:
     void write_modrm_rm16(uint16_t value);
     void write_modrm_r32(uint32_t value);
     void write_modrm_rm32(uint32_t value);
+
+    // Arithmetic
+    template <typename T>
+    T inc(T v);
 
     // Instructions
     void push_dx();  // 0x52
