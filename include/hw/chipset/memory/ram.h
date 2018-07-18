@@ -7,6 +7,7 @@ class RAM : public Memory
 {
 public:
     RAM(addr_t base, size_t size);
+    RAM(void* initial, size_t initial_size, addr_t base, size_t size);
     ~RAM() override;
 
     addr_t base() override;

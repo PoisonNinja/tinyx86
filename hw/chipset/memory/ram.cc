@@ -1,8 +1,18 @@
 #include <hw/chipset/memory/ram.h>
+#include <cstring>
 
 RAM::RAM(addr_t base, size_t size) : b(base), s(size)
 {
     host_base = new uint8_t[s];
+}
+
+RAM::RAM(void* initial, size_t initial_size, addr_t base, size_t size)
+    : RAM(base, size)
+{
+    // Populate the ROM area with the data
+    std::memcpy(host_base, initial, initial_size);
+    // Zero out the rest of the area
+    std::memset(host_base + (size - initial_size), 0, size - initial_size);
 }
 
 RAM::~RAM()
