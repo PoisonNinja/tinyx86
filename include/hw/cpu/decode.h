@@ -81,20 +81,39 @@ private:
     // Instructions
     void inc_bx();  // 0x43
     void inc_ebx();
+    void inc_di();  // 0x47
+    void inc_edi();
 
     void push_dx();  // 0x52
     void push_edx();
     void push_bx();  // 0x53
     void push_ebx();
+    void push_di();  // 0x57
+    void push_edi();
 
+    void pop_bx();  // 0x5B
+    void pop_ebx();
+    void pop_di();  // 0x5F
+    void pop_edi();
+
+    void xchg_r8_rm8();  // 0x86
+
+    void mov_rm8_r8();    // 0x88
     void mov_rm16_r16();  // 0x89
     void mov_rm32_r32();
-    void mov_r8_rm8();  // 0x8A
+    void mov_r8_rm8();    // 0x8A
+    void mov_r16_rm16();  // 0x8B
+    void mov_r32_rm32();
 
     void mov_ax_imm16();  // 0xB8
     void mov_eax_imm32();
+    void mov_bx_imm16();  // 0xBB
+    void mov_ebx_imm32();
     void mov_sp_imm16();  // 0xBC
     void mov_esp_imm32();
+
+    void retn16();  // 0xC3
+    void retn32();
 
     void call_rel16();  // 0xE8
     void call_rel32();

@@ -26,18 +26,36 @@ InstructionDecoder::InstructionDecoder(CPU& cpu) : cpu(cpu)
     // Initialize instruction table
     this->opcodes16[0x43] = &InstructionDecoder::inc_bx;
     this->opcodes32[0x43] = &InstructionDecoder::inc_ebx;
+    this->opcodes16[0x47] = &InstructionDecoder::inc_di;
+    this->opcodes32[0x47] = &InstructionDecoder::inc_edi;
     this->opcodes16[0x52] = &InstructionDecoder::push_dx;
     this->opcodes32[0x52] = &InstructionDecoder::push_edx;
     this->opcodes16[0x53] = &InstructionDecoder::push_bx;
     this->opcodes32[0x53] = &InstructionDecoder::push_ebx;
+    this->opcodes16[0x57] = &InstructionDecoder::push_di;
+    this->opcodes32[0x57] = &InstructionDecoder::push_edi;
+    this->opcodes16[0x5B] = &InstructionDecoder::pop_bx;
+    this->opcodes32[0x5B] = &InstructionDecoder::pop_ebx;
+    this->opcodes16[0x5F] = &InstructionDecoder::pop_di;
+    this->opcodes32[0x5F] = &InstructionDecoder::pop_edi;
+    this->opcodes16[0x86] = this->opcodes32[0x86] =
+        &InstructionDecoder::xchg_r8_rm8;
+    this->opcodes16[0x88] = this->opcodes32[0x88] =
+        &InstructionDecoder::mov_rm8_r8;
     this->opcodes16[0x89] = &InstructionDecoder::mov_rm16_r16;
     this->opcodes32[0x89] = &InstructionDecoder::mov_rm32_r32;
     this->opcodes16[0x8A] = this->opcodes32[0x8A] =
         &InstructionDecoder::mov_r8_rm8;
+    this->opcodes16[0x8B] = &InstructionDecoder::mov_r16_rm16;
+    this->opcodes32[0x8B] = &InstructionDecoder::mov_r32_rm32;
     this->opcodes16[0xB8] = &InstructionDecoder::mov_ax_imm16;
     this->opcodes32[0xB8] = &InstructionDecoder::mov_eax_imm32;
+    this->opcodes16[0xBB] = &InstructionDecoder::mov_bx_imm16;
+    this->opcodes32[0xBB] = &InstructionDecoder::mov_ebx_imm32;
     this->opcodes16[0xBC] = &InstructionDecoder::mov_sp_imm16;
     this->opcodes32[0xBC] = &InstructionDecoder::mov_esp_imm32;
+    this->opcodes16[0xC3] = &InstructionDecoder::retn16;
+    this->opcodes32[0xC3] = &InstructionDecoder::retn32;
     this->opcodes16[0xE8] = &InstructionDecoder::call_rel16;
     this->opcodes32[0xE8] = &InstructionDecoder::call_rel32;
 }
