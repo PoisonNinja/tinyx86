@@ -204,3 +204,8 @@ void InstructionDecoder::call_rel32()
     this->cpu.push32(this->cpu.read_eip());
     this->cpu.write_eip(this->cpu.read_eip() + imm);
 }
+
+void InstructionDecoder::hlt()
+{
+    this->cpu.halt();
+}

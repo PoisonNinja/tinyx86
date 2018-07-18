@@ -14,8 +14,14 @@ CPU::~CPU()
 
 void CPU::tick()
 {
-    this->state = CPUState::RUNNING;
-    this->decoder.tick();
+    if (this->state == CPUState::HALTED) {
+        // TODO: Check for interrupts
+        this->log->info("[cpu] CPU halted, actually stopping");
+        this->state = CPUState::STOPPED;
+    } else {
+        this->state = CPUState::RUNNING;
+        this->decoder.tick();
+    }
 }
 
 void CPU::reset()

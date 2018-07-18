@@ -64,6 +64,7 @@ InstructionDecoder::InstructionDecoder(CPU& cpu) : cpu(cpu)
     this->opcodes32[0xC3] = &InstructionDecoder::retn32;
     this->opcodes16[0xE8] = &InstructionDecoder::call_rel16;
     this->opcodes32[0xE8] = &InstructionDecoder::call_rel32;
+    this->opcodes16[0xF4] = this->opcodes32[0xF4] = &InstructionDecoder::hlt;
 }
 
 InstructionDecoder::~InstructionDecoder()

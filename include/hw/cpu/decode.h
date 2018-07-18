@@ -125,4 +125,6 @@ private:
 
     void call_rel16();  // 0xE8
     void call_rel32();
+
+    void hlt();  // 0xF4
 };
