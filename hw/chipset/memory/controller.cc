@@ -65,6 +65,7 @@ void MemoryController::register_memory(Memory* memory)
 
 uint8_t MemoryController::read8(addr_t addr)
 {
+    this->log->trace("[memory] read8 at 0x{:X}", addr);
     MemoryNode* node = locate_node(addr);
     if (!node) {
         this->log->error("Attempting to read outside of memory at {:x}", addr);
@@ -75,6 +76,7 @@ uint8_t MemoryController::read8(addr_t addr)
 
 uint16_t MemoryController::read16(addr_t addr)
 {
+    this->log->trace("[memory] read16 at 0x{:X}", addr);
     MemoryNode* node = locate_node(addr);
     if (!node) {
         this->log->error("Attempting to read outside of memory at {:x}", addr);
@@ -85,6 +87,7 @@ uint16_t MemoryController::read16(addr_t addr)
 
 uint32_t MemoryController::read32(addr_t addr)
 {
+    this->log->trace("[memory] read32 at 0x{:X}", addr);
     MemoryNode* node = locate_node(addr);
     if (!node) {
         this->log->error("Attempting to read outside of memory at {:x}", addr);
@@ -95,6 +98,8 @@ uint32_t MemoryController::read32(addr_t addr)
 
 void MemoryController::write8(addr_t addr, uint8_t value)
 {
+    this->log->trace("[memory] write8 at 0x{:X} with value 0x{:X}", addr,
+                     value);
     MemoryNode* node = locate_node(addr);
     if (!node) {
         this->log->error("Attempting to write outside of memory at {:x}", addr);
@@ -104,6 +109,8 @@ void MemoryController::write8(addr_t addr, uint8_t value)
 
 void MemoryController::write16(addr_t addr, uint16_t value)
 {
+    this->log->trace("[memory] write16 at 0x{:X} with value 0x{:X}", addr,
+                     value);
     MemoryNode* node = locate_node(addr);
     if (!node) {
         this->log->error("Attempting to write outside of memory at {:x}", addr);
@@ -113,6 +120,8 @@ void MemoryController::write16(addr_t addr, uint16_t value)
 
 void MemoryController::write32(addr_t addr, uint32_t value)
 {
+    this->log->trace("[memory] write32 at 0x{:X} with value 0x{:X}", addr,
+                     value);
     MemoryNode* node = locate_node(addr);
     if (!node) {
         this->log->error("Attempting to write outside of memory at {:x}", addr);
