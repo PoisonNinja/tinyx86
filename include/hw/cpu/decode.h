@@ -79,6 +79,9 @@ private:
     T inc(T v);
 
     // Instructions
+    void inc_bx();  // 0x43
+    void inc_ebx();
+
     void push_dx();  // 0x52
     void push_edx();
     void push_bx();  // 0x53
@@ -86,6 +89,7 @@ private:
 
     void mov_rm16_r16();  // 0x89
     void mov_rm32_r32();
+    void mov_r8_rm8();  // 0x8A
 
     void mov_ax_imm16();  // 0xB8
     void mov_eax_imm32();

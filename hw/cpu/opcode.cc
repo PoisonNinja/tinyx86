@@ -1,6 +1,19 @@
 #include <hw/cpu/cpu.h>
 #include <hw/cpu/decode.h>
 
+void InstructionDecoder::inc_bx()
+{
+    this->cpu.write_gpreg16(
+        GPRegister16::BX, this->inc(this->cpu.read_gpreg16(GPRegister16::BX)));
+}
+
+void InstructionDecoder::inc_ebx()
+{
+    this->cpu.write_gpreg32(
+        GPRegister32::EBX,
+        this->inc(this->cpu.read_gpreg32(GPRegister32::EBX)));
+}
+
 void InstructionDecoder::push_dx()
 {
     this->cpu.push16(this->cpu.read_gpreg16(GPRegister16::DX));
@@ -19,6 +32,24 @@ void InstructionDecoder::push_bx()
 void InstructionDecoder::push_ebx()
 {
     this->cpu.push32(this->cpu.read_gpreg32(GPRegister32::EBX));
+}
+
+void InstructionDecoder::mov_rm16_r16()
+{
+    this->load_modrm();
+    this->write_modrm_rm16(this->read_modrm_r16());
+}
+
+void InstructionDecoder::mov_rm32_r32()
+{
+    this->load_modrm();
+    this->write_modrm_rm32(this->read_modrm_r32());
+}
+
+void InstructionDecoder::mov_r8_rm8()
+{
+    this->load_modrm();
+    this->write_modrm_r8(this->read_modrm_rm8());
 }
 
 void InstructionDecoder::mov_ax_imm16()

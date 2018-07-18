@@ -24,10 +24,16 @@ InstructionDecoder::InstructionDecoder(CPU& cpu) : cpu(cpu)
     }
 
     // Initialize instruction table
+    this->opcodes16[0x43] = &InstructionDecoder::inc_bx;
+    this->opcodes32[0x43] = &InstructionDecoder::inc_ebx;
     this->opcodes16[0x52] = &InstructionDecoder::push_dx;
     this->opcodes32[0x52] = &InstructionDecoder::push_edx;
     this->opcodes16[0x53] = &InstructionDecoder::push_bx;
     this->opcodes32[0x53] = &InstructionDecoder::push_ebx;
+    this->opcodes16[0x89] = &InstructionDecoder::mov_rm16_r16;
+    this->opcodes32[0x89] = &InstructionDecoder::mov_rm32_r32;
+    this->opcodes16[0x8A] = this->opcodes32[0x8A] =
+        &InstructionDecoder::mov_r8_rm8;
     this->opcodes16[0xB8] = &InstructionDecoder::mov_ax_imm16;
     this->opcodes32[0xB8] = &InstructionDecoder::mov_eax_imm32;
     this->opcodes16[0xBC] = &InstructionDecoder::mov_sp_imm16;
@@ -48,24 +54,28 @@ void InstructionDecoder::tick()
     while (isPrefix) {
         switch (opcode) {
             case 0x2E:
-                this->log->trace("Prefix overriding to CS");
+                this->log->trace("[decode] Prefix overriding to CS");
                 this->prefixes.segment = SGRegister::CS;
                 break;
             case 0x66:
-                this->log->trace("Prefix overriding operand size");
+                this->log->trace("[decode] Prefix overriding operand size");
                 this->prefixes.opsize = true;
+                break;
+            case 0x67:
+                this->log->trace("[decode] Prefix overriding address size");
+                this->prefixes.addrsize = true;
                 break;
             default:
                 isPrefix = false;
                 break;
         }
     }
-    this->log->trace("Opcode: 0x{:X}", opcode);
+    this->log->trace("[decode] Opcode: 0x{:X}", opcode);
     // TODO: Check for 32 bit. We assume 16 bit by default
     InstructionPointer* opcodes =
         (this->is_osize_32()) ? this->opcodes32 : this->opcodes16;
     if (!opcodes[opcode]) {
-        this->log->error("Unknown opcode 0x{:X}, halting...", opcode);
+        this->log->error("[decode] Unknown opcode 0x{:X}, halting...", opcode);
         this->cpu.stop();
     } else {
         InstructionPointer instr = opcodes[opcode];
