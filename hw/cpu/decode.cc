@@ -54,6 +54,38 @@ InstructionDecoder::InstructionDecoder(CPU& cpu) : cpu(cpu)
     this->opcodes32[0x0D] = &InstructionDecoder::or_eax_imm32;
     this->opcodes16[0x0E] = &InstructionDecoder::push_cs16;
     this->opcodes32[0x0E] = &InstructionDecoder::push_cs32;
+    this->opcodes16[0x10] = this->opcodes32[0x10] =
+        &InstructionDecoder::adc_rm8_r8;
+    this->opcodes16[0x11] = &InstructionDecoder::adc_rm16_r16;
+    this->opcodes32[0x11] = &InstructionDecoder::adc_rm32_r32;
+    this->opcodes16[0x12] = this->opcodes32[0x12] =
+        &InstructionDecoder::adc_r8_rm8;
+    this->opcodes16[0x13] = &InstructionDecoder::adc_r16_rm16;
+    this->opcodes32[0x13] = &InstructionDecoder::adc_r32_rm32;
+    this->opcodes16[0x14] = this->opcodes32[0x14] =
+        &InstructionDecoder::adc_al_imm8;
+    this->opcodes16[0x15] = &InstructionDecoder::adc_ax_imm16;
+    this->opcodes32[0x15] = &InstructionDecoder::adc_eax_imm32;
+    this->opcodes16[0x16] = &InstructionDecoder::push_ss16;
+    this->opcodes32[0x16] = &InstructionDecoder::push_ss32;
+    this->opcodes16[0x17] = &InstructionDecoder::pop_ss16;
+    this->opcodes32[0x17] = &InstructionDecoder::pop_ss32;
+    this->opcodes16[0x18] = this->opcodes32[0x18] =
+        &InstructionDecoder::sbb_rm8_r8;
+    this->opcodes16[0x19] = &InstructionDecoder::sbb_rm16_r16;
+    this->opcodes32[0x19] = &InstructionDecoder::sbb_rm32_r32;
+    this->opcodes16[0x1A] = this->opcodes32[0x1A] =
+        &InstructionDecoder::sbb_r8_rm8;
+    this->opcodes16[0x1B] = &InstructionDecoder::sbb_r16_rm16;
+    this->opcodes32[0x1B] = &InstructionDecoder::sbb_r32_rm32;
+    this->opcodes16[0x1C] = this->opcodes32[0x1C] =
+        &InstructionDecoder::sbb_al_imm8;
+    this->opcodes16[0x1D] = &InstructionDecoder::sbb_ax_imm16;
+    this->opcodes32[0x1D] = &InstructionDecoder::sbb_eax_imm32;
+    this->opcodes16[0x1E] = &InstructionDecoder::push_ds16;
+    this->opcodes32[0x1E] = &InstructionDecoder::push_ds32;
+    this->opcodes16[0x1F] = &InstructionDecoder::pop_ds16;
+    this->opcodes32[0x1F] = &InstructionDecoder::pop_ds32;
     this->opcodes16[0x20] = this->opcodes32[0x20] =
         &InstructionDecoder::and_rm8_r8;
     this->opcodes16[0x43] = &InstructionDecoder::inc_bx;

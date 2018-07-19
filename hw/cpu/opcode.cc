@@ -158,6 +158,172 @@ void InstructionDecoder::push_cs32()
     this->cpu.push32(this->cpu.read_sgreg(SGRegister::CS));
 }
 
+void InstructionDecoder::adc_rm8_r8()
+{
+    this->load_modrm();
+    this->write_modrm_rm8(
+        this->adc(this->read_modrm_rm8(), this->read_modrm_r8()));
+}
+
+void InstructionDecoder::adc_rm16_r16()
+{
+    this->load_modrm();
+    this->write_modrm_rm16(
+        this->adc(this->read_modrm_rm16(), this->read_modrm_r16()));
+}
+
+void InstructionDecoder::adc_rm32_r32()
+{
+    this->load_modrm();
+    this->write_modrm_rm32(
+        this->adc(this->read_modrm_rm32(), this->read_modrm_r32()));
+}
+
+void InstructionDecoder::adc_r8_rm8()
+{
+    this->load_modrm();
+    this->write_modrm_r8(
+        this->adc(this->read_modrm_r8(), this->read_modrm_rm8()));
+}
+
+void InstructionDecoder::adc_r16_rm16()
+{
+    this->load_modrm();
+    this->write_modrm_r16(
+        this->adc(this->read_modrm_r16(), this->read_modrm_rm16()));
+}
+
+void InstructionDecoder::adc_r32_rm32()
+{
+    this->load_modrm();
+    this->write_modrm_r32(
+        this->adc(this->read_modrm_r32(), this->read_modrm_rm32()));
+}
+
+void InstructionDecoder::adc_al_imm8()
+{
+    this->cpu.write_gpreg8(GPRegister8::AL,
+                           this->adc(this->cpu.read_gpreg8(GPRegister8::AL),
+                                     this->cpu.read_instruction8()));
+}
+
+void InstructionDecoder::adc_ax_imm16()
+{
+    this->cpu.write_gpreg16(GPRegister16::AX,
+                            this->adc(this->cpu.read_gpreg16(GPRegister16::AX),
+                                      this->cpu.read_instruction16()));
+}
+
+void InstructionDecoder::adc_eax_imm32()
+{
+    this->cpu.write_gpreg32(GPRegister32::EAX,
+                            this->adc(this->cpu.read_gpreg32(GPRegister32::EAX),
+                                      this->cpu.read_instruction32()));
+}
+
+void InstructionDecoder::push_ss16()
+{
+    this->cpu.push16(this->cpu.read_sgreg(SGRegister::SS));
+}
+
+void InstructionDecoder::push_ss32()
+{
+    this->cpu.push32(this->cpu.read_sgreg(SGRegister::SS));
+}
+
+void InstructionDecoder::pop_ss16()
+{
+    this->cpu.write_sgreg(SGRegister::SS, this->cpu.pop16());
+}
+
+void InstructionDecoder::pop_ss32()
+{
+    this->cpu.write_sgreg(SGRegister::SS, this->cpu.pop32() & 0xFFFF);
+}
+
+void InstructionDecoder::sbb_rm8_r8()
+{
+    this->load_modrm();
+    this->write_modrm_rm8(
+        this->sbb(this->read_modrm_rm8(), this->read_modrm_r8()));
+}
+
+void InstructionDecoder::sbb_rm16_r16()
+{
+    this->load_modrm();
+    this->write_modrm_rm16(
+        this->sbb(this->read_modrm_rm16(), this->read_modrm_r16()));
+}
+
+void InstructionDecoder::sbb_rm32_r32()
+{
+    this->load_modrm();
+    this->write_modrm_rm32(
+        this->sbb(this->read_modrm_rm32(), this->read_modrm_r32()));
+}
+
+void InstructionDecoder::sbb_r8_rm8()
+{
+    this->load_modrm();
+    this->write_modrm_r8(
+        this->sbb(this->read_modrm_r8(), this->read_modrm_rm8()));
+}
+
+void InstructionDecoder::sbb_r16_rm16()
+{
+    this->load_modrm();
+    this->write_modrm_r16(
+        this->sbb(this->read_modrm_r16(), this->read_modrm_rm16()));
+}
+
+void InstructionDecoder::sbb_r32_rm32()
+{
+    this->load_modrm();
+    this->write_modrm_r32(
+        this->sbb(this->read_modrm_r32(), this->read_modrm_rm32()));
+}
+
+void InstructionDecoder::sbb_al_imm8()
+{
+    this->cpu.write_gpreg8(GPRegister8::AL,
+                           this->sbb(this->cpu.read_gpreg8(GPRegister8::AL),
+                                     this->cpu.read_instruction8()));
+}
+
+void InstructionDecoder::sbb_ax_imm16()
+{
+    this->cpu.write_gpreg16(GPRegister16::AX,
+                            this->sbb(this->cpu.read_gpreg16(GPRegister16::AX),
+                                      this->cpu.read_instruction16()));
+}
+
+void InstructionDecoder::sbb_eax_imm32()
+{
+    this->cpu.write_gpreg32(GPRegister32::EAX,
+                            this->sbb(this->cpu.read_gpreg32(GPRegister32::EAX),
+                                      this->cpu.read_instruction32()));
+}
+
+void InstructionDecoder::push_ds16()
+{
+    this->cpu.push16(this->cpu.read_sgreg(SGRegister::DS));
+}
+
+void InstructionDecoder::push_ds32()
+{
+    this->cpu.push32(this->cpu.read_sgreg(SGRegister::DS));
+}
+
+void InstructionDecoder::pop_ds16()
+{
+    this->cpu.write_sgreg(SGRegister::DS, this->cpu.pop16());
+}
+
+void InstructionDecoder::pop_ds32()
+{
+    this->cpu.write_sgreg(SGRegister::DS, this->cpu.pop32() & 0xFFFF);
+}
+
 void InstructionDecoder::and_rm8_r8()
 {
     this->load_modrm();

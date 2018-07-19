@@ -119,6 +119,38 @@ private:
 
     // 0x0F are 2 byte operations
 
+    void adc_rm8_r8();    // 0x10
+    void adc_rm16_r16();  // 0x11
+    void adc_rm32_r32();
+    void adc_r8_rm8();    // 0x12
+    void adc_r16_rm16();  // 0x13
+    void adc_r32_rm32();
+    void adc_al_imm8();   // 0x14
+    void adc_ax_imm16();  // 0x15
+    void adc_eax_imm32();
+
+    void push_ss16();  // 0x16
+    void push_ss32();
+
+    void pop_ss16();  // 0x17
+    void pop_ss32();
+
+    void sbb_rm8_r8();    // 0x18
+    void sbb_rm16_r16();  // 0x19
+    void sbb_rm32_r32();
+    void sbb_r8_rm8();    // 0x1A
+    void sbb_r16_rm16();  // 0x1B
+    void sbb_r32_rm32();
+    void sbb_al_imm8();   // 0x1C
+    void sbb_ax_imm16();  // 0x1D
+    void sbb_eax_imm32();
+
+    void push_ds16();  // 0x1E
+    void push_ds32();
+
+    void pop_ds16();  // 0x1F
+    void pop_ds32();
+
     void and_rm8_r8();  // 0x20
 
     void inc_bx();  // 0x43
