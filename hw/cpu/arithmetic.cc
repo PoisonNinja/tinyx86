@@ -2,6 +2,18 @@
 #include <hw/cpu/decode.h>
 
 template <typename T>
+T InstructionDecoder::adc(T a, T b)
+{
+    uint32_t result = a + b + ((this->cpu.get_cf()) ? 1 : 0);
+    this->cpu.set_eflag_operation(eflags_all, 0, a, b, result, result,
+                                  sizeof(T) * 8 - 1);
+    return result;
+}
+template uint8_t InstructionDecoder::adc(uint8_t, uint8_t);
+template uint16_t InstructionDecoder::adc(uint16_t, uint16_t);
+template uint32_t InstructionDecoder::adc(uint32_t, uint32_t);
+
+template <typename T>
 T InstructionDecoder::add(T a, T b)
 {
     uint32_t result = a + b;
@@ -49,3 +61,15 @@ T InstructionDecoder::do_or(T a, T b)
 template uint8_t InstructionDecoder::do_or(uint8_t, uint8_t);
 template uint16_t InstructionDecoder::do_or(uint16_t, uint16_t);
 template uint32_t InstructionDecoder::do_or(uint32_t, uint32_t);
+
+template <typename T>
+T InstructionDecoder::sbb(T a, T b)
+{
+    uint32_t result = a - b - ((this->cpu.get_cf()) ? 1 : 0);
+    this->cpu.set_eflag_operation(eflags_all, 0, result, b, result, a,
+                                  sizeof(T) * 8 - 1);
+    return result;
+}
+template uint8_t InstructionDecoder::sbb(uint8_t, uint8_t);
+template uint16_t InstructionDecoder::sbb(uint16_t, uint16_t);
+template uint32_t InstructionDecoder::sbb(uint32_t, uint32_t);

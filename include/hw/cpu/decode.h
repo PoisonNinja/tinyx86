@@ -75,6 +75,8 @@ private:
 
     // Arithmetic
     template <typename T>
+    T adc(T a, T b);
+    template <typename T>
     T add(T a, T b);
     template <typename T>
     T do_and(T a, T b);  // and is a keyword in C++, alternative to &&
@@ -82,6 +84,8 @@ private:
     T inc(T v);
     template <typename T>
     T do_or(T a, T b);  // or is a keyword in C++, alternative to ||
+    template <typename T>
+    T sbb(T a, T b);
 
     // Instructions
     void add_rm8_r8();    // 0x00
