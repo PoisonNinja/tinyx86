@@ -81,11 +81,65 @@ private:
     template <typename T>
     T do_and(T a, T b);  // and is a keyword in C++, alternative to &&
     template <typename T>
-    T inc(T v);
+    T bsf(T a, T b);
+    template <typename T>
+    T bsr(T a, T b);
+    // template <typename T>
+    // T bt(T a, T b);
+    // template <typename T>
+    // T btc(T a, T b);
+    // template <typename T>
+    // T btr(T a, T b);
+    // template <typename T>
+    // T bts(T a, T b);
+    template <typename T>
+    void cmp(T a, T b);
+    template <typename T>
+    T dec(T a);
+    template <typename T>
+    void div(T a);
+    template <typename T>
+    void idiv(T a);
+    // template <typename T>
+    // T imul(T a, T b);
+    template <typename T>
+    T inc(T a);
+    template <typename T>
+    void mul(T a);
+    template <typename T>
+    T neg(T a);
+    template <typename T>
+    T do_not(T a, T b);  // not is a keyword in C++, alternative to !
     template <typename T>
     T do_or(T a, T b);  // or is a keyword in C++, alternative to ||
     template <typename T>
+    T popcnt(T a, T b);
+    template <typename T>
+    T rcl(T a, T b);
+    template <typename T>
+    T rcr(T a, T b);
+    template <typename T>
+    T rol(T a, T b);
+    template <typename T>
+    T ror(T a, T b);
+    template <typename T>
+    T sar(T a, T b);
+    template <typename T>
     T sbb(T a, T b);
+    template <typename T>
+    T shl(T a, T b);
+    template <typename T>
+    T shld(T a, T b, T c);
+    template <typename T>
+    T shr(T a, T b);
+    template <typename T>
+    T shrd(T a, T b, T c);
+    template <typename T>
+    T sub(T a, T b);
+    template <typename T>
+    T test(T a, T b);
+    template <typename T>
+    T do_xor(T a, T b);  // xor is a keyword in C++, alterative to ^
 
     // Instructions
     void add_rm8_r8();    // 0x00
