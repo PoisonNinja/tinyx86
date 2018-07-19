@@ -24,6 +24,36 @@ InstructionDecoder::InstructionDecoder(CPU& cpu) : cpu(cpu)
     }
 
     // Initialize instruction table
+    this->opcodes16[0x00] = this->opcodes32[0x00] =
+        &InstructionDecoder::add_rm8_r8;
+    this->opcodes16[0x01] = &InstructionDecoder::add_rm16_r16;
+    this->opcodes32[0x01] = &InstructionDecoder::add_rm32_r32;
+    this->opcodes16[0x02] = this->opcodes32[0x02] =
+        &InstructionDecoder::add_r8_rm8;
+    this->opcodes16[0x03] = &InstructionDecoder::add_r16_rm16;
+    this->opcodes32[0x03] = &InstructionDecoder::add_r32_rm32;
+    this->opcodes16[0x04] = this->opcodes32[0x04] =
+        &InstructionDecoder::add_al_imm8;
+    this->opcodes16[0x05] = &InstructionDecoder::add_ax_imm16;
+    this->opcodes32[0x05] = &InstructionDecoder::add_eax_imm32;
+    this->opcodes16[0x06] = &InstructionDecoder::push_es16;
+    this->opcodes32[0x06] = &InstructionDecoder::push_es32;
+    this->opcodes16[0x07] = &InstructionDecoder::pop_es16;
+    this->opcodes32[0x07] = &InstructionDecoder::pop_es32;
+    this->opcodes16[0x08] = this->opcodes32[0x08] =
+        &InstructionDecoder::or_rm8_r8;
+    this->opcodes16[0x09] = &InstructionDecoder::or_rm16_r16;
+    this->opcodes32[0x09] = &InstructionDecoder::or_rm32_r32;
+    this->opcodes16[0x0A] = this->opcodes32[0x0A] =
+        &InstructionDecoder::or_r8_rm8;
+    this->opcodes16[0x0B] = &InstructionDecoder::or_r16_rm16;
+    this->opcodes32[0x0B] = &InstructionDecoder::or_r32_rm32;
+    this->opcodes16[0x0C] = this->opcodes32[0x0C] =
+        &InstructionDecoder::or_al_imm8;
+    this->opcodes16[0x0D] = &InstructionDecoder::or_ax_imm16;
+    this->opcodes32[0x0D] = &InstructionDecoder::or_eax_imm32;
+    this->opcodes16[0x0E] = &InstructionDecoder::push_cs16;
+    this->opcodes32[0x0E] = &InstructionDecoder::push_cs32;
     this->opcodes16[0x20] = this->opcodes32[0x20] =
         &InstructionDecoder::and_rm8_r8;
     this->opcodes16[0x43] = &InstructionDecoder::inc_bx;

@@ -7,7 +7,6 @@
 class CPU;
 
 enum class SGRegister : int;
-enum class GPRegister : int;
 
 struct PrefixState {
     SGRegister segment;
@@ -85,6 +84,37 @@ private:
     T do_or(T a, T b);  // or is a keyword in C++, alternative to ||
 
     // Instructions
+    void add_rm8_r8();    // 0x00
+    void add_rm16_r16();  // 0x01
+    void add_rm32_r32();
+    void add_r8_rm8();    // 0x02
+    void add_r16_rm16();  // 0x03
+    void add_r32_rm32();
+    void add_al_imm8();   // 0x04
+    void add_ax_imm16();  // 0x05
+    void add_eax_imm32();
+
+    void push_es16();  // 0x06
+    void push_es32();
+
+    void pop_es16();  // 0x07
+    void pop_es32();
+
+    void or_rm8_r8();    // 0x08
+    void or_rm16_r16();  // 0x09
+    void or_rm32_r32();
+    void or_r8_rm8();    // 0x0A
+    void or_r16_rm16();  // 0x0B
+    void or_r32_rm32();
+    void or_al_imm8();   // 0x0C
+    void or_ax_imm16();  // 0x0D
+    void or_eax_imm32();
+
+    void push_cs16();  // 0x0E
+    void push_cs32();
+
+    // 0x0F are 2 byte operations
+
     void and_rm8_r8();  // 0x20
 
     void inc_bx();  // 0x43
