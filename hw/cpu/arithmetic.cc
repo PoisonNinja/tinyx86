@@ -2,16 +2,28 @@
 #include <hw/cpu/decode.h>
 
 template <typename T>
-T InstructionDecoder::ando(T a, T b)
+T InstructionDecoder::add(T a, T b)
+{
+    uint32_t result = a + b;
+    this->cpu.set_eflag_operation(eflags_all, 0, a, b, result, result,
+                                  sizeof(T) * 8 - 1);
+    return result;
+}
+template uint8_t InstructionDecoder::add(uint8_t, uint8_t);
+template uint16_t InstructionDecoder::add(uint16_t, uint16_t);
+template uint32_t InstructionDecoder::add(uint32_t, uint32_t);
+
+template <typename T>
+T InstructionDecoder::do_and(T a, T b)
 {
     uint32_t result = a & b;
     this->cpu.set_eflag_operation(eflags_pf | eflags_zf | eflags_sf, 0, a, b,
                                   result, 0, sizeof(T) * 8 - 1);
     return result;
 }
-template uint8_t InstructionDecoder::ando(uint8_t, uint8_t);
-template uint16_t InstructionDecoder::ando(uint16_t, uint16_t);
-template uint32_t InstructionDecoder::ando(uint32_t, uint32_t);
+template uint8_t InstructionDecoder::do_and(uint8_t, uint8_t);
+template uint16_t InstructionDecoder::do_and(uint16_t, uint16_t);
+template uint32_t InstructionDecoder::do_and(uint32_t, uint32_t);
 
 template <typename T>
 T InstructionDecoder::inc(T v)
@@ -25,3 +37,15 @@ T InstructionDecoder::inc(T v)
 template uint8_t InstructionDecoder::inc(uint8_t);
 template uint16_t InstructionDecoder::inc(uint16_t);
 template uint32_t InstructionDecoder::inc(uint32_t);
+
+template <typename T>
+T InstructionDecoder::do_or(T a, T b)
+{
+    uint32_t result = a | b;
+    this->cpu.set_eflag_operation(eflags_pf | eflags_zf | eflags_sf, 0, a, b,
+                                  result, result, sizeof(T) * 8 - 1);
+    return result;
+}
+template uint8_t InstructionDecoder::do_or(uint8_t, uint8_t);
+template uint16_t InstructionDecoder::do_or(uint16_t, uint16_t);
+template uint32_t InstructionDecoder::do_or(uint32_t, uint32_t);

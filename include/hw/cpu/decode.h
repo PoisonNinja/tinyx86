@@ -76,9 +76,13 @@ private:
 
     // Arithmetic
     template <typename T>
-    T ando(T a, T b);  // and is a keyword in C++, alternative to &&
+    T add(T a, T b);
+    template <typename T>
+    T do_and(T a, T b);  // and is a keyword in C++, alternative to &&
     template <typename T>
     T inc(T v);
+    template <typename T>
+    T do_or(T a, T b);  // or is a keyword in C++, alternative to ||
 
     // Instructions
     void and_rm8_r8();  // 0x20
