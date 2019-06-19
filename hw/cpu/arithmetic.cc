@@ -275,3 +275,15 @@ T InstructionDecoder::sbb(T a, T b)
 template uint8_t InstructionDecoder::sbb(uint8_t, uint8_t);
 template uint16_t InstructionDecoder::sbb(uint16_t, uint16_t);
 template uint32_t InstructionDecoder::sbb(uint32_t, uint32_t);
+
+template <typename T>
+T InstructionDecoder::sub(T a, T b)
+{
+    uint32_t result = a - b;
+    this->cpu.set_eflag_operation(eflags_all, 0, result, b, result, a,
+                                  sizeof(T) * 8 - 1);
+    return result;
+}
+template uint8_t InstructionDecoder::sub(uint8_t, uint8_t);
+template uint16_t InstructionDecoder::sub(uint16_t, uint16_t);
+template uint32_t InstructionDecoder::sub(uint32_t, uint32_t);
