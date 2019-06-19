@@ -47,7 +47,10 @@ void CPU::reset()
     this->last_size = 0;
 
     // Set to reset vector
-    this->ip.regs_32 = 0;
+    this->sgregs[static_cast<int>(SGRegister::CS)].base = 0xFFFF0000;
+    this->sgregs[static_cast<int>(SGRegister::CS)].limit = 0xFFFF;
+    this->sgregs[static_cast<int>(SGRegister::CS)].selector = 0xF000;
+    this->ip.regs_16 = 0xFFF0;
 }
 
 uint8_t CPU::read_gpreg8(GPRegister8 reg)
