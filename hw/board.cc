@@ -1,7 +1,6 @@
 #include <hw/board.h>
 #include <hw/chipset/memory/ram.h>
 #include <hw/chipset/memory/rom.h>
-
 #include <fstream>
 
 Board::Board(size_t size) : cpu(*this)
@@ -13,13 +12,20 @@ Board::Board(size_t size) : cpu(*this)
 
     // Kludge
     std::ifstream bios;
-    bios.open("../fw/hello.bin");
+    bios.open("../fw/bios.bin");
     bios.seekg(0, std::ios::end);
     size_t fileSize = bios.tellg();
+    if (fileSize > UINT32_MAX) {
+        this->log->critical("BIOS image too big, aborting\n");
+        // TODO: Throw exception
+    }
     bios.seekg(0, std::ios::beg);
     char* buffer = new char[fileSize];
     bios.read(buffer, fileSize);
-    this->memory.register_memory(new RAM(buffer, fileSize, 0, 128));
+    this->memory.register_memory(
+        new ROM(buffer, fileSize, 0x100000 - fileSize, fileSize));
+    uint32_t invert = fileSize;
+    this->memory.register_memory(new ROM(buffer, fileSize, -invert, fileSize));
     delete[] buffer;
 }
 
