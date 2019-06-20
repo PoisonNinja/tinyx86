@@ -138,10 +138,10 @@ InstructionDecoder::~InstructionDecoder()
 void InstructionDecoder::tick()
 {
     this->prefixes.reset();
-    uint8_t opcode = this->cpu.read_instruction8();
+    uint8_t opcode = 0;  // Will be fetched below
     bool isPrefix = true;
     while (isPrefix) {
-        switch (opcode) {
+        switch ((opcode = this->cpu.read_instruction8())) {
             case 0x2E:
                 this->log->trace("[decode] Prefix overriding to CS");
                 this->prefixes.segment = SGRegister::CS;
