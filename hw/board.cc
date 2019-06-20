@@ -26,6 +26,8 @@ Board::Board(size_t size) : cpu(*this)
         new ROM(buffer, fileSize, 0x100000 - fileSize, fileSize));
     uint32_t invert = fileSize;
     this->memory.register_memory(new ROM(buffer, fileSize, -invert, fileSize));
+    this->log->info("BIOS image loaded to {:X} and {:X}", -invert,
+                    0x100000 - fileSize);
     delete[] buffer;
 }
 
