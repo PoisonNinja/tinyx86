@@ -250,5 +250,8 @@ private:
     void call_rel16();  // 0xE8
     void call_rel32();
 
+    void jmpf_ptr16();  // 0xEA
+    void jmpf_ptr32();
+
     void hlt();  // 0xF4
 };

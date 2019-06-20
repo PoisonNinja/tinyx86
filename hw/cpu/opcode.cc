@@ -528,6 +528,22 @@ void InstructionDecoder::call_rel32()
     this->cpu.write_eip(this->cpu.read_eip() + imm);
 }
 
+void InstructionDecoder::jmpf_ptr16()
+{
+    uint16_t ip = this->cpu.read_instruction16();
+    uint16_t cs = this->cpu.read_instruction16();
+    this->cpu.write_sgreg(SGRegister::CS, cs);
+    this->cpu.write_ip(ip);
+}
+
+void InstructionDecoder::jmpf_ptr32()
+{
+    uint32_t ip = this->cpu.read_instruction32();
+    uint16_t cs = this->cpu.read_instruction16();
+    this->cpu.write_sgreg(SGRegister::CS, cs);
+    this->cpu.write_eip(ip);
+}
+
 void InstructionDecoder::hlt()
 {
     this->cpu.halt();
