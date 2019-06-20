@@ -1,5 +1,6 @@
 # Directories
 build/
+.vscode/
 
 # File types
 *.o
