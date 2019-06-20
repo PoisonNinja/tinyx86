@@ -164,6 +164,8 @@ private:
     Board& board;  // Parent board
     std::shared_ptr<spdlog::logger> log;
 
+    // Decoder has access to full CPU state
+    friend class InstructionDecoder;
     InstructionDecoder decoder;
 
     CPUState state;
