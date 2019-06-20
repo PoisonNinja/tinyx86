@@ -323,22 +323,6 @@ bool CPU::get_of()
     return eflags & eflags_of;
 }
 
-void CPU::set_eflag_operation(uint32_t eflags_dirty, uint32_t eflags_initial,
-                              uint32_t last_op1, uint32_t last_op2,
-                              uint32_t last_result, uint32_t last_add_result,
-                              uint8_t last_size)
-{
-    this->eflags &= this->eflags & 0xFFFFF72A;  // Clear all status flags
-    this->eflags |=
-        eflags_initial & 0x8D5;  // Set status flags based on initial
-    this->eflags_dirty = eflags_dirty;
-    this->last_op1 = last_op1;
-    this->last_op2 = last_op2;
-    this->last_result = last_result;
-    this->last_add_result = last_add_result;
-    this->last_size = last_size;
-}
-
 addr_t CPU::segment_to_linear(SGRegister reg, addr_t offset)
 {
     return sgregs[static_cast<int>(reg)].base + offset;

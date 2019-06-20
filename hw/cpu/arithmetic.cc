@@ -5,8 +5,12 @@ template <typename T>
 T InstructionDecoder::adc(T a, T b)
 {
     uint32_t result = a + b + ((this->cpu.get_cf()) ? 1 : 0);
-    this->cpu.set_eflag_operation(eflags_all, 0, a, b, result, result,
-                                  sizeof(T) * 8 - 1);
+    this->cpu.eflags_dirty = eflags_all;
+    this->cpu.last_op1 = a;
+    this->cpu.last_op2 = b;
+    this->cpu.last_result = result;
+    this->cpu.last_add_result = result;
+    this->cpu.last_size = sizeof(T) * 8 - 1;
     return result;
 }
 template uint8_t InstructionDecoder::adc(uint8_t, uint8_t);
@@ -17,8 +21,12 @@ template <typename T>
 T InstructionDecoder::add(T a, T b)
 {
     uint32_t result = a + b;
-    this->cpu.set_eflag_operation(eflags_all, 0, a, b, result, result,
-                                  sizeof(T) * 8 - 1);
+    this->cpu.eflags_dirty = eflags_all;
+    this->cpu.last_op1 = a;
+    this->cpu.last_op2 = b;
+    this->cpu.last_result = result;
+    this->cpu.last_add_result = result;
+    this->cpu.last_size = sizeof(T) * 8 - 1;
     return result;
 }
 template uint8_t InstructionDecoder::add(uint8_t, uint8_t);
@@ -29,8 +37,11 @@ template <typename T>
 T InstructionDecoder::do_and(T a, T b)
 {
     uint32_t result = a & b;
-    this->cpu.set_eflag_operation(eflags_pf | eflags_zf | eflags_sf, 0, a, b,
-                                  result, 0, sizeof(T) * 8 - 1);
+    this->cpu.eflags_dirty = eflags_pf | eflags_zf | eflags_sf;
+    this->cpu.last_op1 = a;
+    this->cpu.last_op2 = b;
+    this->cpu.last_result = result;
+    this->cpu.last_size = sizeof(T) * 8 - 1;
     return result;
 }
 template uint8_t InstructionDecoder::do_and(uint8_t, uint8_t);
@@ -40,19 +51,19 @@ template uint32_t InstructionDecoder::do_and(uint32_t, uint32_t);
 template <typename T>
 T InstructionDecoder::bsf(T a, T b)
 {
-    uint32_t flags = eflags_all & ~eflags_zf;
-    uint32_t initial = 0;
+    this->cpu.eflags_dirty = eflags_all & ~eflags_zf;
+    this->cpu.last_size = sizeof(T) * 8 - 1;
     uint32_t result = 0;
     if (b == 0) {
-        initial |= eflags_zf;
+        this->cpu.eflags |= eflags_zf;
+        this->cpu.last_result = b;
         result = a;
     } else {
         // uint*_t are implicitly promoted to double
+        this->cpu.eflags &= ~eflags_zf;
         result = std::log2(b & ~b);
+        this->cpu.last_result = result;
     }
-    // Everything else besides ZF is undefined so result and size only matter
-    this->cpu.set_eflag_operation(flags, initial, a, b, result, 0,
-                                  sizeof(T) * 8 - 1);
     return result;
 }
 template uint16_t InstructionDecoder::bsf(uint16_t, uint16_t);
@@ -61,19 +72,19 @@ template uint32_t InstructionDecoder::bsf(uint32_t, uint32_t);
 template <typename T>
 T InstructionDecoder::bsr(T a, T b)
 {
-    uint32_t flags = eflags_all & ~eflags_zf;
-    uint32_t initial = 0;
+    this->cpu.eflags_dirty = eflags_all & ~eflags_zf;
+    this->cpu.last_size = sizeof(T) * 8 - 1;
     uint32_t result = 0;
     if (b == 0) {
-        initial |= eflags_zf;
+        this->cpu.eflags |= eflags_zf;
+        this->cpu.last_result = b;
         result = a;
     } else {
         // uint*_t are implicitly promoted to double
+        this->cpu.eflags &= ~eflags_zf;
         result = std::log2(b);
+        this->cpu.last_result = result;
     }
-    // Everything else besides ZF is undefined so result and size only matter
-    this->cpu.set_eflag_operation(flags, initial, a, b, result, 0,
-                                  sizeof(T) * 8 - 1);
     return result;
 }
 template uint16_t InstructionDecoder::bsr(uint16_t, uint16_t);
@@ -94,10 +105,14 @@ template void InstructionDecoder::cmp(uint32_t, uint32_t);
 template <typename T>
 T InstructionDecoder::dec(T v)
 {
-    uint32_t initial = this->cpu.get_cf() ? eflags_cf : 0;
     uint32_t result = static_cast<uint32_t>(v) - 1;
-    this->cpu.set_eflag_operation((eflags_all & ~eflags_cf), initial, result, 1,
-                                  result, v, sizeof(T) * 8 - 1);
+    this->cpu.eflags = (this->cpu.eflags & ~1) | this->cpu.get_cf();
+    this->cpu.eflags_dirty = eflags_all & ~eflags_cf;
+    this->cpu.last_op1 = result;
+    this->cpu.last_op2 = 1;
+    this->cpu.last_result = result;
+    this->cpu.last_add_result = v;
+    this->cpu.last_size = sizeof(T) * 8 - 1;
     return result;
 }
 template uint8_t InstructionDecoder::dec(uint8_t);
@@ -207,10 +222,12 @@ template void InstructionDecoder::idiv(uint32_t);
 template <typename T>
 T InstructionDecoder::inc(T v)
 {
-    uint32_t initial = this->cpu.get_cf() ? eflags_cf : 0;
     uint32_t result = static_cast<uint32_t>(v) + 1;
-    this->cpu.set_eflag_operation((eflags_all & ~eflags_cf), initial, v, 1,
-                                  result, result, sizeof(T) * 8 - 1);
+    this->cpu.eflags = (this->cpu.eflags & ~1) | this->cpu.get_cf();
+    this->cpu.last_op1 = v;
+    this->cpu.last_op2 = 1;
+    this->cpu.last_add_result = this->cpu.last_result = result;
+    this->cpu.last_size = sizeof(T) * 8 - 1;
     return result;
 }
 template uint8_t InstructionDecoder::inc(uint8_t);
@@ -226,27 +243,36 @@ void InstructionDecoder::mul(T a)
         uint8_t factor = this->cpu.read_gpreg8(GPRegister8::AL);
         uint16_t product = factor * a;
         this->cpu.write_gpreg16(GPRegister16::AX, product);
+        this->cpu.last_result = product;
         if (this->cpu.read_gpreg8(GPRegister8::AH)) {
-            initial |= eflags_of | eflags_cf;
+            this->cpu.eflags |= eflags_of | eflags_cf;
+        } else {
+            this->cpu.eflags &= ~eflags_of & ~eflags_cf;
         }
     } else if (sizeof(T) == 2) {
         uint16_t factor = this->cpu.read_gpreg16(GPRegister16::AX);
         uint32_t product = factor * a;
         this->cpu.write_gpreg16(GPRegister16::AX, product & 0xFFFF);
         this->cpu.write_gpreg16(GPRegister16::DX, product >> 16);
+        this->cpu.last_result = product;
         if (this->cpu.read_gpreg16(GPRegister16::DX)) {
             initial |= eflags_of | eflags_cf;
+        } else {
+            this->cpu.eflags &= ~eflags_of & ~eflags_cf;
         }
     } else if (sizeof(T) == 4) {
         uint32_t factor = this->cpu.read_gpreg32(GPRegister32::EAX);
         uint64_t product = factor * a;
         this->cpu.write_gpreg32(GPRegister32::EAX, product & 0xFFFFFFFF);
         this->cpu.write_gpreg32(GPRegister32::EDX, product >> 32);
+        this->cpu.last_result = product & 0xFFFFFFFF;
         if (this->cpu.read_gpreg32(GPRegister32::EDX)) {
             initial |= eflags_of | eflags_cf;
+        } else {
+            this->cpu.eflags &= ~eflags_of & ~eflags_cf;
         }
     }
-    this->cpu.set_eflag_operation(0, initial, 0, 0, 0, 0, 0);
+    this->cpu.last_size = sizeof(T) * 8 - 1;
 }
 template void InstructionDecoder::mul(uint8_t);
 template void InstructionDecoder::mul(uint16_t);
@@ -256,8 +282,10 @@ template <typename T>
 T InstructionDecoder::do_or(T a, T b)
 {
     uint32_t result = a | b;
-    this->cpu.set_eflag_operation(eflags_pf | eflags_zf | eflags_sf, 0, a, b,
-                                  result, result, sizeof(T) * 8 - 1);
+    this->cpu.eflags_dirty = eflags_pf | eflags_zf | eflags_sf;
+    this->cpu.eflags &= eflags_cf | eflags_of | eflags_af;
+    this->cpu.last_result = result;
+    this->cpu.last_size = sizeof(T) * 8 - 1;
     return result;
 }
 template uint8_t InstructionDecoder::do_or(uint8_t, uint8_t);
@@ -268,8 +296,11 @@ template <typename T>
 T InstructionDecoder::sbb(T a, T b)
 {
     uint32_t result = a - b - ((this->cpu.get_cf()) ? 1 : 0);
-    this->cpu.set_eflag_operation(eflags_all, 0, result, b, result, a,
-                                  sizeof(T) * 8 - 1);
+    this->cpu.eflags_dirty = eflags_all;
+    this->cpu.last_op1 = this->cpu.last_result = result;
+    this->cpu.last_op2 = b;
+    this->cpu.last_add_result = a;
+    this->cpu.last_size = sizeof(T) * 8 - 1;
     return result;
 }
 template uint8_t InstructionDecoder::sbb(uint8_t, uint8_t);
@@ -280,8 +311,11 @@ template <typename T>
 T InstructionDecoder::sub(T a, T b)
 {
     uint32_t result = a - b;
-    this->cpu.set_eflag_operation(eflags_all, 0, result, b, result, a,
-                                  sizeof(T) * 8 - 1);
+    this->cpu.eflags_dirty = eflags_all;
+    this->cpu.last_add_result = a;
+    this->cpu.last_op1 = this->cpu.last_result = result;
+    this->cpu.last_op2 = b;
+    this->cpu.last_size = sizeof(T) * 8 - 1;
     return result;
 }
 template uint8_t InstructionDecoder::sub(uint8_t, uint8_t);

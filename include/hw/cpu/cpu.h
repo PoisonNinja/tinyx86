@@ -148,10 +148,6 @@ public:
     bool get_zf();
     bool get_sf();
     bool get_of();
-    void set_eflag_operation(uint32_t eflags_dirty, uint32_t eflags_initial,
-                             uint32_t last_op1, uint32_t last_op2,
-                             uint32_t last_result, uint32_t last_add_result,
-                             uint8_t last_size);
 
     addr_t segment_to_linear(SGRegister seg, addr_t offset);
 
