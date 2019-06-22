@@ -133,6 +133,9 @@ InstructionDecoder::InstructionDecoder(CPU& cpu) : cpu(cpu)
     this->opcodes16[0xEA] = &InstructionDecoder::jmpf_ptr16;
     this->opcodes32[0xEA] = &InstructionDecoder::jmpf_ptr32;
     this->opcodes16[0xF4] = this->opcodes32[0xF4] = &InstructionDecoder::hlt;
+
+    this->fopcodes16[0x85] = &InstructionDecoder::jnz_jne16;
+    this->fopcodes32[0x85] = &InstructionDecoder::jnz_jne16;
 }
 
 InstructionDecoder::~InstructionDecoder()

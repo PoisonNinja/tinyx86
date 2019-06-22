@@ -260,4 +260,8 @@ private:
     void jmpf_ptr32();
 
     void hlt();  // 0xF4
+
+    // Two byte opcodes
+    void jnz_jne16();  // 0x85
+    void jnz_jne32();
 };

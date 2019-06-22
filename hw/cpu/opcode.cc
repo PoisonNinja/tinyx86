@@ -493,6 +493,7 @@ void InstructionDecoder::do_rm32_imm8()
 
 void InstructionDecoder::xchg_r8_rm8()
 {
+    // TODO: Use xchg (modifies EFLAGS)
     this->load_modrm();
     uint8_t tmp = this->read_modrm_rm8();
     this->write_modrm_rm8(this->read_modrm_r8());
@@ -613,4 +614,14 @@ void InstructionDecoder::jmpf_ptr32()
 void InstructionDecoder::hlt()
 {
     this->cpu.halt();
+}
+
+void InstructionDecoder::jnz_jne16()
+{
+    this->cpu.jmpcc16(!this->cpu.get_zf());
+}
+
+void InstructionDecoder::jnz_jne32()
+{
+    this->cpu.jmpcc32(!this->cpu.get_zf());
 }

@@ -203,6 +203,22 @@ uint32_t CPU::pop32()
     return sp.regs_16 += 4, read_mem32(addr);
 }
 
+void CPU::jmpcc16(bool cond)
+{
+    int16_t off = this->read_instruction16();
+    if (cond) {
+        this->write_ip(this->read_ip() + off);
+    }
+}
+
+void CPU::jmpcc32(bool cond)
+{
+    int32_t off = this->read_instruction32();
+    if (cond) {
+        this->write_eip(this->read_eip() + off);
+    }
+}
+
 bool CPU::is_32()
 {
     // TODO: Eventually figure out of we are actually 32-bit based on GDT
