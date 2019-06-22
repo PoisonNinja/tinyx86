@@ -30,8 +30,8 @@ include_directories(include)
 add_executable(tinyx86 tinyx86.cc spdlog.cc)
 add_subdirectory(hw)
 
-# Enable LTO
-set_target_properties(tinyx86 PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
+# Enable LTO for release builds
+set_target_properties(tinyx86 PROPERTIES INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE)
 
 # INCLUDE(FindPkgConfig)
 
