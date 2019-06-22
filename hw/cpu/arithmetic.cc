@@ -321,3 +321,17 @@ T InstructionDecoder::sub(T a, T b)
 template uint8_t InstructionDecoder::sub(uint8_t, uint8_t);
 template uint16_t InstructionDecoder::sub(uint16_t, uint16_t);
 template uint32_t InstructionDecoder::sub(uint32_t, uint32_t);
+
+template <typename T>
+T InstructionDecoder::do_xor(T a, T b)
+{
+    uint32_t result = a ^ b;
+    this->cpu.eflags_dirty = eflags_pf | eflags_zf | eflags_sf;
+    this->cpu.eflags &= ~eflags_cf & ~eflags_of & ~eflags_af;
+    this->cpu.last_result = result;
+    this->cpu.last_size = sizeof(T) * 8 - 1;
+    return result;
+}
+template uint8_t InstructionDecoder::do_xor(uint8_t, uint8_t);
+template uint16_t InstructionDecoder::do_xor(uint16_t, uint16_t);
+template uint32_t InstructionDecoder::do_xor(uint32_t, uint32_t);
