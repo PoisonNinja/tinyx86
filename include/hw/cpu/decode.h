@@ -42,6 +42,7 @@ private:
     // ModRM byte
     uint8_t raw_modrm;
     struct ModRM* modrm;
+    addr_t decoded_addr;
     void load_modrm();
     addr_t modrm_to_address(uint8_t mod, uint8_t rm);
 
@@ -68,6 +69,9 @@ private:
     /*
      * Note to future me: Do not convert these into overloaded functions because
      * they need to match the read_modrm_* family above in pairs
+     */
+    /*
+     * write_modrm_rm* variants must be called after a call to read_modrm_rm*
      */
     void write_modrm_r8(uint8_t value);
     void write_modrm_rm8(uint8_t value);
@@ -154,13 +158,10 @@ private:
     void add_al_imm8();   // 0x04
     void add_ax_imm16();  // 0x05
     void add_eax_imm32();
-
     void push_es16();  // 0x06
     void push_es32();
-
     void pop_es16();  // 0x07
     void pop_es32();
-
     void or_rm8_r8();    // 0x08
     void or_rm16_r16();  // 0x09
     void or_rm32_r32();
@@ -170,7 +171,6 @@ private:
     void or_al_imm8();   // 0x0C
     void or_ax_imm16();  // 0x0D
     void or_eax_imm32();
-
     void push_cs16();  // 0x0E
     void push_cs32();
 
@@ -185,13 +185,10 @@ private:
     void adc_al_imm8();   // 0x14
     void adc_ax_imm16();  // 0x15
     void adc_eax_imm32();
-
     void push_ss16();  // 0x16
     void push_ss32();
-
     void pop_ss16();  // 0x17
     void pop_ss32();
-
     void sbb_rm8_r8();    // 0x18
     void sbb_rm16_r16();  // 0x19
     void sbb_rm32_r32();
@@ -201,14 +198,21 @@ private:
     void sbb_al_imm8();   // 0x1C
     void sbb_ax_imm16();  // 0x1D
     void sbb_eax_imm32();
-
     void push_ds16();  // 0x1E
     void push_ds32();
-
     void pop_ds16();  // 0x1F
     void pop_ds32();
+    void and_rm8_r8();    // 0x20
+    void and_rm16_r16();  // 0x21
+    void and_rm32_r32();
+    void and_r8_rm8();    // 0x22
+    void and_r16_rm16();  // 0x23
+    void and_r32_rm32();
+    void and_al_imm8();   // 0x24
+    void and_ax_imm16();  // 0x25
+    void and_eax_imm32();
 
-    void and_rm8_r8();  // 0x20
+    // 0x26 is ES override
 
     void inc_bx();  // 0x43
     void inc_ebx();
