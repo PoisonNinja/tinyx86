@@ -310,8 +310,9 @@ bool CPU::get_af()
 bool CPU::get_zf()
 {
     if (eflags_dirty & eflags_zf) {
-        eflags |=
-            ((~last_result & last_result - 1) >> last_size & 1) ? eflags_zf : 0;
+        eflags |= ((~last_result & (last_result - 1)) >> last_size & 1) ?
+                      eflags_zf :
+                      0;
         eflags_dirty &= ~eflags_zf;
     }
     return eflags & eflags_zf;
