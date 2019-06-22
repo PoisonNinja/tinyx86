@@ -21,6 +21,8 @@ InstructionDecoder::InstructionDecoder(CPU& cpu) : cpu(cpu)
     for (size_t i = 0; i < 256; i++) {
         this->opcodes16[i] = nullptr;
         this->opcodes32[i] = nullptr;
+        this->fopcodes16[i] = nullptr;
+        this->fopcodes32[i] = nullptr;
     }
 
     // Initialize instruction table
@@ -161,10 +163,17 @@ void InstructionDecoder::tick()
                 break;
         }
     }
-    this->log->trace("[decode] Opcode: 0x{:X}", opcode);
+    InstructionPointer* opcodes;
+    if (opcode == 0xF) {
+        // Two byte opcode
+        opcode = this->cpu.read_instruction8();
+        this->log->trace("[decode] Opcode: 0xF 0x{:X}", opcode);
+        opcodes = (this->is_osize_32()) ? this->fopcodes32 : this->fopcodes16;
+    } else {
+        this->log->trace("[decode] Opcode: 0x{:X}", opcode);
+        opcodes = (this->is_osize_32()) ? this->opcodes32 : this->opcodes16;
+    }
     // TODO: Check for 32 bit. We assume 16 bit by default
-    InstructionPointer* opcodes =
-        (this->is_osize_32()) ? this->opcodes32 : this->opcodes16;
     if (!opcodes[opcode]) {
         this->log->error("[decode] Unknown opcode 0x{:X}, halting...", opcode);
         this->cpu.stop();

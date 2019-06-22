@@ -54,6 +54,9 @@ private:
     InstructionPointer opcodes16[256];
     InstructionPointer opcodes32[256];
 
+    InstructionPointer fopcodes16[256];
+    InstructionPointer fopcodes32[256];
+
     // ModRM decoding
     uint8_t read_modrm_r8();
     uint8_t read_modrm_rm8();
