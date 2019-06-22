@@ -23,9 +23,11 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
    add_compile_options (-fcolor-diagnostics)
 endif ()
 
+add_definitions(-DSPDLOG_COMPILED_LIB)
+
 include_directories(include)
 
-add_executable(tinyx86 tinyx86.cc)
+add_executable(tinyx86 tinyx86.cc spdlog.cc)
 add_subdirectory(hw)
 
 # Enable LTO
@@ -37,5 +39,7 @@ set_target_properties(tinyx86 PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
 
 # include_directories(${SDL2_INCLUDE_DIRS})
 # target_link_libraries(tinyx86 ${SDL2_LIBRARIES})
+
+target_link_libraries(tinyx86 pthread)
 
 install(TARGETS tinyx86 DESTINATION /usr/local/bin)
