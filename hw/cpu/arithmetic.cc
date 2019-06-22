@@ -283,7 +283,7 @@ T InstructionDecoder::do_or(T a, T b)
 {
     uint32_t result = a | b;
     this->cpu.eflags_dirty = eflags_pf | eflags_zf | eflags_sf;
-    this->cpu.eflags &= eflags_cf | eflags_of | eflags_af;
+    this->cpu.eflags &= ~eflags_cf & ~eflags_of & ~eflags_af;
     this->cpu.last_result = result;
     this->cpu.last_size = sizeof(T) * 8 - 1;
     return result;
