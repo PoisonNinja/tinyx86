@@ -207,8 +207,8 @@ uint8_t InstructionDecoder::read_modrm_rm8()
     if (mod == 3) {
         return this->cpu.read_gpreg8(static_cast<GPRegister8>(rm));
     } else {
-        addr_t addr = this->modrm_to_address(mod, rm);
-        return this->cpu.read_mem8(addr);
+        this->decoded_addr = this->modrm_to_address(mod, rm);
+        return this->cpu.read_mem8(this->decoded_addr);
     }
 }
 
@@ -224,8 +224,8 @@ uint16_t InstructionDecoder::read_modrm_rm16()
     if (mod == 3) {
         return this->cpu.read_gpreg16(static_cast<GPRegister16>(rm));
     } else {
-        addr_t addr = this->modrm_to_address(mod, rm);
-        return this->cpu.read_mem16(addr);
+        this->decoded_addr = this->modrm_to_address(mod, rm);
+        return this->cpu.read_mem16(this->decoded_addr);
     }
 }
 
@@ -241,8 +241,8 @@ uint32_t InstructionDecoder::read_modrm_rm32()
     if (mod == 3) {
         return this->cpu.read_gpreg32(static_cast<GPRegister32>(rm));
     } else {
-        addr_t addr = this->modrm_to_address(mod, rm);
-        return this->cpu.read_mem32(addr);
+        this->decoded_addr = this->modrm_to_address(mod, rm);
+        return this->cpu.read_mem32(this->decoded_addr);
     }
 }
 
@@ -258,8 +258,7 @@ void InstructionDecoder::write_modrm_rm8(uint8_t value)
     if (mod == 3) {
         this->cpu.write_gpreg8(static_cast<GPRegister8>(rm), value);
     } else {
-        addr_t addr = this->modrm_to_address(mod, rm);
-        this->cpu.write_mem8(addr, value);
+        this->cpu.write_mem8(this->decoded_addr, value);
     }
 }
 
@@ -275,8 +274,7 @@ void InstructionDecoder::write_modrm_rm16(uint16_t value)
     if (mod == 3) {
         this->cpu.write_gpreg16(static_cast<GPRegister16>(rm), value);
     } else {
-        addr_t addr = this->modrm_to_address(mod, rm);
-        this->cpu.write_mem16(addr, value);
+        this->cpu.write_mem16(this->decoded_addr, value);
     }
 }
 
@@ -292,7 +290,6 @@ void InstructionDecoder::write_modrm_rm32(uint32_t value)
     if (mod == 3) {
         this->cpu.write_gpreg32(static_cast<GPRegister32>(rm), value);
     } else {
-        addr_t addr = this->modrm_to_address(mod, rm);
-        this->cpu.write_mem32(addr, value);
+        this->cpu.write_mem32(this->decoded_addr, value);
     }
 }
