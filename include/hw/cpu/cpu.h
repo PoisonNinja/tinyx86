@@ -96,6 +96,12 @@ public:
     void tick();
     void reset();
 
+    void halt();
+    void stop();
+
+    CPUState get_state();
+
+private:
     // Register operations
     uint8_t read_gpreg8(GPRegister8 reg);
     uint16_t read_gpreg16(GPRegister16 reg);
@@ -150,11 +156,6 @@ public:
     bool get_of();
 
     addr_t segment_to_linear(SGRegister seg, addr_t offset);
-
-    void halt();
-    void stop();
-
-    CPUState get_state();
 
 private:
     Board& board;  // Parent board
