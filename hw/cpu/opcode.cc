@@ -425,6 +425,72 @@ void InstructionDecoder::jmpnz_ne()
     }
 }
 
+void InstructionDecoder::do_rm16_imm8()
+{
+    this->load_modrm();
+    uint16_t val = this->read_modrm_rm16();
+    uint16_t imm = static_cast<uint16_t>(this->cpu.read_instruction8());
+    switch (this->modrm->reg) {
+        case 0:
+            this->write_modrm_rm16(this->add(val, imm));
+            break;
+        case 1:
+            this->write_modrm_rm16(this->do_or(val, imm));
+            break;
+        case 2:
+            this->write_modrm_rm16(this->adc(val, imm));
+            break;
+        case 3:
+            this->write_modrm_rm16(this->sbb(val, imm));
+            break;
+        case 4:
+            this->write_modrm_rm16(this->do_and(val, imm));
+            break;
+        case 5:
+            this->write_modrm_rm16(this->sub(val, imm));
+            break;
+        case 6:
+            this->write_modrm_rm16(this->do_xor(val, imm));
+            break;
+        case 7:
+            this->cmp(val, imm);
+            break;
+    }
+}
+
+void InstructionDecoder::do_rm32_imm8()
+{
+    this->load_modrm();
+    uint32_t val = this->read_modrm_rm32();
+    uint32_t imm = static_cast<uint32_t>(this->cpu.read_instruction8());
+    switch (this->modrm->reg) {
+        case 0:
+            this->write_modrm_rm32(this->add(val, imm));
+            break;
+        case 1:
+            this->write_modrm_rm32(this->do_or(val, imm));
+            break;
+        case 2:
+            this->write_modrm_rm32(this->adc(val, imm));
+            break;
+        case 3:
+            this->write_modrm_rm32(this->sbb(val, imm));
+            break;
+        case 4:
+            this->write_modrm_rm32(this->do_and(val, imm));
+            break;
+        case 5:
+            this->write_modrm_rm32(this->sub(val, imm));
+            break;
+        case 6:
+            this->write_modrm_rm32(this->do_xor(val, imm));
+            break;
+        case 7:
+            this->cmp(val, imm);
+            break;
+    }
+}
+
 void InstructionDecoder::xchg_r8_rm8()
 {
     this->load_modrm();

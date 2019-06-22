@@ -228,6 +228,9 @@ private:
 
     void jmpnz_ne();  // 0x75
 
+    void do_rm16_imm8();  // 0x83
+    void do_rm32_imm8();
+
     void xchg_r8_rm8();  // 0x86
 
     void mov_rm8_r8();    // 0x88

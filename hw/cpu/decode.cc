@@ -106,6 +106,8 @@ InstructionDecoder::InstructionDecoder(CPU& cpu) : cpu(cpu)
     this->opcodes32[0x5F] = &InstructionDecoder::pop_edi;
     this->opcodes16[0x75] = this->opcodes32[0x75] =
         &InstructionDecoder::jmpnz_ne;
+    this->opcodes16[0x83] = &InstructionDecoder::do_rm16_imm8;
+    this->opcodes32[0x83] = &InstructionDecoder::do_rm32_imm8;
     this->opcodes16[0x86] = this->opcodes32[0x86] =
         &InstructionDecoder::xchg_r8_rm8;
     this->opcodes16[0x88] = this->opcodes32[0x88] =
