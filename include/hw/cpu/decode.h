@@ -102,6 +102,7 @@ private:
     template <typename T>
     void cmp(T a, T b);
     void daa();
+    void das();
     template <typename T>
     T dec(T a);
     template <typename T>

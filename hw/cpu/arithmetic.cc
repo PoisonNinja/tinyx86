@@ -124,6 +124,28 @@ void InstructionDecoder::daa()
     this->cpu.eflags_dirty |= eflags_zf | eflags_sf | eflags_pf;
 }
 
+void InstructionDecoder::das()
+{
+    uint8_t old_al = this->cpu.read_gpreg8(GPRegister8::AL);
+    bool old_cf = this->cpu.get_cf();
+    this->cpu.eflags &= ~eflags_cf;
+    if (((old_al & 0xF) > 9) || this->cpu.get_af()) {
+        this->cpu.write_gpreg8(GPRegister8::AL, old_al - 6);
+        this->cpu.eflags |= eflags_af;
+        this->cpu.eflags |= (old_cf || (old_al < 6)) ? eflags_cf : 0;
+    } else {
+        this->cpu.eflags &= ~eflags_af;
+    }
+    if ((old_al > 0x99) || old_cf) {
+        this->cpu.write_gpreg8(GPRegister8::AL, old_al - 0x60);
+        this->cpu.eflags |= eflags_cf;
+    }
+    this->cpu.last_result = this->cpu.read_gpreg8(GPRegister8::AL);
+    this->cpu.last_op1 = this->cpu.last_op2 = 0;
+    this->cpu.last_size = 7;
+    this->cpu.eflags_dirty |= eflags_zf | eflags_sf | eflags_pf;
+}
+
 template <typename T>
 T InstructionDecoder::dec(T v)
 {
