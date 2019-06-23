@@ -246,10 +246,52 @@ private:
 
     // 0x36 is SS override
 
+    void aaa_al_ah();     // 0x37
+    void cmp_rm8_r8();    // 0x38
+    void cmp_rm16_r16();  // 0x39
+    void cmp_rm32_r32();
+    void cmp_r8_rm8();    // 0x3A
+    void cmp_r16_rm16();  // 0x3B
+    void cmp_r32_rm32();
+    void cmp_al_imm8();   // 0x3C
+    void cmp_ax_imm16();  // 0x3D
+    void cmp_eax_imm32();
+
+    // 0x3E is DS override
+
+    void aas_al_ah();  // 0x3F
+    void inc_ax();     // 0x40
+    void inc_eax();
+    void inc_cx();  // 0x41
+    void inc_ecx();
+    void inc_dx();  // 0x42
+    void inc_edx();
     void inc_bx();  // 0x43
     void inc_ebx();
+    void inc_sp();  // 0x44
+    void inc_esp();
+    void inc_bp();  // 0x45
+    void inc_ebp();
+    void inc_si();  // 0x46
+    void inc_esi();
     void inc_di();  // 0x47
     void inc_edi();
+    void dec_ax();  // 0x48
+    void dec_eax();
+    void dec_cx();  // 0x49
+    void dec_ecx();
+    void dec_dx();  // 0x4A
+    void dec_edx();
+    void dec_bx();  // 0x4B
+    void dec_ebx();
+    void dec_sp();  // 0x4C
+    void dec_esp();
+    void dec_bp();  // 0x4D
+    void dec_ebp();
+    void dec_si();  // 0x4E
+    void dec_esi();
+    void dec_di();  // 0x4F
+    void dec_edi();
 
     void push_dx();  // 0x52
     void push_edx();

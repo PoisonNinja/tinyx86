@@ -126,10 +126,54 @@ InstructionDecoder::InstructionDecoder(CPU& cpu) : cpu(cpu)
         &InstructionDecoder::xor_al_imm8;
     this->opcodes16[0x35] = &InstructionDecoder::xor_ax_imm16;
     this->opcodes32[0x35] = &InstructionDecoder::xor_eax_imm32;
+    this->opcodes16[0x37] = this->opcodes32[0x37] =
+        &InstructionDecoder::aaa_al_ah;
+    this->opcodes16[0x38] = this->opcodes32[0x38] =
+        &InstructionDecoder::cmp_rm8_r8;
+    this->opcodes16[0x39] = &InstructionDecoder::cmp_rm16_r16;
+    this->opcodes32[0x39] = &InstructionDecoder::cmp_rm32_r32;
+    this->opcodes16[0x3A] = this->opcodes32[0x3A] =
+        &InstructionDecoder::cmp_r8_rm8;
+    this->opcodes16[0x3B] = &InstructionDecoder::cmp_r16_rm16;
+    this->opcodes32[0x3B] = &InstructionDecoder::cmp_r32_rm32;
+    this->opcodes16[0x3C] = this->opcodes32[0x3C] =
+        &InstructionDecoder::cmp_al_imm8;
+    this->opcodes16[0x3D] = &InstructionDecoder::cmp_ax_imm16;
+    this->opcodes32[0x3D] = &InstructionDecoder::cmp_eax_imm32;
+    this->opcodes16[0x3F] = this->opcodes32[0x3F] =
+        &InstructionDecoder::aas_al_ah;
+    this->opcodes16[0x40] = &InstructionDecoder::inc_ax;
+    this->opcodes32[0x40] = &InstructionDecoder::inc_eax;
+    this->opcodes16[0x41] = &InstructionDecoder::inc_cx;
+    this->opcodes32[0x41] = &InstructionDecoder::inc_ecx;
+    this->opcodes16[0x42] = &InstructionDecoder::inc_dx;
+    this->opcodes32[0x42] = &InstructionDecoder::inc_edx;
     this->opcodes16[0x43] = &InstructionDecoder::inc_bx;
     this->opcodes32[0x43] = &InstructionDecoder::inc_ebx;
+    this->opcodes16[0x44] = &InstructionDecoder::inc_sp;
+    this->opcodes32[0x44] = &InstructionDecoder::inc_esp;
+    this->opcodes16[0x45] = &InstructionDecoder::inc_bp;
+    this->opcodes32[0x45] = &InstructionDecoder::inc_ebp;
+    this->opcodes16[0x46] = &InstructionDecoder::inc_si;
+    this->opcodes32[0x46] = &InstructionDecoder::inc_esi;
     this->opcodes16[0x47] = &InstructionDecoder::inc_di;
     this->opcodes32[0x47] = &InstructionDecoder::inc_edi;
+    this->opcodes16[0x48] = &InstructionDecoder::dec_ax;
+    this->opcodes32[0x48] = &InstructionDecoder::dec_eax;
+    this->opcodes16[0x49] = &InstructionDecoder::dec_cx;
+    this->opcodes32[0x49] = &InstructionDecoder::dec_ecx;
+    this->opcodes16[0x4A] = &InstructionDecoder::dec_dx;
+    this->opcodes32[0x4A] = &InstructionDecoder::dec_edx;
+    this->opcodes16[0x4B] = &InstructionDecoder::dec_bx;
+    this->opcodes32[0x4B] = &InstructionDecoder::dec_ebx;
+    this->opcodes16[0x4C] = &InstructionDecoder::dec_sp;
+    this->opcodes32[0x4C] = &InstructionDecoder::dec_esp;
+    this->opcodes16[0x4D] = &InstructionDecoder::dec_bp;
+    this->opcodes32[0x4D] = &InstructionDecoder::dec_ebp;
+    this->opcodes16[0x4E] = &InstructionDecoder::dec_si;
+    this->opcodes32[0x4E] = &InstructionDecoder::dec_esi;
+    this->opcodes16[0x4F] = &InstructionDecoder::dec_di;
+    this->opcodes32[0x4F] = &InstructionDecoder::dec_edi;
     this->opcodes16[0x52] = &InstructionDecoder::push_dx;
     this->opcodes32[0x52] = &InstructionDecoder::push_edx;
     this->opcodes16[0x53] = &InstructionDecoder::push_bx;
