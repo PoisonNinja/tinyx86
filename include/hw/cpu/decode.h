@@ -81,6 +81,10 @@ private:
     void write_modrm_rm32(uint32_t value);
 
     // Arithmetic
+    void aaa();
+    void aad(uint8_t imm8);
+    void aam(uint8_t imm8);
+    void aas();
     template <typename T>
     T adc(T a, T b);
     template <typename T>

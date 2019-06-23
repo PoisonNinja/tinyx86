@@ -1,6 +1,66 @@
 #include <hw/cpu/cpu.h>
 #include <hw/cpu/decode.h>
 
+void InstructionDecoder::aaa()
+{
+    uint8_t old_al = this->cpu.read_gpreg8(GPRegister8::AL);
+    bool old_af = this->cpu.get_af();
+    if (((old_al & 0xF) > 9) || old_af) {
+        this->cpu.write_gpreg16(
+            GPRegister16::AX, this->cpu.read_gpreg16(GPRegister16::AX) + 0x106);
+        this->cpu.eflags |= eflags_af | eflags_cf;
+    } else {
+        this->cpu.eflags &= ~eflags_af & ~eflags_cf;
+    }
+    this->cpu.write_gpreg8(GPRegister8::AL,
+                           this->cpu.read_gpreg8(GPRegister8::AL) & 0xF);
+    // Unset dirty bit because we already computed them above
+    this->cpu.eflags_dirty &= ~eflags_af & ~eflags_cf;
+}
+
+void InstructionDecoder::aad(uint8_t imm8)
+{
+    uint8_t temp_al = this->cpu.read_gpreg8(GPRegister8::AL);
+    uint8_t temp_ah = this->cpu.read_gpreg8(GPRegister8::AH);
+    uint16_t result = (temp_al + (temp_ah * imm8)) & 0xFF;
+    this->cpu.write_gpreg8(GPRegister8::AL, result);
+    this->cpu.write_gpreg8(GPRegister8::AH, 0);
+    this->cpu.last_result = result;
+    this->cpu.last_size = 7;
+    this->cpu.eflags_dirty = eflags_sf | eflags_zf | eflags_pf;
+}
+
+void InstructionDecoder::aam(uint8_t imm8)
+{
+    // TODO: imm8 zero check
+    uint8_t temp_al = this->cpu.read_gpreg8(GPRegister8::AL);
+    uint8_t result = temp_al / imm8;
+    this->cpu.write_gpreg8(GPRegister8::AL, result);
+    this->cpu.write_gpreg8(GPRegister8::AH, temp_al % imm8);
+    this->cpu.last_result = result;
+    this->cpu.last_size = 7;
+    this->cpu.eflags_dirty = eflags_sf | eflags_zf | eflags_pf;
+}
+
+void InstructionDecoder::aas()
+{
+    uint8_t old_al = this->cpu.read_gpreg8(GPRegister8::AL);
+    bool old_af = this->cpu.get_af();
+    if (((old_al & 0xF) > 9) || old_af) {
+        this->cpu.write_gpreg16(GPRegister16::AX,
+                                this->cpu.read_gpreg16(GPRegister16::AX) - 6);
+        this->cpu.write_gpreg8(GPRegister8::AH,
+                               this->cpu.read_gpreg8(GPRegister8::AH) - 1);
+        this->cpu.eflags |= eflags_af | eflags_cf;
+    } else {
+        this->cpu.eflags &= ~eflags_af & ~eflags_cf;
+    }
+    this->cpu.write_gpreg8(GPRegister8::AL,
+                           this->cpu.read_gpreg8(GPRegister8::AL) & 0xF);
+    // Unset dirty bit because we already computed them above
+    this->cpu.eflags_dirty &= ~eflags_af & ~eflags_cf;
+}
+
 template <typename T>
 T InstructionDecoder::adc(T a, T b)
 {
