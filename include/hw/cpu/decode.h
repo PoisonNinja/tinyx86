@@ -229,6 +229,19 @@ private:
 
     // 0x2E is CS override
 
+    void das_al();        // 0x2F
+    void xor_rm8_r8();    // 0x30
+    void xor_rm16_r16();  // 0x31
+    void xor_rm32_r32();
+    void xor_r8_rm8();    // 0x32
+    void xor_r16_rm16();  // 0x33
+    void xor_r32_rm32();
+    void xor_al_imm8();   // 0x34
+    void xor_ax_imm16();  // 0x35
+    void xor_eax_imm32();
+
+    // 0x36 is SS override
+
     void inc_bx();  // 0x43
     void inc_ebx();
     void inc_di();  // 0x47

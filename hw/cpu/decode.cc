@@ -113,6 +113,19 @@ InstructionDecoder::InstructionDecoder(CPU& cpu) : cpu(cpu)
         &InstructionDecoder::sub_al_imm8;
     this->opcodes16[0x2D] = &InstructionDecoder::sub_ax_imm16;
     this->opcodes32[0x2D] = &InstructionDecoder::sub_eax_imm32;
+    this->opcodes16[0x2F] = this->opcodes32[0x2F] = &InstructionDecoder::das_al;
+    this->opcodes16[0x30] = this->opcodes32[0x30] =
+        &InstructionDecoder::xor_rm8_r8;
+    this->opcodes16[0x31] = &InstructionDecoder::xor_rm16_r16;
+    this->opcodes32[0x31] = &InstructionDecoder::xor_rm32_r32;
+    this->opcodes16[0x32] = this->opcodes32[0x32] =
+        &InstructionDecoder::xor_r8_rm8;
+    this->opcodes16[0x33] = &InstructionDecoder::xor_r16_rm16;
+    this->opcodes32[0x33] = &InstructionDecoder::xor_r32_rm32;
+    this->opcodes16[0x34] = this->opcodes32[0x34] =
+        &InstructionDecoder::xor_al_imm8;
+    this->opcodes16[0x35] = &InstructionDecoder::xor_ax_imm16;
+    this->opcodes32[0x35] = &InstructionDecoder::xor_eax_imm32;
     this->opcodes16[0x43] = &InstructionDecoder::inc_bx;
     this->opcodes32[0x43] = &InstructionDecoder::inc_ebx;
     this->opcodes16[0x47] = &InstructionDecoder::inc_di;
