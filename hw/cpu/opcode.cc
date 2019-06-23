@@ -797,6 +797,26 @@ void InstructionDecoder::dec_edi()
         this->dec(this->cpu.read_gpreg32(GPRegister32::EDI)));
 }
 
+void InstructionDecoder::push_ax()
+{
+    this->cpu.push16(this->cpu.read_gpreg16(GPRegister16::AX));
+}
+
+void InstructionDecoder::push_eax()
+{
+    this->cpu.push32(this->cpu.read_gpreg32(GPRegister32::EAX));
+}
+
+void InstructionDecoder::push_cx()
+{
+    this->cpu.push16(this->cpu.read_gpreg16(GPRegister16::CX));
+}
+
+void InstructionDecoder::push_ecx()
+{
+    this->cpu.push32(this->cpu.read_gpreg32(GPRegister32::ECX));
+}
+
 void InstructionDecoder::push_dx()
 {
     this->cpu.push16(this->cpu.read_gpreg16(GPRegister16::DX));
@@ -817,6 +837,36 @@ void InstructionDecoder::push_ebx()
     this->cpu.push32(this->cpu.read_gpreg32(GPRegister32::EBX));
 }
 
+void InstructionDecoder::push_sp()
+{
+    this->cpu.push16(this->cpu.read_gpreg16(GPRegister16::SP));
+}
+
+void InstructionDecoder::push_esp()
+{
+    this->cpu.push32(this->cpu.read_gpreg32(GPRegister32::ESP));
+}
+
+void InstructionDecoder::push_bp()
+{
+    this->cpu.push16(this->cpu.read_gpreg16(GPRegister16::BP));
+}
+
+void InstructionDecoder::push_ebp()
+{
+    this->cpu.push32(this->cpu.read_gpreg32(GPRegister32::EBP));
+}
+
+void InstructionDecoder::push_si()
+{
+    this->cpu.push16(this->cpu.read_gpreg16(GPRegister16::SI));
+}
+
+void InstructionDecoder::push_esi()
+{
+    this->cpu.push32(this->cpu.read_gpreg32(GPRegister32::ESI));
+}
+
 void InstructionDecoder::push_di()
 {
     this->cpu.push16(this->cpu.read_gpreg16(GPRegister16::DI));
@@ -825,6 +875,25 @@ void InstructionDecoder::push_di()
 void InstructionDecoder::push_edi()
 {
     this->cpu.push32(this->cpu.read_gpreg32(GPRegister32::EDI));
+}
+void InstructionDecoder::pop_ax()
+{
+    this->cpu.write_gpreg16(GPRegister16::AX, this->cpu.pop16());
+}
+
+void InstructionDecoder::pop_eax()
+{
+    this->cpu.write_gpreg32(GPRegister32::EAX, this->cpu.pop32());
+}
+
+void InstructionDecoder::pop_cx()
+{
+    this->cpu.write_gpreg16(GPRegister16::CX, this->cpu.pop16());
+}
+
+void InstructionDecoder::pop_ecx()
+{
+    this->cpu.write_gpreg32(GPRegister32::ECX, this->cpu.pop32());
 }
 
 void InstructionDecoder::pop_dx()
@@ -845,6 +914,36 @@ void InstructionDecoder::pop_bx()
 void InstructionDecoder::pop_ebx()
 {
     this->cpu.write_gpreg32(GPRegister32::EBX, this->cpu.pop32());
+}
+
+void InstructionDecoder::pop_sp()
+{
+    this->cpu.write_gpreg16(GPRegister16::SP, this->cpu.pop16());
+}
+
+void InstructionDecoder::pop_esp()
+{
+    this->cpu.write_gpreg32(GPRegister32::ESP, this->cpu.pop32());
+}
+
+void InstructionDecoder::pop_bp()
+{
+    this->cpu.write_gpreg16(GPRegister16::BP, this->cpu.pop16());
+}
+
+void InstructionDecoder::pop_ebp()
+{
+    this->cpu.write_gpreg32(GPRegister32::EBP, this->cpu.pop32());
+}
+
+void InstructionDecoder::pop_si()
+{
+    this->cpu.write_gpreg16(GPRegister16::SI, this->cpu.pop16());
+}
+
+void InstructionDecoder::pop_esi()
+{
+    this->cpu.write_gpreg32(GPRegister32::ESI, this->cpu.pop32());
 }
 
 void InstructionDecoder::pop_di()

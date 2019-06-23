@@ -292,18 +292,37 @@ private:
     void dec_esi();
     void dec_di();  // 0x4F
     void dec_edi();
-
+    void push_ax();  // 0x50
+    void push_eax();
+    void push_cx();  // 0x51
+    void push_ecx();
     void push_dx();  // 0x52
     void push_edx();
     void push_bx();  // 0x53
     void push_ebx();
+    void push_sp();  // 0x54
+    void push_esp();
+    void push_bp();  // 0x55
+    void push_ebp();
+    void push_si();  // 0x56
+    void push_esi();
     void push_di();  // 0x57
     void push_edi();
 
+    void pop_ax();  // 0x58
+    void pop_eax();
+    void pop_cx();  // 0x59
+    void pop_ecx();
     void pop_dx();  // 0x5A
     void pop_edx();
     void pop_bx();  // 0x5B
     void pop_ebx();
+    void pop_sp();  // 0x5C
+    void pop_esp();
+    void pop_bp();  // 0x5D
+    void pop_ebp();
+    void pop_si();  // 0x5E
+    void pop_esi();
     void pop_di();  // 0x5F
     void pop_edi();
 
