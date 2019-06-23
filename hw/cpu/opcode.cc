@@ -395,36 +395,42 @@ void InstructionDecoder::daa_al()
 
 void InstructionDecoder::sub_rm8_r8()
 {
+    this->load_modrm();
     this->write_modrm_rm8(
         this->sub(this->read_modrm_rm8(), this->read_modrm_r8()));
 }
 
 void InstructionDecoder::sub_rm16_r16()
 {
+    this->load_modrm();
     this->write_modrm_rm16(
         this->sub(this->read_modrm_rm16(), this->read_modrm_r16()));
 }
 
 void InstructionDecoder::sub_rm32_r32()
 {
+    this->load_modrm();
     this->write_modrm_rm32(
         this->sub(this->read_modrm_rm32(), this->read_modrm_r32()));
 }
 
 void InstructionDecoder::sub_r8_rm8()
 {
+    this->load_modrm();
     this->write_modrm_r8(
         this->sub(this->read_modrm_r8(), this->read_modrm_rm8()));
 }
 
 void InstructionDecoder::sub_r16_rm16()
 {
+    this->load_modrm();
     this->write_modrm_r16(
         this->sub(this->read_modrm_r16(), this->read_modrm_rm16()));
 }
 
 void InstructionDecoder::sub_r32_rm32()
 {
+    this->load_modrm();
     this->write_modrm_r32(
         this->sub(this->read_modrm_r32(), this->read_modrm_rm32()));
 }
