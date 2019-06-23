@@ -102,6 +102,28 @@ template void InstructionDecoder::cmp(uint8_t, uint8_t);
 template void InstructionDecoder::cmp(uint16_t, uint16_t);
 template void InstructionDecoder::cmp(uint32_t, uint32_t);
 
+void InstructionDecoder::daa()
+{
+    uint8_t old_al = this->cpu.read_gpreg8(GPRegister8::AL);
+    bool old_cf = this->cpu.get_cf();
+    if (((old_al & 0xF) > 9) || this->cpu.get_af()) {
+        this->cpu.write_gpreg8(GPRegister8::AL, old_al + 6);
+        this->cpu.eflags |= eflags_af;
+    } else {
+        this->cpu.eflags &= ~eflags_af;
+    }
+    if ((old_al > 0x99) || old_cf) {
+        this->cpu.write_gpreg8(GPRegister8::AL, old_al + 0x60);
+        this->cpu.eflags |= eflags_cf;
+    } else {
+        this->cpu.eflags &= ~eflags_cf;
+    }
+    this->cpu.last_result = this->cpu.read_gpreg8(GPRegister8::AL);
+    this->cpu.last_op1 = this->cpu.last_op2 = 0;
+    this->cpu.last_size = 7;
+    this->cpu.eflags_dirty |= eflags_zf | eflags_sf | eflags_pf;
+}
+
 template <typename T>
 T InstructionDecoder::dec(T v)
 {
