@@ -215,6 +215,19 @@ private:
 
     // 0x26 is ES override
 
+    void daa_al();        // 0x27
+    void sub_rm8_r8();    // 0x28
+    void sub_rm16_r16();  // 0x29
+    void sub_rm32_r32();
+    void sub_r8_rm8();    // 0x2A
+    void sub_r16_rm16();  // 0x2B
+    void sub_r32_rm32();
+    void sub_al_imm8();   // 0x2C
+    void sub_ax_imm16();  // 0x2D
+    void sub_eax_imm32();
+
+    // 0x2E is CS override
+
     void inc_bx();  // 0x43
     void inc_ebx();
     void inc_di();  // 0x47
