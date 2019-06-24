@@ -323,6 +323,44 @@ template void InstructionDecoder::idiv(uint8_t);
 template void InstructionDecoder::idiv(uint16_t);
 template void InstructionDecoder::idiv(uint32_t);
 
+template <typename T, typename R>
+R InstructionDecoder::imul(T a, T b)
+{
+    // a == factor
+    this->cpu.last_size = sizeof(T) * 8 - 1;
+    if (sizeof(T) == 1) {
+        int16_t product = a * b;
+        this->cpu.last_result = product & 0xFF;
+        if (product > 0x7F || product < -0x80) {
+            this->cpu.eflags |= eflags_of | eflags_cf;
+        } else {
+            this->cpu.eflags &= ~eflags_of & ~eflags_cf;
+        }
+        return product;
+    } else if (sizeof(T) == 2) {
+        int32_t product = a * b;
+        this->cpu.last_result = product & 0xFFFF;
+        if (product > 0x7FFF || product < -0x8000) {
+            this->cpu.eflags |= eflags_of | eflags_cf;
+        } else {
+            this->cpu.eflags &= ~eflags_of & ~eflags_cf;
+        }
+        return product;
+    } else if (sizeof(T) == 4) {
+        int64_t product = a * b;
+        this->cpu.last_result = product & 0xFFFFFFFF;
+        if (product >> 32 == (product & 0xFFFFFFFF) >> 31) {
+            this->cpu.eflags |= eflags_of | eflags_cf;
+        } else {
+            this->cpu.eflags &= ~eflags_of & ~eflags_cf;
+        }
+        return product;
+    }
+}
+template uint16_t InstructionDecoder::imul(uint8_t, uint8_t);
+template uint32_t InstructionDecoder::imul(uint16_t, uint16_t);
+template uint64_t InstructionDecoder::imul(uint32_t, uint32_t);
+
 template <typename T>
 T InstructionDecoder::inc(T v)
 {
@@ -342,12 +380,11 @@ template <typename T>
 void InstructionDecoder::mul(T a)
 {
     // a == factor
-    uint32_t initial = 0;
     if (sizeof(T) == 1) {
         uint8_t factor = this->cpu.read_gpreg8(GPRegister8::AL);
         uint16_t product = factor * a;
         this->cpu.write_gpreg16(GPRegister16::AX, product);
-        this->cpu.last_result = product;
+        this->cpu.last_result = product & 0xFF;
         if (this->cpu.read_gpreg8(GPRegister8::AH)) {
             this->cpu.eflags |= eflags_of | eflags_cf;
         } else {
@@ -358,9 +395,9 @@ void InstructionDecoder::mul(T a)
         uint32_t product = factor * a;
         this->cpu.write_gpreg16(GPRegister16::AX, product & 0xFFFF);
         this->cpu.write_gpreg16(GPRegister16::DX, product >> 16);
-        this->cpu.last_result = product;
+        this->cpu.last_result = product & 0xFFFF;
         if (this->cpu.read_gpreg16(GPRegister16::DX)) {
-            initial |= eflags_of | eflags_cf;
+            this->cpu.eflags |= eflags_of | eflags_cf;
         } else {
             this->cpu.eflags &= ~eflags_of & ~eflags_cf;
         }
@@ -371,7 +408,7 @@ void InstructionDecoder::mul(T a)
         this->cpu.write_gpreg32(GPRegister32::EDX, product >> 32);
         this->cpu.last_result = product & 0xFFFFFFFF;
         if (this->cpu.read_gpreg32(GPRegister32::EDX)) {
-            initial |= eflags_of | eflags_cf;
+            this->cpu.eflags |= eflags_of | eflags_cf;
         } else {
             this->cpu.eflags &= ~eflags_of & ~eflags_cf;
         }

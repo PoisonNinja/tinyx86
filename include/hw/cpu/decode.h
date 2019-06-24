@@ -113,8 +113,8 @@ private:
     void div(T a);
     template <typename T>
     void idiv(T a);
-    // template <typename T>
-    // T imul(T a, T b);
+    template <typename T, typename R>
+    R imul(T a, T b);
     template <typename T>
     T inc(T a);
     template <typename T>
