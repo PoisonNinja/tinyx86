@@ -357,9 +357,9 @@ R InstructionDecoder::imul(T a, T b)
         return product;
     }
 }
-template uint16_t InstructionDecoder::imul(uint8_t, uint8_t);
-template uint32_t InstructionDecoder::imul(uint16_t, uint16_t);
-template uint64_t InstructionDecoder::imul(uint32_t, uint32_t);
+template int16_t InstructionDecoder::imul(uint8_t, uint8_t);
+template int32_t InstructionDecoder::imul(uint16_t, uint16_t);
+template int64_t InstructionDecoder::imul(uint32_t, uint32_t);
 
 template <typename T>
 T InstructionDecoder::inc(T v)
