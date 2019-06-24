@@ -326,7 +326,42 @@ private:
     void pop_di();  // 0x5F
     void pop_edi();
 
-    void jmpnz_ne();  // 0x75
+    void pusha16();  // 0x60
+    void pusha32();
+    void popa16();  // 0x61
+    void popa32();
+
+    // TODO: 0x62, BOUND
+    // TODO: 0x63, ARPL
+    // 0x64 is FS override
+    // 0x65 is GS override
+
+    void push_imm16();  // 0x68
+    void push_imm32();
+    void imul_r16_rm16_imm16();  // 0x69
+    void imul_r32_rm32_imm32();
+    void push_imm8();           // 0x6A
+    void imul_r16_rm16_imm8();  // 0x6B
+    void imul_r32_rm32_imm8();
+
+    // TODO: 0x6C - 0x6F/INS/OUTS
+
+    void jo();           // 0x70
+    void jno();          // 0x71
+    void jb_jnae_jc();   // 0x72
+    void jnb_jae_jnc();  // 0x73
+    void jz_je();        // 0x74
+    void jnz_jne();      // 0x75
+    void jbe_jna();      // 0x76
+    void jnbe_ja();      // 0x77
+    void js();           // 0x78
+    void jns();          // 0x79
+    void jp_jpe();       // 0x7A
+    void jnp_jpo();      // 0x7B
+    void jl_jnge();      // 0x7C
+    void jnl_jge();      // 0x7D
+    void jle_jng();      // 0x7E
+    void jnle_jg();      // 0x7F
 
     void do_rm16_imm8();  // 0x83
     void do_rm32_imm8();

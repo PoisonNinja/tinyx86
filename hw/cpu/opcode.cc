@@ -956,12 +956,176 @@ void InstructionDecoder::pop_edi()
     this->cpu.write_gpreg32(GPRegister32::EDI, this->cpu.pop32());
 }
 
-void InstructionDecoder::jmpnz_ne()
+void InstructionDecoder::pusha16()
 {
-    int8_t imm = this->cpu.read_instruction8();
-    if (!this->cpu.get_zf()) {
-        this->cpu.write_ip(this->cpu.read_ip() + imm);
-    }
+    // TODO: Throw page fault if we're unable to push all registers
+    uint16_t old_sp = this->cpu.read_gpreg16(GPRegister16::SP);
+    this->cpu.push16(this->cpu.read_gpreg16(GPRegister16::AX));
+    this->cpu.push16(this->cpu.read_gpreg16(GPRegister16::CX));
+    this->cpu.push16(this->cpu.read_gpreg16(GPRegister16::DX));
+    this->cpu.push16(this->cpu.read_gpreg16(GPRegister16::BX));
+    this->cpu.push16(old_sp);
+    this->cpu.push16(this->cpu.read_gpreg16(GPRegister16::BP));
+    this->cpu.push16(this->cpu.read_gpreg16(GPRegister16::SI));
+    this->cpu.push16(this->cpu.read_gpreg16(GPRegister16::DI));
+}
+
+void InstructionDecoder::pusha32()
+{
+    uint32_t old_esp = this->cpu.read_gpreg32(GPRegister32::ESP);
+    this->cpu.push32(this->cpu.read_gpreg32(GPRegister32::EAX));
+    this->cpu.push32(this->cpu.read_gpreg32(GPRegister32::ECX));
+    this->cpu.push32(this->cpu.read_gpreg32(GPRegister32::EDX));
+    this->cpu.push32(this->cpu.read_gpreg32(GPRegister32::EBX));
+    this->cpu.push32(old_esp);
+    this->cpu.push32(this->cpu.read_gpreg32(GPRegister32::EBP));
+    this->cpu.push32(this->cpu.read_gpreg32(GPRegister32::ESI));
+    this->cpu.push32(this->cpu.read_gpreg32(GPRegister32::EDI));
+}
+
+void InstructionDecoder::popa16()
+{
+    this->cpu.write_gpreg16((GPRegister16::DI), this->cpu.pop16());
+    this->cpu.write_gpreg16((GPRegister16::SI), this->cpu.pop16());
+    this->cpu.write_gpreg16((GPRegister16::BP), this->cpu.pop16());
+    this->cpu.pop16();  // Discard SP
+    this->cpu.write_gpreg16((GPRegister16::BX), this->cpu.pop16());
+    this->cpu.write_gpreg16((GPRegister16::DX), this->cpu.pop16());
+    this->cpu.write_gpreg16((GPRegister16::CX), this->cpu.pop16());
+    this->cpu.write_gpreg16((GPRegister16::AX), this->cpu.pop16());
+}
+
+void InstructionDecoder::popa32()
+{
+    this->cpu.write_gpreg32((GPRegister32::EDI), this->cpu.pop32());
+    this->cpu.write_gpreg32((GPRegister32::ESI), this->cpu.pop32());
+    this->cpu.write_gpreg32((GPRegister32::EBP), this->cpu.pop32());
+    this->cpu.pop32();  // Discard SP
+    this->cpu.write_gpreg32((GPRegister32::EBX), this->cpu.pop32());
+    this->cpu.write_gpreg32((GPRegister32::EDX), this->cpu.pop32());
+    this->cpu.write_gpreg32((GPRegister32::ECX), this->cpu.pop32());
+    this->cpu.write_gpreg32((GPRegister32::EAX), this->cpu.pop32());
+}
+
+void InstructionDecoder::push_imm16()
+{
+    this->cpu.push16(this->cpu.read_instruction16());
+}
+
+void InstructionDecoder::push_imm32()
+{
+    this->cpu.push32(this->cpu.read_instruction32());
+}
+
+void InstructionDecoder::imul_r16_rm16_imm16()
+{
+    this->write_modrm_r16(this->imul<uint16_t, int32_t>(
+        this->read_modrm_rm16(), this->cpu.read_instruction16()));
+}
+
+void InstructionDecoder::imul_r32_rm32_imm32()
+{
+    this->write_modrm_r32(this->imul<uint32_t, int64_t>(
+        this->read_modrm_rm32(), this->cpu.read_instruction32()));
+}
+
+void InstructionDecoder::push_imm8()
+{
+    this->cpu.push16(this->cpu.read_instruction8());
+}
+
+void InstructionDecoder::imul_r16_rm16_imm8()
+{
+    this->write_modrm_r16(this->imul<uint16_t, int32_t>(
+        this->read_modrm_rm16(), this->cpu.read_instruction8()));
+}
+
+void InstructionDecoder::imul_r32_rm32_imm8()
+{
+    this->write_modrm_r32(this->imul<uint32_t, int64_t>(
+        this->read_modrm_rm32(), this->cpu.read_instruction8()));
+}
+
+void InstructionDecoder::jo()
+{
+    this->cpu.jmpcc8(this->cpu.get_of());
+}
+
+void InstructionDecoder::jno()
+{
+    this->cpu.jmpcc8(!this->cpu.get_of());
+}
+
+void InstructionDecoder::jb_jnae_jc()
+{
+    this->cpu.jmpcc8(this->cpu.get_cf());
+}
+
+void InstructionDecoder::jnb_jae_jnc()
+{
+    this->cpu.jmpcc8(!this->cpu.get_cf());
+}
+
+void InstructionDecoder::jz_je()
+{
+    this->cpu.jmpcc8(this->cpu.get_zf());
+}
+
+void InstructionDecoder::jnz_jne()
+{
+    this->cpu.jmpcc8(!this->cpu.get_zf());
+}
+
+void InstructionDecoder::jbe_jna()
+{
+    this->cpu.jmpcc8(this->cpu.get_cf() || this->cpu.get_zf());
+}
+
+void InstructionDecoder::jnbe_ja()
+{
+    this->cpu.jmpcc8(!this->cpu.get_cf() && !this->cpu.get_zf());
+}
+
+void InstructionDecoder::js()
+{
+    this->cpu.jmpcc8(this->cpu.get_sf());
+}
+
+void InstructionDecoder::jns()
+{
+    this->cpu.jmpcc8(!this->cpu.get_sf());
+}
+
+void InstructionDecoder::jp_jpe()
+{
+    this->cpu.jmpcc8(this->cpu.get_pf());
+}
+
+void InstructionDecoder::jnp_jpo()
+{
+    this->cpu.jmpcc8(!this->cpu.get_pf());
+}
+
+void InstructionDecoder::jl_jnge()
+{
+    this->cpu.jmpcc8(!this->cpu.get_sf() != !this->cpu.get_of());
+}
+
+void InstructionDecoder::jnl_jge()
+{
+    this->cpu.jmpcc8(!this->cpu.get_sf() == !this->cpu.get_of());
+}
+
+void InstructionDecoder::jle_jng()
+{
+    this->cpu.jmpcc8(!this->cpu.get_sf() != !this->cpu.get_of() ||
+                     this->cpu.get_zf());
+}
+
+void InstructionDecoder::jnle_jg()
+{
+    this->cpu.jmpcc8(!this->cpu.get_sf() == !this->cpu.get_of() &&
+                     !this->cpu.get_zf());
 }
 
 void InstructionDecoder::do_rm16_imm8()

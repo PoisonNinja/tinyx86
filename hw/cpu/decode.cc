@@ -206,8 +206,44 @@ InstructionDecoder::InstructionDecoder(CPU& cpu) : cpu(cpu)
     this->opcodes32[0x5E] = &InstructionDecoder::pop_esi;
     this->opcodes16[0x5F] = &InstructionDecoder::pop_di;
     this->opcodes32[0x5F] = &InstructionDecoder::pop_edi;
+    this->opcodes16[0x60] = &InstructionDecoder::pusha16;
+    this->opcodes32[0x60] = &InstructionDecoder::pusha32;
+    this->opcodes16[0x61] = &InstructionDecoder::popa16;
+    this->opcodes32[0x61] = &InstructionDecoder::popa32;
+    this->opcodes16[0x68] = &InstructionDecoder::push_imm16;
+    this->opcodes32[0x68] = &InstructionDecoder::push_imm32;
+    this->opcodes16[0x69] = &InstructionDecoder::imul_r16_rm16_imm16;
+    this->opcodes32[0x69] = &InstructionDecoder::imul_r32_rm32_imm32;
+    this->opcodes16[0x6A] = this->opcodes32[0x6A] =
+        &InstructionDecoder::push_imm8;
+    this->opcodes16[0x6B] = &InstructionDecoder::imul_r16_rm16_imm8;
+    this->opcodes32[0x6B] = &InstructionDecoder::imul_r32_rm32_imm8;
+    this->opcodes16[0x70] = this->opcodes32[0x70] = &InstructionDecoder::jo;
+    this->opcodes16[0x71] = this->opcodes32[0x71] = &InstructionDecoder::jno;
+    this->opcodes16[0x72] = this->opcodes32[0x72] =
+        &InstructionDecoder::jb_jnae_jc;
+    this->opcodes16[0x73] = this->opcodes32[0x73] =
+        &InstructionDecoder::jnb_jae_jnc;
+    this->opcodes16[0x74] = this->opcodes32[0x74] = &InstructionDecoder::jz_je;
     this->opcodes16[0x75] = this->opcodes32[0x75] =
-        &InstructionDecoder::jmpnz_ne;
+        &InstructionDecoder::jnz_jne;
+    this->opcodes16[0x76] = this->opcodes32[0x76] =
+        &InstructionDecoder::jbe_jna;
+    this->opcodes16[0x77] = this->opcodes32[0x77] =
+        &InstructionDecoder::jnbe_ja;
+    this->opcodes16[0x78] = this->opcodes32[0x78] = &InstructionDecoder::js;
+    this->opcodes16[0x79] = this->opcodes32[0x79] = &InstructionDecoder::jns;
+    this->opcodes16[0x7A] = this->opcodes32[0x7A] = &InstructionDecoder::jp_jpe;
+    this->opcodes16[0x7B] = this->opcodes32[0x7B] =
+        &InstructionDecoder::jnp_jpo;
+    this->opcodes16[0x7C] = this->opcodes32[0x7C] =
+        &InstructionDecoder::jl_jnge;
+    this->opcodes16[0x7D] = this->opcodes32[0x7D] =
+        &InstructionDecoder::jnl_jge;
+    this->opcodes16[0x7E] = this->opcodes32[0x7E] =
+        &InstructionDecoder::jle_jng;
+    this->opcodes16[0x7F] = this->opcodes32[0x7F] =
+        &InstructionDecoder::jnle_jg;
     this->opcodes16[0x83] = &InstructionDecoder::do_rm16_imm8;
     this->opcodes32[0x83] = &InstructionDecoder::do_rm32_imm8;
     this->opcodes16[0x86] = this->opcodes32[0x86] =
