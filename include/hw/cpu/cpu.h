@@ -140,6 +140,7 @@ private:
     uint16_t pop16();
     uint32_t pop32();
 
+    void jmpcc8(bool cond);
     void jmpcc16(bool cond);
     void jmpcc32(bool cond);
 

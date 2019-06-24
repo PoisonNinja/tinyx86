@@ -203,6 +203,14 @@ uint32_t CPU::pop32()
     return sp.regs_16 += 4, read_mem32(addr);
 }
 
+void CPU::jmpcc8(bool cond)
+{
+    int8_t off = this->read_instruction8();
+    if (cond) {
+        this->write_ip(this->read_ip() + off);
+    }
+}
+
 void CPU::jmpcc16(bool cond)
 {
     int16_t off = this->read_instruction16();
