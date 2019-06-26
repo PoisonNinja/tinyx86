@@ -464,6 +464,15 @@ template uint16_t InstructionDecoder::sub(uint16_t, uint16_t);
 template uint32_t InstructionDecoder::sub(uint32_t, uint32_t);
 
 template <typename T>
+void InstructionDecoder::test(T a, T b)
+{
+    this->do_and(a, b);
+}
+template void InstructionDecoder::test(uint8_t, uint8_t);
+template void InstructionDecoder::test(uint16_t, uint16_t);
+template void InstructionDecoder::test(uint32_t, uint32_t);
+
+template <typename T>
 T InstructionDecoder::do_xor(T a, T b)
 {
     uint32_t result = a ^ b;

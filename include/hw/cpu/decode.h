@@ -150,7 +150,7 @@ private:
     template <typename T>
     T sub(T a, T b);
     template <typename T>
-    T test(T a, T b);
+    void test(T a, T b);
     template <typename T>
     T do_xor(T a, T b);  // xor is a keyword in C++, alterative to ^
 
