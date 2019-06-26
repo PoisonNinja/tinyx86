@@ -6,6 +6,27 @@ void InstructionDecoder::load_modrm()
     this->raw_modrm = this->cpu.read_instruction8();
 }
 
+SGRegister InstructionDecoder::decode_modrm_sgreg()
+{
+    switch (this->modrm->reg) {
+        case 0:
+            return SGRegister::ES;
+        case 1:
+            return SGRegister::CS;
+        case 2:
+            return SGRegister::SS;
+        case 3:
+            return SGRegister::DS;
+        case 4:
+            return SGRegister::FS;
+        case 5:
+            return SGRegister::GS;
+        default:
+            this->log->critical("Invalid sgregister");
+            return SGRegister::CS;
+    }
+}
+
 addr_t InstructionDecoder::modrm_to_address(uint8_t mod, uint8_t rm)
 {
     // TODO: Switch based on real/protected mode

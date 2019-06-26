@@ -59,6 +59,8 @@ private:
     InstructionPointer fopcodes32[256];
 
     // ModRM decoding
+    SGRegister decode_modrm_sgreg();
+
     uint8_t read_modrm_r8();
     uint8_t read_modrm_rm8();
     uint16_t read_modrm_r16();
