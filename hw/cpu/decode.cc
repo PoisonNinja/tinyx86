@@ -244,10 +244,22 @@ InstructionDecoder::InstructionDecoder(CPU& cpu) : cpu(cpu)
         &InstructionDecoder::jle_jng;
     this->opcodes16[0x7F] = this->opcodes32[0x7F] =
         &InstructionDecoder::jnle_jg;
+    this->opcodes16[0x80] = this->opcodes32[0x80] =
+        &InstructionDecoder::do_rm8_imm8;
+    this->opcodes16[0x81] = &InstructionDecoder::do_rm16_imm16;
+    this->opcodes32[0x81] = &InstructionDecoder::do_rm32_imm32;
+    this->opcodes16[0x82] = this->opcodes32[0x82] =
+        &InstructionDecoder::do_rm8_imm8;
     this->opcodes16[0x83] = &InstructionDecoder::do_rm16_imm8;
     this->opcodes32[0x83] = &InstructionDecoder::do_rm32_imm8;
+    this->opcodes16[0x84] = this->opcodes32[0x84] =
+        &InstructionDecoder::test_rm8_r8;
+    this->opcodes16[0x85] = &InstructionDecoder::test_rm16_r16;
+    this->opcodes32[0x85] = &InstructionDecoder::test_rm32_r32;
     this->opcodes16[0x86] = this->opcodes32[0x86] =
-        &InstructionDecoder::xchg_r8_rm8;
+        &InstructionDecoder::xchg_rm8_r8;
+    this->opcodes16[0x87] = &InstructionDecoder::xchg_rm16_r16;
+    this->opcodes32[0x87] = &InstructionDecoder::xchg_rm32_r32;
     this->opcodes16[0x88] = this->opcodes32[0x88] =
         &InstructionDecoder::mov_rm8_r8;
     this->opcodes16[0x89] = &InstructionDecoder::mov_rm16_r16;
@@ -256,6 +268,12 @@ InstructionDecoder::InstructionDecoder(CPU& cpu) : cpu(cpu)
         &InstructionDecoder::mov_r8_rm8;
     this->opcodes16[0x8B] = &InstructionDecoder::mov_r16_rm16;
     this->opcodes32[0x8B] = &InstructionDecoder::mov_r32_rm32;
+    this->opcodes16[0x8C] = &InstructionDecoder::mov_rm16_sreg;
+    this->opcodes32[0x8C] = &InstructionDecoder::mov_rm32_sreg;
+    this->opcodes16[0x8D] = &InstructionDecoder::lea_rm16_m;
+    this->opcodes32[0x8D] = &InstructionDecoder::lea_rm32_m;
+    this->opcodes16[0x8E] = this->opcodes32[0x8E] =
+        &InstructionDecoder::mov_sgreg_rm16;
     this->opcodes16[0xB8] = &InstructionDecoder::mov_ax_imm16;
     this->opcodes32[0xB8] = &InstructionDecoder::mov_eax_imm32;
     this->opcodes16[0xBB] = &InstructionDecoder::mov_bx_imm16;

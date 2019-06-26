@@ -1128,6 +1128,105 @@ void InstructionDecoder::jnle_jg()
                      !this->cpu.get_zf());
 }
 
+void InstructionDecoder::do_rm8_imm8()
+{
+    this->load_modrm();
+    uint8_t val = this->read_modrm_rm8();
+    uint8_t imm = this->cpu.read_instruction8();
+    switch (this->modrm->reg) {
+        case 0:
+            this->write_modrm_rm8(this->add(val, imm));
+            break;
+        case 1:
+            this->write_modrm_rm8(this->do_or(val, imm));
+            break;
+        case 2:
+            this->write_modrm_rm8(this->adc(val, imm));
+            break;
+        case 3:
+            this->write_modrm_rm8(this->sbb(val, imm));
+            break;
+        case 4:
+            this->write_modrm_rm8(this->do_and(val, imm));
+            break;
+        case 5:
+            this->write_modrm_rm8(this->sub(val, imm));
+            break;
+        case 6:
+            this->write_modrm_rm8(this->do_xor(val, imm));
+            break;
+        case 7:
+            this->cmp(val, imm);
+            break;
+    }
+}
+
+void InstructionDecoder::do_rm16_imm16()
+{
+    this->load_modrm();
+    uint16_t val = this->read_modrm_rm16();
+    uint16_t imm = this->cpu.read_instruction16();
+    switch (this->modrm->reg) {
+        case 0:
+            this->write_modrm_rm16(this->add(val, imm));
+            break;
+        case 1:
+            this->write_modrm_rm16(this->do_or(val, imm));
+            break;
+        case 2:
+            this->write_modrm_rm16(this->adc(val, imm));
+            break;
+        case 3:
+            this->write_modrm_rm16(this->sbb(val, imm));
+            break;
+        case 4:
+            this->write_modrm_rm16(this->do_and(val, imm));
+            break;
+        case 5:
+            this->write_modrm_rm16(this->sub(val, imm));
+            break;
+        case 6:
+            this->write_modrm_rm16(this->do_xor(val, imm));
+            break;
+        case 7:
+            this->cmp(val, imm);
+            break;
+    }
+}
+
+void InstructionDecoder::do_rm32_imm32()
+{
+    this->load_modrm();
+    uint32_t val = this->read_modrm_rm32();
+    uint32_t imm = this->cpu.read_instruction32();
+    switch (this->modrm->reg) {
+        case 0:
+            this->write_modrm_rm32(this->add(val, imm));
+            break;
+        case 1:
+            this->write_modrm_rm32(this->do_or(val, imm));
+            break;
+        case 2:
+            this->write_modrm_rm32(this->adc(val, imm));
+            break;
+        case 3:
+            this->write_modrm_rm32(this->sbb(val, imm));
+            break;
+        case 4:
+            this->write_modrm_rm32(this->do_and(val, imm));
+            break;
+        case 5:
+            this->write_modrm_rm32(this->sub(val, imm));
+            break;
+        case 6:
+            this->write_modrm_rm32(this->do_xor(val, imm));
+            break;
+        case 7:
+            this->cmp(val, imm);
+            break;
+    }
+}
+
 void InstructionDecoder::do_rm16_imm8()
 {
     this->load_modrm();
@@ -1194,13 +1293,43 @@ void InstructionDecoder::do_rm32_imm8()
     }
 }
 
-void InstructionDecoder::xchg_r8_rm8()
+void InstructionDecoder::test_rm8_r8()
 {
-    // TODO: Use xchg (modifies EFLAGS)
+    this->test(this->read_modrm_rm8(), this->read_modrm_r8());
+}
+
+void InstructionDecoder::test_rm16_r16()
+{
+    this->test(this->read_modrm_rm16(), this->read_modrm_r16());
+}
+
+void InstructionDecoder::test_rm32_r32()
+{
+    this->test(this->read_modrm_rm32(), this->read_modrm_r32());
+}
+
+void InstructionDecoder::xchg_rm8_r8()
+{
     this->load_modrm();
     uint8_t tmp = this->read_modrm_rm8();
     this->write_modrm_rm8(this->read_modrm_r8());
     this->write_modrm_r8(tmp);
+}
+
+void InstructionDecoder::xchg_rm16_r16()
+{
+    this->load_modrm();
+    uint16_t tmp = this->read_modrm_rm16();
+    this->write_modrm_rm16(this->read_modrm_r16());
+    this->write_modrm_r16(tmp);
+}
+
+void InstructionDecoder::xchg_rm32_r32()
+{
+    this->load_modrm();
+    uint32_t tmp = this->read_modrm_rm32();
+    this->write_modrm_rm32(this->read_modrm_r32());
+    this->write_modrm_r32(tmp);
 }
 
 void InstructionDecoder::mov_rm8_r8()
@@ -1237,6 +1366,46 @@ void InstructionDecoder::mov_r32_rm32()
 {
     this->load_modrm();
     this->write_modrm_r32(this->read_modrm_rm32());
+}
+
+void InstructionDecoder::mov_rm16_sreg()
+{
+    this->load_modrm();
+    this->write_modrm_rm16(this->cpu.read_sgreg(this->decode_modrm_sgreg()));
+}
+
+void InstructionDecoder::mov_rm32_sreg()
+{
+    this->load_modrm();
+    this->write_modrm_rm32(this->cpu.read_sgreg(this->decode_modrm_sgreg()));
+}
+
+void InstructionDecoder::lea_rm16_m()
+{
+    // TODO: Is this even correct
+    this->load_modrm();
+    // Dummy call to load modrm_address
+    this->read_modrm_rm16();
+    // TODO: UD if not memory location
+    this->write_modrm_rm16(
+        this->modrm_to_address(this->modrm->mod, this->modrm->rm));
+}
+
+void InstructionDecoder::lea_rm32_m()
+{
+    // TODO: Is this even correct
+    this->load_modrm();
+    // Dummy call to load modrm_address
+    this->read_modrm_rm32();
+    // TODO: UD if not memory location
+    this->write_modrm_rm32(
+        this->modrm_to_address(this->modrm->mod, this->modrm->rm));
+}
+
+void InstructionDecoder::mov_sgreg_rm16()
+{
+    this->load_modrm();
+    this->cpu.write_sgreg(this->decode_modrm_sgreg(), this->read_modrm_rm16());
 }
 
 void InstructionDecoder::mov_ax_imm16()

@@ -365,17 +365,29 @@ private:
     void jle_jng();      // 0x7E
     void jnle_jg();      // 0x7F
 
+    void do_rm8_imm8();    // 0x80
+    void do_rm16_imm16();  // 0x81
+    void do_rm32_imm32();
+    // 0x82 is aliased to 0x80
     void do_rm16_imm8();  // 0x83
     void do_rm32_imm8();
-
-    void xchg_r8_rm8();  // 0x86
-
+    void test_rm8_r8();    // 0x84
+    void test_rm16_r16();  // 0x85
+    void test_rm32_r32();
+    void xchg_rm8_r8();    // 0x86
+    void xchg_rm16_r16();  // 0x87
+    void xchg_rm32_r32();
     void mov_rm8_r8();    // 0x88
     void mov_rm16_r16();  // 0x89
     void mov_rm32_r32();
     void mov_r8_rm8();    // 0x8A
     void mov_r16_rm16();  // 0x8B
     void mov_r32_rm32();
+    void mov_rm16_sreg();  // 0x8C
+    void mov_rm32_sreg();
+    void lea_rm16_m();  // 0x8D
+    void lea_rm32_m();
+    void mov_sgreg_rm16();  // 0x8E
 
     void mov_ax_imm16();  // 0xB8
     void mov_eax_imm32();
