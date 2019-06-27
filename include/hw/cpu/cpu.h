@@ -26,12 +26,13 @@ constexpr size_t num_sgregs = 6;
 constexpr size_t operand_size_8 = 7;
 constexpr size_t operand_size_16 = 15;
 constexpr size_t operand_size_32 = 31;
-
 constexpr uint32_t eflags_cf = (1 << 0);
 constexpr uint32_t eflags_pf = (1 << 2);
 constexpr uint32_t eflags_af = (1 << 4);
 constexpr uint32_t eflags_zf = (1 << 6);
 constexpr uint32_t eflags_sf = (1 << 7);
+constexpr uint32_t eflags_if = (1 << 9);
+constexpr uint32_t eflags_df = (1 << 10);
 constexpr uint32_t eflags_of = (1 << 11);
 constexpr uint32_t eflags_all =
     (eflags_cf | eflags_pf | eflags_af | eflags_zf | eflags_sf | eflags_of);

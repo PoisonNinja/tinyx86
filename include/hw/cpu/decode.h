@@ -421,11 +421,14 @@ private:
 
     void call_rel16();  // 0xE8
     void call_rel32();
-
+    void jmp_rel16();  // 0xE9
+    void jmp_rel32();
     void jmpf_ptr16();  // 0xEA
     void jmpf_ptr32();
 
     void hlt();  // 0xF4
+    void cli();  // 0xFA
+    void cld();  // 0xFC
 
     // Two byte opcodes
     void jnz_jne16();  // 0x85

@@ -1570,6 +1570,18 @@ void InstructionDecoder::call_rel32()
     this->cpu.write_eip(this->cpu.read_eip() + imm);
 }
 
+void InstructionDecoder::jmp_rel16()
+{
+    int16_t off = static_cast<int16_t>(this->cpu.read_instruction16());
+    this->cpu.write_ip(this->cpu.read_ip() + off);
+}
+
+void InstructionDecoder::jmp_rel32()
+{
+    int32_t off = static_cast<int32_t>(this->cpu.read_instruction32());
+    this->cpu.write_eip(this->cpu.read_eip() + off);
+}
+
 void InstructionDecoder::jmpf_ptr16()
 {
     uint16_t ip = this->cpu.read_instruction16();
@@ -1589,6 +1601,18 @@ void InstructionDecoder::jmpf_ptr32()
 void InstructionDecoder::hlt()
 {
     this->cpu.halt();
+}
+
+void InstructionDecoder::cli()
+{
+    // TODO: Security checks
+    this->cpu.eflags &= ~eflags_if;
+}
+
+void InstructionDecoder::cld()
+{
+    // TODO: Security checks
+    this->cpu.eflags &= ~eflags_df;
 }
 
 void InstructionDecoder::jnz_jne16()
