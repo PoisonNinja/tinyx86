@@ -388,13 +388,33 @@ private:
     void lea_rm16_m();  // 0x8D
     void lea_rm32_m();
     void mov_sgreg_rm16();  // 0x8E
+    void pop_rm16();        // 0x8F
+    void pop_rm32();
 
+    void mov_al_imm8();   // 0xB0
+    void mov_cl_imm8();   // 0xB1
+    void mov_dl_imm8();   // 0xB2
+    void mov_bl_imm8();   // 0xB3
+    void mov_ah_imm8();   // 0xB4
+    void mov_ch_imm8();   // 0xB5
+    void mov_dh_imm8();   // 0xB6
+    void mov_bh_imm8();   // 0xB7
     void mov_ax_imm16();  // 0xB8
     void mov_eax_imm32();
+    void mov_cx_imm16();  // 0xB9
+    void mov_ecx_imm32();
+    void mov_dx_imm16();  // 0xBA
+    void mov_edx_imm32();
     void mov_bx_imm16();  // 0xBB
     void mov_ebx_imm32();
     void mov_sp_imm16();  // 0xBC
     void mov_esp_imm32();
+    void mov_bp_imm16();  // 0xBD
+    void mov_ebp_imm32();
+    void mov_si_imm16();  // 0xBE
+    void mov_esi_imm32();
+    void mov_di_imm16();  // 0xBF
+    void mov_edi_imm32();
 
     void retn16();  // 0xC3
     void retn32();

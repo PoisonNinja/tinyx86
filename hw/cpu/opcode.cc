@@ -1408,6 +1408,59 @@ void InstructionDecoder::mov_sgreg_rm16()
     this->cpu.write_sgreg(this->decode_modrm_sgreg(), this->read_modrm_rm16());
 }
 
+void InstructionDecoder::pop_rm16()
+{
+    // TODO: Handle possible page fault
+    this->load_modrm();
+    this->write_modrm_rm16(this->cpu.pop16());
+}
+
+void InstructionDecoder::pop_rm32()
+{
+    this->load_modrm();
+    this->write_modrm_rm32(this->cpu.pop32());
+}
+
+void InstructionDecoder::mov_al_imm8()
+{
+    this->cpu.write_gpreg8(GPRegister8::AL, this->cpu.read_instruction8());
+}
+
+void InstructionDecoder::mov_cl_imm8()
+{
+    this->cpu.write_gpreg8(GPRegister8::CL, this->cpu.read_instruction8());
+}
+
+void InstructionDecoder::mov_dl_imm8()
+{
+    this->cpu.write_gpreg8(GPRegister8::DL, this->cpu.read_instruction8());
+}
+
+void InstructionDecoder::mov_bl_imm8()
+{
+    this->cpu.write_gpreg8(GPRegister8::BL, this->cpu.read_instruction8());
+}
+
+void InstructionDecoder::mov_ah_imm8()
+{
+    this->cpu.write_gpreg8(GPRegister8::AH, this->cpu.read_instruction8());
+}
+
+void InstructionDecoder::mov_ch_imm8()
+{
+    this->cpu.write_gpreg8(GPRegister8::CH, this->cpu.read_instruction8());
+}
+
+void InstructionDecoder::mov_dh_imm8()
+{
+    this->cpu.write_gpreg8(GPRegister8::DH, this->cpu.read_instruction8());
+}
+
+void InstructionDecoder::mov_bh_imm8()
+{
+    this->cpu.write_gpreg8(GPRegister8::BH, this->cpu.read_instruction8());
+}
+
 void InstructionDecoder::mov_ax_imm16()
 {
     this->cpu.write_gpreg16(GPRegister16::AX, this->cpu.read_instruction16());
@@ -1416,6 +1469,26 @@ void InstructionDecoder::mov_ax_imm16()
 void InstructionDecoder::mov_eax_imm32()
 {
     this->cpu.write_gpreg32(GPRegister32::EAX, this->cpu.read_instruction32());
+}
+
+void InstructionDecoder::mov_cx_imm16()
+{
+    this->cpu.write_gpreg16(GPRegister16::CX, this->cpu.read_instruction16());
+}
+
+void InstructionDecoder::mov_ecx_imm32()
+{
+    this->cpu.write_gpreg32(GPRegister32::ECX, this->cpu.read_instruction32());
+}
+
+void InstructionDecoder::mov_dx_imm16()
+{
+    this->cpu.write_gpreg16(GPRegister16::DX, this->cpu.read_instruction16());
+}
+
+void InstructionDecoder::mov_edx_imm32()
+{
+    this->cpu.write_gpreg32(GPRegister32::EDX, this->cpu.read_instruction32());
 }
 
 void InstructionDecoder::mov_bx_imm16()
@@ -1436,6 +1509,36 @@ void InstructionDecoder::mov_sp_imm16()
 void InstructionDecoder::mov_esp_imm32()
 {
     this->cpu.write_gpreg32(GPRegister32::ESP, this->cpu.read_instruction32());
+}
+
+void InstructionDecoder::mov_bp_imm16()
+{
+    this->cpu.write_gpreg16(GPRegister16::BP, this->cpu.read_instruction16());
+}
+
+void InstructionDecoder::mov_ebp_imm32()
+{
+    this->cpu.write_gpreg32(GPRegister32::EBP, this->cpu.read_instruction32());
+}
+
+void InstructionDecoder::mov_si_imm16()
+{
+    this->cpu.write_gpreg16(GPRegister16::SI, this->cpu.read_instruction16());
+}
+
+void InstructionDecoder::mov_esi_imm32()
+{
+    this->cpu.write_gpreg32(GPRegister32::ESI, this->cpu.read_instruction32());
+}
+
+void InstructionDecoder::mov_di_imm16()
+{
+    this->cpu.write_gpreg16(GPRegister16::DI, this->cpu.read_instruction16());
+}
+
+void InstructionDecoder::mov_edi_imm32()
+{
+    this->cpu.write_gpreg32(GPRegister32::EDI, this->cpu.read_instruction32());
 }
 
 void InstructionDecoder::retn16()
