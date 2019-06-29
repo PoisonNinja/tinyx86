@@ -8,4 +8,4 @@
 #define TINYX86_VERSION_MINOR 0
 #define TINYX86_VERSION_PATCH 1
 
-typedef uint32_t addr_t;
+using addr_t = uint32_t;

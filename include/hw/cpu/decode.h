@@ -50,7 +50,7 @@ private:
     bool is_osize_32();
     bool is_asize_32();
 
-    typedef void (InstructionDecoder::*InstructionPointer)();
+    using InstructionPointer = void (InstructionDecoder::*)();
 
     InstructionPointer opcodes16[256];
     InstructionPointer opcodes32[256];
