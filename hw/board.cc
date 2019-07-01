@@ -71,3 +71,15 @@ void Board::write32(addr_t addr, uint32_t value)
 {
     this->memory.write32(addr, value);
 }
+
+uint8_t Board::inb(uint16_t port)
+{
+    return this->io.inb(port);
+}
+
+uint16_t inw(uint16_t port);
+uint32_t inl(uint16_t port);
+
+void outb(uint16_t port, uint8_t val);
+void outw(uint16_t port, uint16_t val);
+void outl(uint16_t port, uint32_t val);
