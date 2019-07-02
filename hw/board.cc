@@ -77,9 +77,27 @@ uint8_t Board::inb(uint16_t port)
     return this->io.inb(port);
 }
 
-uint16_t inw(uint16_t port);
-uint32_t inl(uint16_t port);
+uint16_t Board::inw(uint16_t port)
+{
+    return this->io.inw(port);
+}
 
-void outb(uint16_t port, uint8_t val);
-void outw(uint16_t port, uint16_t val);
-void outl(uint16_t port, uint32_t val);
+uint32_t Board::inl(uint16_t port)
+{
+    return this->io.inl(port);
+}
+
+void Board::outb(uint16_t port, uint8_t val)
+{
+    return this->io.outb(port, val);
+}
+
+void Board::outw(uint16_t port, uint16_t val)
+{
+    return this->io.outw(port, val);
+}
+
+void Board::outl(uint16_t port, uint32_t val)
+{
+    return this->io.outl(port, val);
+}

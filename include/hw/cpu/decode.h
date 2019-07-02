@@ -419,6 +419,9 @@ private:
     void retn16();  // 0xC3
     void retn32();
 
+    void out_imm8_al();  // 0xE6
+    void out_imm8_ax();  // 0xE7
+    void out_imm8_eax();
     void call_rel16();  // 0xE8
     void call_rel32();
     void jmp_rel16();  // 0xE9

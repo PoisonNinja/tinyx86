@@ -1551,6 +1551,25 @@ void InstructionDecoder::retn32()
     this->cpu.write_eip(this->cpu.pop32());
 }
 
+void InstructionDecoder::out_imm8_al()
+{
+    // TODO: Permission checks
+    this->cpu.outb(this->cpu.read_instruction8(),
+                   this->cpu.read_gpreg8(GPRegister8::AL));
+}
+
+void InstructionDecoder::out_imm8_ax()
+{
+    this->cpu.outw(this->cpu.read_instruction8(),
+                   this->cpu.read_gpreg16(GPRegister16::AX));
+}
+
+void InstructionDecoder::out_imm8_eax()
+{
+    this->cpu.outl(this->cpu.read_instruction8(),
+                   this->cpu.read_gpreg32(GPRegister32::EAX));
+}
+
 void InstructionDecoder::call_rel16()
 {
     /*

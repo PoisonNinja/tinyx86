@@ -310,6 +310,10 @@ InstructionDecoder::InstructionDecoder(CPU& cpu) : cpu(cpu)
     this->opcodes32[0xBF] = &InstructionDecoder::mov_edi_imm32;
     this->opcodes16[0xC3] = &InstructionDecoder::retn16;
     this->opcodes32[0xC3] = &InstructionDecoder::retn32;
+    this->opcodes16[0xE6] = this->opcodes32[0xE6] =
+        &InstructionDecoder::out_imm8_al;
+    this->opcodes16[0xE7] = &InstructionDecoder::out_imm8_ax;
+    this->opcodes32[0xE7] = &InstructionDecoder::out_imm8_eax;
     this->opcodes16[0xE8] = &InstructionDecoder::call_rel16;
     this->opcodes32[0xE8] = &InstructionDecoder::call_rel32;
     this->opcodes16[0xE9] = &InstructionDecoder::jmp_rel16;

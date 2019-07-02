@@ -130,6 +130,15 @@ private:
     void write_mem16(addr_t addr, uint16_t value);
     void write_mem32(addr_t addr, uint32_t value);
 
+    // ioport interface
+    uint8_t inb(uint16_t port);
+    uint16_t inw(uint16_t port);
+    uint32_t inl(uint16_t port);
+
+    void outb(uint16_t port, uint8_t val);
+    void outw(uint16_t port, uint16_t val);
+    void outl(uint16_t port, uint32_t val);
+
     // Convenience functions
     uint8_t read_instruction8();
     uint16_t read_instruction16();

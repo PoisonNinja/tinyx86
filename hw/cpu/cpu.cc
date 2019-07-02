@@ -155,6 +155,36 @@ void CPU::write_mem32(addr_t addr, uint32_t value)
     board.write32(addr, value);
 }
 
+uint8_t CPU::inb(uint16_t port)
+{
+    return this->board.inb(port);
+}
+
+uint16_t CPU::inw(uint16_t port)
+{
+    return this->board.inw(port);
+}
+
+uint32_t CPU::inl(uint16_t port)
+{
+    return this->board.inl(port);
+}
+
+void CPU::outb(uint16_t port, uint8_t val)
+{
+    return this->board.outb(port, val);
+}
+
+void CPU::outw(uint16_t port, uint16_t val)
+{
+    return this->board.outw(port, val);
+}
+
+void CPU::outl(uint16_t port, uint32_t val)
+{
+    return this->board.outl(port, val);
+}
+
 uint8_t CPU::read_instruction8()
 {
     addr_t ip = segment_to_linear(SGRegister::CS, this->ip.regs_16);
