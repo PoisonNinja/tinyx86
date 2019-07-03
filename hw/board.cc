@@ -3,7 +3,7 @@
 #include <hw/chipset/memory/rom.h>
 #include <fstream>
 
-Board::Board(size_t size) : cpu(*this)
+Board::Board(size_t size) : cpu(*this), rtc(io)
 {
     this->log = spdlog::get("stdout");
 

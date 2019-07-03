@@ -2,6 +2,7 @@
 
 #include <hw/chipset/io.h>
 #include <hw/chipset/memory/controller.h>
+#include <hw/chipset/rtc.h>
 #include <hw/cpu/cpu.h>
 #include <spdlog/spdlog.h>
 #include <tinyx86.h>
@@ -32,8 +33,13 @@ public:
     void outl(uint16_t port, uint32_t val);
 
 private:
+    // Core devices
+    CPU cpu;
     MemoryController memory;
     IOController io;
-    CPU cpu;
+
+    // Secondary devices
+    RTC rtc;
+
     std::shared_ptr<spdlog::logger> log;
 };
