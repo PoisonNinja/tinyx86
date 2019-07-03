@@ -419,6 +419,9 @@ private:
     void retn16();  // 0xC3
     void retn32();
 
+    void in_al_imm8();  // 0xE4
+    void in_ax_imm8();  // 0xE5
+    void in_eax_imm8();
     void out_imm8_al();  // 0xE6
     void out_imm8_ax();  // 0xE7
     void out_imm8_eax();
