@@ -22,7 +22,7 @@ public:
     void outl(uint16_t port, uint32_t val);
 
     void register_io_read(uint16_t port, ioread_handler_t handler);
-    void register_io_write(uint16_t port, ioread_handler_t handler);
+    void register_io_write(uint16_t port, iowrite_handler_t handler);
 
 private:
     std::shared_ptr<spdlog::logger> log;
