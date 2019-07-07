@@ -1653,6 +1653,33 @@ void InstructionDecoder::cld()
     this->cpu.eflags &= ~eflags_df;
 }
 
+void InstructionDecoder::table_ops()
+{
+    this->load_modrm();
+    addr_t addr = this->modrm_to_address(this->modrm->mod, this->modrm->rm);
+    switch (this->modrm->reg) {
+        case 2:
+            // lgdt
+            // TODO: Security checks
+            struct GDTDescriptor gdt;
+            gdt.size = this->cpu.read_mem16(addr);
+            gdt.offset = this->cpu.read_mem32(addr);
+            if (!this->is_osize_32()) {
+                // Truncated to 24-bits if osize is 16-bits
+                gdt.offset &= 0xFFFFFF;
+            }
+            this->cpu.lgdt(gdt);
+            break;
+        case 3:
+            // lidt
+            break;
+        default:
+            this->log->warn(
+                "[decode] Unimplemented reg value for 0xF 0x1, 0x{:X}",
+                this->modrm->reg);
+    }
+}
+
 void InstructionDecoder::jnz_jne16()
 {
     this->cpu.jmpcc16(!this->cpu.get_zf());

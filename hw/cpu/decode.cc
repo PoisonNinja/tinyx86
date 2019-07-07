@@ -328,6 +328,8 @@ InstructionDecoder::InstructionDecoder(CPU& cpu) : cpu(cpu)
     this->opcodes16[0xFA] = this->opcodes32[0xFA] = &InstructionDecoder::cli;
     this->opcodes16[0xFC] = this->opcodes32[0xFC] = &InstructionDecoder::cld;
 
+    this->fopcodes16[0x01] = this->fopcodes32[0x01] =
+        &InstructionDecoder::table_ops;
     this->fopcodes16[0x85] = &InstructionDecoder::jnz_jne16;
     this->fopcodes32[0x85] = &InstructionDecoder::jnz_jne16;
 }

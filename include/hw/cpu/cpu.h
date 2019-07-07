@@ -85,6 +85,21 @@ enum class CPUState {
     RUNNING,
 };
 
+struct GDTDescriptor {
+    uint16_t size;
+    addr_t offset;
+} __attribute__((packed));
+
+struct GDTEntry {
+    uint16_t limit_low;
+    uint16_t base_low;
+    uint8_t base_middle;
+    uint8_t access;
+    uint8_t limit_high : 4;
+    uint8_t flags : 4;
+    uint8_t base_high;
+} __attribute__((packed));
+
 class Board;
 class MemoryController;
 
@@ -120,6 +135,8 @@ private:
 
     void write_ip(uint16_t value);
     void write_eip(uint32_t value);
+
+    void lgdt(struct GDTDescriptor& reg);
 
     // Memory interface
     uint8_t read_mem8(addr_t addr);
@@ -189,6 +206,9 @@ private:
 
     // Instruction pointer
     Register ip;
+
+    // GDT register
+    GDTDescriptor gdtr;
 
     // EFLAGS
     uint32_t eflags;           // Internal representation of EFLAGS

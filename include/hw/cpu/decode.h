@@ -437,6 +437,8 @@ private:
     void cld();  // 0xFC
 
     // Two byte opcodes
+    void table_ops();  // 0x1
+
     void jnz_jne16();  // 0x85
     void jnz_jne32();
 };
