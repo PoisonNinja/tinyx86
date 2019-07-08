@@ -85,6 +85,19 @@ enum class CPUState {
     RUNNING,
 };
 
+struct IDTDescriptor {
+    uint16_t size;
+    addr_t offset;
+} __attribute__((packed));
+
+struct IDTEntry {
+    uint16_t offset_low;
+    uint16_t selector;
+    uint8_t zero;
+    uint8_t attributes;
+    uint16_t offset_high;
+} __attribute__((packed));
+
 struct GDTDescriptor {
     uint16_t size;
     addr_t offset;
@@ -136,6 +149,7 @@ private:
     void write_ip(uint16_t value);
     void write_eip(uint32_t value);
 
+    void lidt(struct IDTDescriptor& reg);
     void lgdt(struct GDTDescriptor& reg);
 
     // Memory interface
@@ -206,6 +220,9 @@ private:
 
     // Instruction pointer
     Register ip;
+
+    // IDT register
+    IDTDescriptor idtr;
 
     // GDT register
     GDTDescriptor gdtr;

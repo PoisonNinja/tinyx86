@@ -105,6 +105,13 @@ void CPU::write_sgreg(SGRegister reg, uint16_t selector)
     sgregs[static_cast<int>(reg)].base = selector << 4;
 }
 
+void CPU::lidt(struct IDTDescriptor& reg)
+{
+    this->log->trace("[cpu] lidt: Size: 0x{:X}, Offset: 0x{:X}", reg.size,
+                     reg.offset);
+    this->idtr = reg;
+}
+
 void CPU::lgdt(struct GDTDescriptor& reg)
 {
     this->log->trace("[cpu] lgdt: Size: 0x{:X}, Offset: 0x{:X}", reg.size,

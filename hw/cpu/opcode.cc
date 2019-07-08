@@ -1672,6 +1672,14 @@ void InstructionDecoder::table_ops()
             break;
         case 3:
             // lidt
+            struct IDTDescriptor idt;
+            idt.size = this->cpu.read_mem16(addr);
+            idt.offset = this->cpu.read_mem32(addr);
+            if (!this->is_osize_32()) {
+                // Truncated to 24-bits if osize is 16-bits
+                idt.offset &= 0xFFFFFF;
+            }
+            this->cpu.lidt(idt);
             break;
         default:
             this->log->warn(

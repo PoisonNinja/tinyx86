@@ -346,7 +346,8 @@ void InstructionDecoder::tick()
     while (isPrefix) {
         switch ((opcode = this->cpu.read_instruction8())) {
             case 0x2E:
-                this->log->trace("[decode] Prefix overriding to CS");
+                this->log->trace("[decode] Prefix overriding to CS, 0x{:X}",
+                                 this->cpu.read_sgreg(SGRegister::CS));
                 this->prefixes.segment = SGRegister::CS;
                 break;
             case 0x66:
