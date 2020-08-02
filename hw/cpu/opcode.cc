@@ -1421,6 +1421,95 @@ void InstructionDecoder::pop_rm32()
     this->write_modrm_rm32(this->cpu.pop32());
 }
 
+void InstructionDecoder::nop()
+{
+    // Do nothing
+}
+
+void InstructionDecoder::xchg16_common(GPRegister16 reg)
+{
+    uint16_t tmp = this->cpu.read_gpreg16(reg);
+    this->cpu.write_gpreg16(reg, this->cpu.read_gpreg16(GPRegister16::AX));
+    this->cpu.write_gpreg16(GPRegister16::AX, tmp);
+}
+
+void InstructionDecoder::xchg32_common(GPRegister32 reg)
+{
+    uint32_t tmp = this->cpu.read_gpreg32(reg);
+    this->cpu.write_gpreg32(reg, this->cpu.read_gpreg32(GPRegister32::EAX));
+    this->cpu.write_gpreg32(GPRegister32::EAX, tmp);
+}
+
+void InstructionDecoder::xchg_cx_ax()
+{
+    this->xchg16_common(GPRegister16::CX);
+}
+
+void InstructionDecoder::xchg_ecx_eax()
+{
+    this->xchg32_common(GPRegister32::ECX);
+}
+
+void InstructionDecoder::xchg_dx_ax()
+{
+    this->xchg16_common(GPRegister16::DX);
+}
+
+void InstructionDecoder::xchg_edx_eax()
+{
+    this->xchg32_common(GPRegister32::EDX);
+}
+
+void InstructionDecoder::xchg_bx_ax()
+{
+    this->xchg16_common(GPRegister16::BX);
+}
+
+void InstructionDecoder::xchg_ebx_eax()
+{
+    this->xchg32_common(GPRegister32::EBX);
+}
+
+void InstructionDecoder::xchg_sp_ax()
+{
+    this->xchg16_common(GPRegister16::SP);
+}
+
+void InstructionDecoder::xchg_esp_eax()
+{
+    this->xchg32_common(GPRegister32::ESP);
+}
+
+void InstructionDecoder::xchg_bp_ax()
+{
+    this->xchg16_common(GPRegister16::BP);
+}
+
+void InstructionDecoder::xchg_ebp_eax()
+{
+    this->xchg32_common(GPRegister32::EBP);
+}
+
+void InstructionDecoder::xchg_si_ax()
+{
+    this->xchg16_common(GPRegister16::SI);
+}
+
+void InstructionDecoder::xchg_esi_eax()
+{
+    this->xchg32_common(GPRegister32::ESI);
+}
+
+void InstructionDecoder::xchg_di_ax()
+{
+    this->xchg16_common(GPRegister16::DI);
+}
+
+void InstructionDecoder::xchg_edi_eax()
+{
+    this->xchg32_common(GPRegister32::EDI);
+}
+
 void InstructionDecoder::mov_al_imm8()
 {
     this->cpu.write_gpreg8(GPRegister8::AL, this->cpu.read_instruction8());

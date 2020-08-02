@@ -2,11 +2,14 @@
 
 #include <spdlog/spdlog.h>
 #include <tinyx86.h>
+
 #include <cstdint>
 
 class CPU;
 
 enum class SGRegister : int;
+enum class GPRegister16 : uint8_t;
+enum class GPRegister32 : uint8_t;
 
 struct PrefixState {
     SGRegister segment;
@@ -390,6 +393,26 @@ private:
     void mov_sgreg_rm16();  // 0x8E
     void pop_rm16();        // 0x8F
     void pop_rm32();
+
+    void nop();  // 0x90
+
+    void xchg16_common(GPRegister16 reg);
+    void xchg32_common(GPRegister32 reg);
+
+    void xchg_cx_ax();  // 0x91
+    void xchg_ecx_eax();
+    void xchg_dx_ax();  // 0x92
+    void xchg_edx_eax();
+    void xchg_bx_ax();  // 0x93
+    void xchg_ebx_eax();
+    void xchg_sp_ax();  // 0x94
+    void xchg_esp_eax();
+    void xchg_bp_ax();  // 0x95
+    void xchg_ebp_eax();
+    void xchg_si_ax();  // 0x96
+    void xchg_esi_eax();
+    void xchg_di_ax();  // 0x97
+    void xchg_edi_eax();
 
     void mov_al_imm8();   // 0xB0
     void mov_cl_imm8();   // 0xB1
