@@ -414,6 +414,14 @@ private:
     void xchg_di_ax();  // 0x97
     void xchg_edi_eax();
 
+    void cbw();  // 0x98
+    void cwde();
+    void cwd();  // 0x99
+    void cdq();
+
+    void callf16(); // 0x9A
+    void callf32();
+
     void mov_al_imm8();   // 0xB0
     void mov_cl_imm8();   // 0xB1
     void mov_dl_imm8();   // 0xB2

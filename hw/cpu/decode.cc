@@ -276,6 +276,25 @@ InstructionDecoder::InstructionDecoder(CPU& cpu) : cpu(cpu)
         &InstructionDecoder::mov_sgreg_rm16;
     this->opcodes16[0x8F] = &InstructionDecoder::pop_rm16;
     this->opcodes32[0x8F] = &InstructionDecoder::pop_rm32;
+    this->opcodes16[0x90] = this->opcodes32[0x90] = &InstructionDecoder::nop;
+    this->opcodes16[0x91] = &InstructionDecoder::xchg_cx_ax;
+    this->opcodes32[0x91] = &InstructionDecoder::xchg_ecx_eax;
+    this->opcodes16[0x92] = &InstructionDecoder::xchg_dx_ax;
+    this->opcodes32[0x92] = &InstructionDecoder::xchg_edx_eax;
+    this->opcodes16[0x93] = &InstructionDecoder::xchg_bx_ax;
+    this->opcodes32[0x93] = &InstructionDecoder::xchg_ebx_eax;
+    this->opcodes16[0x94] = &InstructionDecoder::xchg_sp_ax;
+    this->opcodes32[0x94] = &InstructionDecoder::xchg_esp_eax;
+    this->opcodes16[0x95] = &InstructionDecoder::xchg_bp_ax;
+    this->opcodes32[0x95] = &InstructionDecoder::xchg_ebp_eax;
+    this->opcodes16[0x96] = &InstructionDecoder::xchg_si_ax;
+    this->opcodes32[0x96] = &InstructionDecoder::xchg_esi_eax;
+    this->opcodes16[0x97] = &InstructionDecoder::xchg_di_ax;
+    this->opcodes32[0x97] = &InstructionDecoder::xchg_edi_eax;
+    this->opcodes16[0x98] = &InstructionDecoder::cbw;
+    this->opcodes32[0x98] = &InstructionDecoder::cwde;
+    this->opcodes16[0x99] = &InstructionDecoder::cwd;
+    this->opcodes32[0x99] = &InstructionDecoder::cdq;
     this->opcodes16[0xB0] = this->opcodes32[0xB0] =
         &InstructionDecoder::mov_al_imm8;
     this->opcodes16[0xB1] = this->opcodes32[0xB1] =

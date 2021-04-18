@@ -1510,6 +1510,40 @@ void InstructionDecoder::xchg_edi_eax()
     this->xchg32_common(GPRegister32::EDI);
 }
 
+void InstructionDecoder::cbw()
+{
+    int16_t val = (int16_t)(int8_t)this->cpu.read_gpreg8(GPRegister8::AL);
+    this->cpu.write_gpreg16(GPRegister16::AX, val);
+}
+
+void InstructionDecoder::cwde()
+{
+    int32_t val = (int32_t)(int16_t)this->cpu.read_gpreg16(GPRegister16::AX);
+    this->cpu.write_gpreg32(GPRegister32::EAX, val);
+}
+
+void InstructionDecoder::cwd()
+{
+    uint16_t val =
+        (this->cpu.read_gpreg16(GPRegister16::AX) >> 15) ? 0xFFFF : 0;
+    this->cpu.write_gpreg16(GPRegister16::DX, val);
+}
+
+void InstructionDecoder::cdq()
+{
+    uint32_t val =
+        (this->cpu.read_gpreg32(GPRegister32::EAX) >> 31) ? 0xFFFFFFFF : 0;
+    this->cpu.write_gpreg32(GPRegister32::EDX, val);
+}
+
+void InstructionDecoder::callf16()
+{
+    uint32_t destination = this->cpu.read_instruction32();
+    uint16_t cs = (destination >> 16) & 0xFFFF;
+    uint16_t eip = destination & 0xFFFF;
+    this->cpu.
+}
+
 void InstructionDecoder::mov_al_imm8()
 {
     this->cpu.write_gpreg8(GPRegister8::AL, this->cpu.read_instruction8());
